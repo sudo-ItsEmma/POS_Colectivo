@@ -1,0 +1,14 @@
+# NetBeans / Maven files
+target/
+nbproject/private/
+build/
+dist/
+nbdist/
+.nb-gradle/
+
+# Database files (We keep the engine but NOT the data)
+db_engine/data/*
+!db_engine/data/.gitkeep
+
+# macOS system files
+.DS_Store
