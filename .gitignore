@@ -12,4 +12,9 @@ db_engine/data/*
 
 # macOS system files
 .DS_Store
+
+# Logs de error del sistema
+*.log
+
+# Database Setup Script (Excluido por decisión del desarrollador)
 src/main/resources/db_setup.sql

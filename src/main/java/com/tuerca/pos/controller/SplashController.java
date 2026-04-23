@@ -56,6 +56,11 @@ public class SplashController {
                 Thread.sleep(500);
                 view.dispose();
                 // Abrir LoginView aquí
+                java.awt.EventQueue.invokeLater(() -> {
+                    com.tuerca.pos.view.LoginView login = new com.tuerca.pos.view.LoginView();
+                    login.setVisible(true);
+                    login.setLocationRelativeTo(null); // Esto lo centra en tu monitor
+                });
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(view, "Error crítico: " + e.getMessage());
