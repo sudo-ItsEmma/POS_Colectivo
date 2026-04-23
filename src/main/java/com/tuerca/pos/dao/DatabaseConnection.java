@@ -20,14 +20,14 @@ public class DatabaseConnection {
     public static Connection getConnection() throws SQLException {
         if (connectionInstance == null || connectionInstance.isClosed()) {
             try {
-                // Register the MariaDB driver
                 Class.forName("org.mariadb.jdbc.Driver");
+                // Quitamos "+ DATABASE_NAME" para conectar al motor general primero
                 connectionInstance = DriverManager.getConnection(
-                    CONNECTION_URL + DATABASE_NAME, 
+                    CONNECTION_URL, 
                     DATABASE_USER, 
                     DATABASE_PASSWORD
                 );
-                System.out.println("Database connection successful!");
+                System.out.println("Conexión al motor MariaDB exitosa!");
             } catch (ClassNotFoundException | SQLException e) {
                 System.err.println("Connection error: " + e.getMessage());
                 throw new SQLException(e);

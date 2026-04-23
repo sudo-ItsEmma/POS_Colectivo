@@ -12,3 +12,4 @@ db_engine/data/*
 
 # macOS system files
 .DS_Store
+src/main/resources/db_setup.sql

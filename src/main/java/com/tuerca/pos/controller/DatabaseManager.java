@@ -14,29 +14,47 @@ import java.io.IOException;
 public class DatabaseManager {
     private Process dbProcess;
 
+    
     public void startDatabase() {
         try {
-            // Path to the bin folder inside your project
+            // Rutas absolutas para portabilidad en macOS
             String dbPath = new File("db_engine/bin/mariadbd").getAbsolutePath();
             String dataPath = new File("db_engine/data").getAbsolutePath();
+            String baseDir = new File("db_engine").getAbsolutePath();
+            File dataDir = new File(dataPath);
 
-            System.out.println("Starting database engine from: " + dbPath);
+            ProcessBuilder pb = new ProcessBuilder();
+            pb.redirectErrorStream(true);
 
-            // Command to start MariaDB pointing to our local data folder
-            ProcessBuilder processBuilder = new ProcessBuilder(
-                dbPath, 
+            // 1. Inicialización (Solo si la carpeta data está vacía)
+            if (dataDir.list() == null || dataDir.list().length <= 1) { 
+                System.out.println("Primera ejecución: Inicializando diccionarios de sistema...");
+                pb.command(dbPath, 
+                    "--basedir=" + baseDir, 
+                    "--datadir=" + dataPath, 
+                    "--initialize-insecure", 
+                    "--lower-case-table-names=2");
+                Process initProcess = pb.start();
+                initProcess.waitFor(); // Espera obligatoria para crear tablas 'mysql'
+            }
+
+            // 2. Arranque del servidor (Persistente en puerto 3306)
+            System.out.println("Arrancando motor MariaDB portable...");
+            pb.command(dbPath, 
+                "--basedir=" + baseDir, 
                 "--datadir=" + dataPath, 
-                "--port=3306"
-            );
-
-            dbProcess = processBuilder.start();
-            System.out.println("Database engine is warming up...");
+                "--port=3306", 
+                "--lower-case-table-names=2", 
+                "--skip-grant-tables"); // Evita bloqueos de privilegios iniciales
             
-        } catch (IOException e) {
-            System.err.println("Failed to start database: " + e.getMessage());
+            dbProcess = pb.start();
+
+        } catch (Exception e) {
+            System.err.println("Error crítico en el motor: " + e.getMessage());
         }
     }
-
+    
+    
     public void stopDatabase() {
         if (dbProcess != null) {
             dbProcess.destroy();
