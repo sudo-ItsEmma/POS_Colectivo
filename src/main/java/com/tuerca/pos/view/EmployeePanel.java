@@ -15,6 +15,19 @@ public class EmployeePanel extends javax.swing.JPanel {
      */
     public EmployeePanel() {
         initComponents();
+        // Cambiamos el estilo de "píldora" por un redondeado sutil de 15 píxeles
+        for (java.awt.Component c : jPanel1.getComponents()) { 
+            if (c instanceof javax.swing.JButton btn) {
+                // Obtenemos el color que ya tiene el botón (el que pusiste en el diseño)
+                String hexColor = String.format("#%02x%02x%02x", 
+                        btn.getBackground().getRed(), 
+                        btn.getBackground().getGreen(), 
+                        btn.getBackground().getBlue());
+
+                // Aplicamos el arco Y el color de fondo al mismo tiempo
+                btn.putClientProperty("FlatLaf.style", "arc: 15; background: " + hexColor);
+            }
+        }
     }
 
     /**
@@ -26,37 +39,127 @@ public class EmployeePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setBounds(new java.awt.Rectangle(0, 0, 1280, 720));
+        setMinimumSize(new java.awt.Dimension(1280, 720));
+        setPreferredSize(new java.awt.Dimension(1280, 720));
 
-        jPanel2.setMinimumSize(new java.awt.Dimension(1280, 720));
-        jPanel2.setSize(new java.awt.Dimension(1280, 720));
+        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setText("POS de Venta");
 
         jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Panel Empleado");
+        jLabel2.setText("Aura Tienda Colectiva");
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE)
+        jPanel1.setLayout(new java.awt.GridLayout(3, 3, 20, 20));
+
+        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton1.setText("Gestión Emprendedores");
+        jPanel1.add(jButton1);
+
+        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton4.setText("Gestión Productos");
+        jPanel1.add(jButton4);
+
+        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton2.setText("Venta");
+        jPanel1.add(jButton2);
+
+        jButton7.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        jButton7.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton7.setText("Pago Emprendedores");
+        jPanel1.add(jButton7);
+
+        jButton6.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        jButton6.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton6.setText("Gestión Apartados");
+        jPanel1.add(jButton6);
+
+        jButton8.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        jButton8.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton8.setText("Arquedo de Caja");
+        jPanel1.add(jButton8);
+
+        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.GreyInline"));
+        jButton5.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton5.setText("Generar Reportes");
+        jPanel1.add(jButton5);
+
+        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.GreyInline"));
+        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton3.setText("Devolución");
+        jPanel1.add(jButton3);
+
+        jButton9.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        jButton9.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        jButton9.setText("Corte de Caja");
+        jPanel1.add(jButton9);
+
+        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Usuario");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1274, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 1274, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 651, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel3))
         );
-
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
