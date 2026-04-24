@@ -55,11 +55,11 @@ public class SplashController {
                 // 4. Salto al Login
                 Thread.sleep(500);
                 view.dispose();
-                // Abrir LoginView aquí
+                // Abrimos el MainView (que ya contiene al LoginPanel por defecto)
                 java.awt.EventQueue.invokeLater(() -> {
-                    com.tuerca.pos.view.LoginView login = new com.tuerca.pos.view.LoginView();
-                    login.setVisible(true);
-                    login.setLocationRelativeTo(null); // Esto lo centra en tu monitor
+                    com.tuerca.pos.view.MainView main = new com.tuerca.pos.view.MainView();
+                    main.setVisible(true);
+                    main.setLocationRelativeTo(null); // Centra la ventana en tu pantalla
                 });
 
             } catch (Exception e) {
