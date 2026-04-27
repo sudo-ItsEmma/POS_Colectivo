@@ -58,5 +58,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="com.tuerca.pos.view.Ventas" name="ventas1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="ventas"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
