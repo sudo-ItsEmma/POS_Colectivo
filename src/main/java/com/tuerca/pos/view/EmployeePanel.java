@@ -29,7 +29,7 @@ public class EmployeePanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        btnEmprendedores = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
@@ -53,10 +53,15 @@ public class EmployeePanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.GridLayout(3, 3, 20, 20));
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton1.setText("Gestión Emprendedores");
-        jPanel1.add(jButton1);
+        btnEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmprendedores.setText("Gestión Emprendedores");
+        btnEmprendedores.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmprendedoresActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnEmprendedores);
 
         jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
@@ -125,9 +130,21 @@ public class EmployeePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEmprendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmprendedoresActionPerformed
+        // TODO add your handling code here:
+        // 1. Buscamos la ventana principal (MainView)
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // 2. Le pedimos que muestre la vista de emprendedores
+            // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
+            main.showView("entrepreneur");
+        }
+    }//GEN-LAST:event_btnEmprendedoresActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnEmprendedores;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
