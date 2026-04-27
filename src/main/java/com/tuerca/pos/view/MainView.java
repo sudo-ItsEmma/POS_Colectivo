@@ -21,9 +21,9 @@ public class MainView extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         
         // Forzamos el nombre de las cartas por código
-        getContentPane().add(loginPanel2, "login");
-        getContentPane().add(adminPanel1, "admin");
-        getContentPane().add(employeePanel1, "employee");
+        getContentPane().add(loginPanel1, "login");
+        getContentPane().add(adminPanel2, "admin");
+        getContentPane().add(employeePanel2, "employee");
 
         showView("login");
     }
@@ -42,15 +42,15 @@ public class MainView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        loginPanel2 = new com.tuerca.pos.view.LoginPanel();
-        adminPanel1 = new com.tuerca.pos.view.AdminPanel();
-        employeePanel1 = new com.tuerca.pos.view.EmployeePanel();
+        loginPanel1 = new com.tuerca.pos.view.LoginPanel();
+        employeePanel2 = new com.tuerca.pos.view.EmployeePanel();
+        adminPanel2 = new com.tuerca.pos.view.AdminPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
-        getContentPane().add(loginPanel2, "card2");
-        getContentPane().add(adminPanel1, "card3");
-        getContentPane().add(employeePanel1, "card4");
+        getContentPane().add(loginPanel1, "card2");
+        getContentPane().add(employeePanel2, "card3");
+        getContentPane().add(adminPanel2, "card4");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -91,8 +91,8 @@ public class MainView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.tuerca.pos.view.AdminPanel adminPanel1;
-    private com.tuerca.pos.view.EmployeePanel employeePanel1;
-    private com.tuerca.pos.view.LoginPanel loginPanel2;
+    private com.tuerca.pos.view.AdminPanel adminPanel2;
+    private com.tuerca.pos.view.EmployeePanel employeePanel2;
+    private com.tuerca.pos.view.LoginPanel loginPanel1;
     // End of variables declaration//GEN-END:variables
 }

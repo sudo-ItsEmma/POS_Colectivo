@@ -23,21 +23,21 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
   <SubComponents>
-    <Component class="com.tuerca.pos.view.LoginPanel" name="loginPanel2">
+    <Component class="com.tuerca.pos.view.LoginPanel" name="loginPanel1">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="card2"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="com.tuerca.pos.view.AdminPanel" name="adminPanel1">
+    <Component class="com.tuerca.pos.view.EmployeePanel" name="employeePanel2">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="card3"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="com.tuerca.pos.view.EmployeePanel" name="employeePanel1">
+    <Component class="com.tuerca.pos.view.AdminPanel" name="adminPanel2">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="card4"/>
