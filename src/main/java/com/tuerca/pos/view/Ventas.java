@@ -37,14 +37,18 @@ public class Ventas extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnApartarProductos = new javax.swing.JButton();
+        btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20");
+        btnPagar = new javax.swing.JButton();
+        btnPagar.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -84,9 +88,10 @@ public class Ventas extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jButton2.setText("Apartar Productos");
+        btnApartarProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
+        btnApartarProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        btnApartarProductos.setForeground(new java.awt.Color(255, 255, 255));
+        btnApartarProductos.setText("Apartar Productos");
 
         jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 48)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -102,13 +107,15 @@ public class Ventas extends javax.swing.JPanel {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Cancelar");
+        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Cancelar");
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton4.setText("Pagar");
+        btnPagar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnPagar.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
+        btnPagar.setForeground(new java.awt.Color(255, 255, 255));
+        btnPagar.setText("Pagar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -132,15 +139,15 @@ public class Ventas extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(btnApartarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jScrollPane1))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnPagar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                             .addComponent(jLabel8)
@@ -174,15 +181,15 @@ public class Ventas extends javax.swing.JPanel {
                         .addGap(26, 26, 26)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
                         .addGap(24, 24, 24)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnApartarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addGap(20, 20, 20))
         );
@@ -201,10 +208,10 @@ public class Ventas extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApartarProductos;
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnPagar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

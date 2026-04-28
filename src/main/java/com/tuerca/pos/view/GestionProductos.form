@@ -38,9 +38,9 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="jComboBox1" min="-2" pref="240" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jButton2" min="-2" pref="240" max="-2" attributes="0"/>
+                              <Component id="btnNuevoProducto" min="-2" pref="240" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" pref="240" max="-2" attributes="0"/>
+                              <Component id="btnCargaMasiva" min="-2" pref="240" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
@@ -60,8 +60,8 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="txtBuscar" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButton1" alignment="3" pref="40" max="32767" attributes="0"/>
-                      <Component id="jButton2" alignment="3" pref="40" max="32767" attributes="0"/>
+                      <Component id="btnCargaMasiva" alignment="3" pref="40" max="32767" attributes="0"/>
+                      <Component id="btnNuevoProducto" alignment="3" pref="40" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jComboBox1" max="32767" attributes="0"/>
               </Group>
@@ -89,7 +89,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtBuscar">
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btnCargaMasiva">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="a2" id="Actions.Yellow" palette="3" red="ed" type="palette"/>
@@ -97,8 +97,14 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SF Pro Rounded" size="18" style="1"/>
         </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Carga Masiva"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCargaMasiva.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+      </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
 
@@ -179,8 +185,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnBack.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+      </AuxValues>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="btnNuevoProducto">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
@@ -188,8 +197,14 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SF Pro Rounded" size="18" style="1"/>
         </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nuevo Producto"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnNuevoProducto.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBox1">
       <Properties>

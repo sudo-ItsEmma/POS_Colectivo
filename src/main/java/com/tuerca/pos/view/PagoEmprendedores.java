@@ -29,6 +29,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -37,7 +38,8 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
         jSpinner1 = new javax.swing.JSpinner();
         jSpinner2 = new javax.swing.JSpinner();
-        jButton2 = new javax.swing.JButton();
+        btnCalcular = new javax.swing.JButton();
+        btnCalcular.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -47,7 +49,8 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
+        btnRegistrarPago = new javax.swing.JButton();
+        btnRegistrarPago.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -84,9 +87,10 @@ public class PagoEmprendedores extends javax.swing.JPanel {
 
         jSpinner2.setModel(new javax.swing.SpinnerDateModel());
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Calcular");
+        btnCalcular.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnCalcular.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnCalcular.setForeground(new java.awt.Color(255, 255, 255));
+        btnCalcular.setText("Calcular");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -104,7 +108,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
                     .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSpinner2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 537, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
@@ -118,7 +122,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnCalcular, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -220,9 +224,10 @@ public class PagoEmprendedores extends javax.swing.JPanel {
 
         jPanel6.add(jPanel1);
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Registrar pago");
+        btnRegistrarPago.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnRegistrarPago.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnRegistrarPago.setForeground(new java.awt.Color(255, 255, 255));
+        btnRegistrarPago.setText("Registrar pago");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -242,7 +247,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnRegistrarPago, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -256,7 +261,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnRegistrarPago, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -275,8 +280,8 @@ public class PagoEmprendedores extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnCalcular;
+    private javax.swing.JButton btnRegistrarPago;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

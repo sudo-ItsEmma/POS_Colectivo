@@ -29,16 +29,26 @@ public class AdminPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        btnEmpleados = new javax.swing.JButton();
+        btnEmpleados.putClientProperty("FlatLaf.style", "arc: 20");
+        btnProductos = new javax.swing.JButton();
+        btnProductos.putClientProperty("FlatLaf.style", "arc: 20");
+        btnVentas = new javax.swing.JButton();
+        btnVentas.putClientProperty("FlatLaf.style", "arc: 20");
+        btnEmprendedores = new javax.swing.JButton();
+        btnEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnApartados = new javax.swing.JButton();
+        btnApartados.putClientProperty("FlatLaf.style", "arc: 20");
+        btnArqueoCaja = new javax.swing.JButton();
+        btnArqueoCaja.putClientProperty("FlatLaf.style", "arc: 20");
+        btnPagoEmprendedores = new javax.swing.JButton();
+        btnPagoEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnDevolucion = new javax.swing.JButton();
+        btnDevolucion.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCorteCaja = new javax.swing.JButton();
+        btnCorteCaja.putClientProperty("FlatLaf.style", "arc: 20");
+        btnReportes = new javax.swing.JButton();
+        btnReportes.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel3 = new javax.swing.JLabel();
 
         setBounds(new java.awt.Rectangle(0, 0, 1280, 720));
@@ -55,55 +65,55 @@ public class AdminPanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.GridLayout(4, 3, 20, 20));
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton1.setText("Empleados");
-        jPanel1.add(jButton1);
+        btnEmpleados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnEmpleados.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmpleados.setText("Empleados");
+        jPanel1.add(btnEmpleados);
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Gestión Productos");
-        jPanel1.add(jButton2);
+        btnProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnProductos.setText("Gestión Productos");
+        jPanel1.add(btnProductos);
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Venta");
-        jPanel1.add(jButton3);
+        btnVentas.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnVentas.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnVentas.setText("Venta");
+        jPanel1.add(btnVentas);
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton4.setText("Gestión Emprendedores");
-        jPanel1.add(jButton4);
+        btnEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmprendedores.setText("Gestión Emprendedores");
+        jPanel1.add(btnEmprendedores);
 
-        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton5.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton5.setText("Gestión Apartados");
-        jPanel1.add(jButton5);
+        btnApartados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnApartados.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnApartados.setText("Gestión Apartados");
+        jPanel1.add(btnApartados);
 
-        jButton6.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        jButton6.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton6.setText("Arqueo de Caja");
-        jPanel1.add(jButton6);
+        btnArqueoCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnArqueoCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnArqueoCaja.setText("Arqueo de Caja");
+        jPanel1.add(btnArqueoCaja);
 
-        jButton9.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton9.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton9.setText("Pago Emprendedores");
-        jPanel1.add(jButton9);
+        btnPagoEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnPagoEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnPagoEmprendedores.setText("Pago Emprendedores");
+        jPanel1.add(btnPagoEmprendedores);
 
-        jButton7.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        jButton7.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton7.setText("Devolución");
-        jPanel1.add(jButton7);
+        btnDevolucion.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
+        btnDevolucion.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnDevolucion.setText("Devolución");
+        jPanel1.add(btnDevolucion);
 
-        jButton8.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        jButton8.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton8.setText("Corte de caja");
-        jPanel1.add(jButton8);
+        btnCorteCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnCorteCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnCorteCaja.setText("Corte de caja");
+        jPanel1.add(btnCorteCaja);
 
-        jButton10.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        jButton10.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton10.setText("Generar Reportes");
-        jPanel1.add(jButton10);
+        btnReportes.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
+        btnReportes.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnReportes.setText("Generar Reportes");
+        jPanel1.add(btnReportes);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -141,16 +151,16 @@ public class AdminPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton btnApartados;
+    private javax.swing.JButton btnArqueoCaja;
+    private javax.swing.JButton btnCorteCaja;
+    private javax.swing.JButton btnDevolucion;
+    private javax.swing.JButton btnEmpleados;
+    private javax.swing.JButton btnEmprendedores;
+    private javax.swing.JButton btnPagoEmprendedores;
+    private javax.swing.JButton btnProductos;
+    private javax.swing.JButton btnReportes;
+    private javax.swing.JButton btnVentas;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

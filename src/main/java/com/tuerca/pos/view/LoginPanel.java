@@ -33,7 +33,8 @@ public class LoginPanel extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        btnIniciarSesion = new javax.swing.JButton();
+        btnIniciarSesion.putClientProperty("FlatLaf.style", "arc: 20");
         btnEmployee = new javax.swing.JButton();
         btnAdmin = new javax.swing.JButton();
 
@@ -53,10 +54,10 @@ public class LoginPanel extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setText("Contraseña:");
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Iniciar sesión");
+        btnIniciarSesion.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnIniciarSesion.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        btnIniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        btnIniciarSesion.setText("Iniciar sesión");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -74,7 +75,7 @@ public class LoginPanel extends javax.swing.JPanel {
                     .addComponent(jPasswordField1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(btnIniciarSesion)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -89,7 +90,7 @@ public class LoginPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnIniciarSesion)
                 .addGap(21, 21, 21))
         );
 
@@ -169,7 +170,7 @@ public class LoginPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdmin;
     private javax.swing.JButton btnEmployee;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnIniciarSesion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

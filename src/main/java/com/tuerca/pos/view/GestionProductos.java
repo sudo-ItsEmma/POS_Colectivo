@@ -33,12 +33,15 @@ public class GestionProductos extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnCargaMasiva = new javax.swing.JButton();
+        btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnNuevoProducto = new javax.swing.JButton();
+        btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20");
         jComboBox1 = new javax.swing.JComboBox<>();
         jRadioButton1 = new javax.swing.JRadioButton();
 
@@ -46,9 +49,10 @@ public class GestionProductos extends javax.swing.JPanel {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Gestión de Productos");
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton1.setText("Carga Masiva");
+        btnCargaMasiva.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnCargaMasiva.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnCargaMasiva.setForeground(new java.awt.Color(255, 255, 255));
+        btnCargaMasiva.setText("Carga Masiva");
 
         jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -84,9 +88,10 @@ public class GestionProductos extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Nuevo Producto");
+        btnNuevoProducto.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoProducto.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnNuevoProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoProducto.setText("Nuevo Producto");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -116,9 +121,9 @@ public class GestionProductos extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnNuevoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnCargaMasiva, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -131,8 +136,8 @@ public class GestionProductos extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtBuscar)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                        .addComponent(btnCargaMasiva, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                        .addComponent(btnNuevoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
                     .addComponent(jComboBox1))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
@@ -158,8 +163,8 @@ public class GestionProductos extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnCargaMasiva;
+    private javax.swing.JButton btnNuevoProducto;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

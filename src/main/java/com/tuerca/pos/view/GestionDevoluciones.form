@@ -144,6 +144,9 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnBack.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>

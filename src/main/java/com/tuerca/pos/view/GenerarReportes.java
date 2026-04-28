@@ -29,10 +29,13 @@ public class GenerarReportes extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnDescargarPDF = new javax.swing.JButton();
+        btnDescargarPDF.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
+        btnGenerarReporte = new javax.swing.JButton();
+        btnGenerarReporte.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -57,17 +60,19 @@ public class GenerarReportes extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Descargar PDF");
+        btnDescargarPDF.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnDescargarPDF.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnDescargarPDF.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescargarPDF.setText("Descargar PDF");
 
         jPanel4.setLayout(new java.awt.GridLayout(1, 2, 20, 20));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Configuración de Reporte", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SF Pro Rounded", 1, 24))); // NOI18N
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton4.setText("Generar Reporte");
+        btnGenerarReporte.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnGenerarReporte.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnGenerarReporte.setForeground(new java.awt.Color(255, 255, 255));
+        btnGenerarReporte.setText("Generar Reporte");
 
         jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         jLabel1.setText("Emprendedor:");
@@ -92,7 +97,7 @@ public class GenerarReportes extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(160, 160, 160)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +127,7 @@ public class GenerarReportes extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 347, Short.MAX_VALUE)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -161,7 +166,7 @@ public class GenerarReportes extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnDescargarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -175,7 +180,7 @@ public class GenerarReportes extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDescargarPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -194,8 +199,8 @@ public class GenerarReportes extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnDescargarPDF;
+    private javax.swing.JButton btnGenerarReporte;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

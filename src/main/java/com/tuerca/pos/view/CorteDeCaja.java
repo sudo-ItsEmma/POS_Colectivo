@@ -29,7 +29,9 @@ public class CorteDeCaja extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnFinalizarJornada = new javax.swing.JButton();
+        btnFinalizarJornada.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -52,9 +54,10 @@ public class CorteDeCaja extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Finalizar Jornada");
+        btnFinalizarJornada.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnFinalizarJornada.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnFinalizarJornada.setForeground(new java.awt.Color(255, 255, 255));
+        btnFinalizarJornada.setText("Finalizar Jornada");
 
         jPanel2.setLayout(new java.awt.GridLayout(2, 2, 20, 20));
 
@@ -136,7 +139,7 @@ public class CorteDeCaja extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnFinalizarJornada, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -150,7 +153,7 @@ public class CorteDeCaja extends javax.swing.JPanel {
                 .addGap(17, 17, 17)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFinalizarJornada, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -169,7 +172,7 @@ public class CorteDeCaja extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnFinalizarJornada;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;

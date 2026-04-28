@@ -33,19 +33,22 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnNuevoEmprendedor = new javax.swing.JButton();
+        btnNuevoEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Gestión de Emprendedores");
 
-        jButton1.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton1.setText("Nuevo Emprendedor");
+        btnNuevoEmprendedor.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnNuevoEmprendedor.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoEmprendedor.setText("Nuevo Emprendedor");
 
         jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -94,7 +97,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtBuscar)
                                 .addGap(35, 35, 35)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnNuevoEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,7 +117,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtBuscar)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
+                    .addComponent(btnNuevoEmprendedor, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -137,7 +140,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnNuevoEmprendedor;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;

@@ -31,10 +31,13 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20");
+        btnIntroducirCantidad = new javax.swing.JButton();
+        btnIntroducirCantidad.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -87,13 +90,15 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel7.setText("Ventas realizadas");
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Cancelar");
+        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
+        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setText("Cancelar");
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton4.setText("Introducir cantidad");
+        btnIntroducirCantidad.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnIntroducirCantidad.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnIntroducirCantidad.setForeground(new java.awt.Color(255, 255, 255));
+        btnIntroducirCantidad.setText("Introducir cantidad");
 
         jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -139,8 +144,8 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnIntroducirCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGap(29, 29, 29))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -181,9 +186,9 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
                         .addGap(11, 11, 11)
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnIntroducirCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1)
@@ -207,8 +212,8 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnIntroducirCantidad;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;

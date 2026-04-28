@@ -37,7 +37,9 @@ public class GestionApartados extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnNuevoApartado = new javax.swing.JButton();
+        btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20");
         jComboBox1 = new javax.swing.JComboBox<>();
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
@@ -78,9 +80,10 @@ public class GestionApartados extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Nuevo Producto");
+        btnNuevoApartado.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoApartado.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnNuevoApartado.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoApartado.setText("Nuevo Apartado");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendientes", "Vencidos", "Liquidados" }));
 
@@ -107,7 +110,7 @@ public class GestionApartados extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -119,7 +122,7 @@ public class GestionApartados extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtBuscar)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
@@ -143,7 +146,7 @@ public class GestionApartados extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnNuevoApartado;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

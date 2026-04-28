@@ -30,31 +30,41 @@ public class EmployeePanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnEmprendedores = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
+        btnEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnProductos = new javax.swing.JButton();
+        btnProductos.putClientProperty("FlatLaf.style", "arc: 20");
+        btnVentas = new javax.swing.JButton();
+        btnVentas.putClientProperty("FlatLaf.style", "arc: 20");
+        btnPagoEmprendedores = new javax.swing.JButton();
+        btnPagoEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnApartados = new javax.swing.JButton();
+        btnApartados.putClientProperty("FlatLaf.style", "arc: 20");
+        btnArqueoCaja = new javax.swing.JButton();
+        btnArqueoCaja.putClientProperty("FlatLaf.style", "arc: 20");
+        btnReportes = new javax.swing.JButton();
+        btnReportes.putClientProperty("FlatLaf.style", "arc: 20");
+        btnDevolucion = new javax.swing.JButton();
+        btnDevolucion.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCorteCaja = new javax.swing.JButton();
+        btnCorteCaja.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel3 = new javax.swing.JLabel();
 
         setBounds(new java.awt.Rectangle(0, 0, 1280, 720));
         setPreferredSize(new java.awt.Dimension(1280, 720));
 
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("POS de Venta");
 
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Aura Tienda Colectiva");
 
         jPanel1.setLayout(new java.awt.GridLayout(3, 3, 20, 20));
 
         btnEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnEmprendedores.setForeground(new java.awt.Color(255, 255, 255));
         btnEmprendedores.setText("Gestión Emprendedores");
         btnEmprendedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,85 +73,93 @@ public class EmployeePanel extends javax.swing.JPanel {
         });
         jPanel1.add(btnEmprendedores);
 
-        jButton2.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton2.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton2.setText("Gestión Productos");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnProductos.setForeground(new java.awt.Color(255, 255, 255));
+        btnProductos.setText("Gestión Productos");
+        btnProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnProductosActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2);
+        jPanel1.add(btnProductos);
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        jButton4.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton4.setText("Ventas");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        btnVentas.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnVentas.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnVentas.setForeground(new java.awt.Color(255, 255, 255));
+        btnVentas.setText("Ventas");
+        btnVentas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                btnVentasActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4);
+        jPanel1.add(btnVentas);
 
-        jButton7.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton7.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton7.setText("Pago Emprendedores");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        btnPagoEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnPagoEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnPagoEmprendedores.setForeground(new java.awt.Color(255, 255, 255));
+        btnPagoEmprendedores.setText("Pago Emprendedores");
+        btnPagoEmprendedores.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                btnPagoEmprendedoresActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton7);
+        jPanel1.add(btnPagoEmprendedores);
 
-        jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton3.setText("Gestión Apartados");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        btnApartados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnApartados.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnApartados.setForeground(new java.awt.Color(255, 255, 255));
+        btnApartados.setText("Gestión Apartados");
+        btnApartados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                btnApartadosActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3);
+        jPanel1.add(btnApartados);
 
-        jButton5.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        jButton5.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton5.setText("Arqueo de Caja");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        btnArqueoCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnArqueoCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnArqueoCaja.setForeground(new java.awt.Color(255, 255, 255));
+        btnArqueoCaja.setText("Arqueo de Caja");
+        btnArqueoCaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                btnArqueoCajaActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton5);
+        jPanel1.add(btnArqueoCaja);
 
-        jButton6.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        jButton6.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton6.setText("Generar Reportes");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        btnReportes.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
+        btnReportes.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnReportes.setForeground(new java.awt.Color(255, 255, 255));
+        btnReportes.setText("Generar Reportes");
+        btnReportes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                btnReportesActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton6);
+        jPanel1.add(btnReportes);
 
-        jButton8.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        jButton8.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton8.setText("Devolución");
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        btnDevolucion.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
+        btnDevolucion.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnDevolucion.setForeground(new java.awt.Color(255, 255, 255));
+        btnDevolucion.setText("Devolución");
+        btnDevolucion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                btnDevolucionActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton8);
+        jPanel1.add(btnDevolucion);
 
-        jButton9.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        jButton9.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jButton9.setText("Corte de Caja");
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        btnCorteCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnCorteCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnCorteCaja.setForeground(new java.awt.Color(255, 255, 255));
+        btnCorteCaja.setText("Corte de Caja");
+        btnCorteCaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                btnCorteCajaActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton9);
+        jPanel1.add(btnCorteCaja);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -189,7 +207,7 @@ public class EmployeePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnEmprendedoresActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductosActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -199,9 +217,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("products");
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnProductosActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -211,9 +229,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("ventas");
         }
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_btnVentasActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void btnDevolucionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDevolucionActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -223,9 +241,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("devoluciones");
         }
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_btnDevolucionActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -235,9 +253,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("apartados");
         }
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_btnApartadosActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void btnArqueoCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArqueoCajaActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -247,9 +265,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("arqueo");
         }
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_btnArqueoCajaActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void btnCorteCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCorteCajaActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -259,9 +277,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("corte");
         }
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_btnCorteCajaActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void btnPagoEmprendedoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPagoEmprendedoresActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -271,9 +289,9 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("pagoEmprendedores");
         }
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_btnPagoEmprendedoresActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void btnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportesActionPerformed
         // TODO add your handling code here:
         // 1. Buscamos la ventana principal (MainView)
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
@@ -283,19 +301,19 @@ public class EmployeePanel extends javax.swing.JPanel {
             // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
             main.showView("reportes");
         }
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_btnReportesActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApartados;
+    private javax.swing.JButton btnArqueoCaja;
+    private javax.swing.JButton btnCorteCaja;
+    private javax.swing.JButton btnDevolucion;
     private javax.swing.JButton btnEmprendedores;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
+    private javax.swing.JButton btnPagoEmprendedores;
+    private javax.swing.JButton btnProductos;
+    private javax.swing.JButton btnReportes;
+    private javax.swing.JButton btnVentas;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
