@@ -53,6 +53,7 @@ public class MainView extends javax.swing.JFrame {
         arqueoDeCaja1 = new com.tuerca.pos.view.ArqueoDeCaja();
         corteDeCaja1 = new com.tuerca.pos.view.CorteDeCaja();
         pagoEmprendedores1 = new com.tuerca.pos.view.PagoEmprendedores();
+        generarReportes1 = new com.tuerca.pos.view.GenerarReportes();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -67,6 +68,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(arqueoDeCaja1, "arqueo");
         getContentPane().add(corteDeCaja1, "corte");
         getContentPane().add(pagoEmprendedores1, "pagoEmprendedores");
+        getContentPane().add(generarReportes1, "reportes");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -111,6 +113,7 @@ public class MainView extends javax.swing.JFrame {
     private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
     private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
     private com.tuerca.pos.view.EmployeePanel employeePanel2;
+    private com.tuerca.pos.view.GenerarReportes generarReportes1;
     private com.tuerca.pos.view.GestionApartados gestionApartados1;
     private com.tuerca.pos.view.GestionDevoluciones gestionDevoluciones1;
     private com.tuerca.pos.view.GestionEmprendedores gestionEmprendedores1;

@@ -100,5 +100,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="com.tuerca.pos.view.GenerarReportes" name="generarReportes1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="reportes"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
