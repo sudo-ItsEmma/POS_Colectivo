@@ -79,5 +79,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="com.tuerca.pos.view.ArqueoDeCaja" name="arqueoDeCaja1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="arqueo"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
