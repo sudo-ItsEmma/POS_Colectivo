@@ -51,6 +51,7 @@ public class MainView extends javax.swing.JFrame {
         gestionDevoluciones1 = new com.tuerca.pos.view.GestionDevoluciones();
         gestionApartados1 = new com.tuerca.pos.view.GestionApartados();
         arqueoDeCaja1 = new com.tuerca.pos.view.ArqueoDeCaja();
+        corteDeCaja1 = new com.tuerca.pos.view.CorteDeCaja();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -63,6 +64,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(gestionDevoluciones1, "devoluciones");
         getContentPane().add(gestionApartados1, "apartados");
         getContentPane().add(arqueoDeCaja1, "arqueo");
+        getContentPane().add(corteDeCaja1, "corte");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -105,6 +107,7 @@ public class MainView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.tuerca.pos.view.AdminPanel adminPanel2;
     private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
+    private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
     private com.tuerca.pos.view.EmployeePanel employeePanel2;
     private com.tuerca.pos.view.GestionApartados gestionApartados1;
     private com.tuerca.pos.view.GestionDevoluciones gestionDevoluciones1;

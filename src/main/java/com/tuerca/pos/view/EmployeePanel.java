@@ -126,6 +126,11 @@ public class EmployeePanel extends javax.swing.JPanel {
         jButton9.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
         jButton9.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         jButton9.setText("Corte de Caja");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton9);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
@@ -226,6 +231,18 @@ public class EmployeePanel extends javax.swing.JPanel {
             main.showView("arqueo");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+        // 1. Buscamos la ventana principal (MainView)
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // 2. Le pedimos que muestre la vista de emprendedores
+            // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
+            main.showView("corte");
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
