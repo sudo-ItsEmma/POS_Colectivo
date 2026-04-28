@@ -33,7 +33,9 @@ public class GestionApartados extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
@@ -41,6 +43,7 @@ public class GestionApartados extends javax.swing.JPanel {
         btnNuevoApartado = new javax.swing.JButton();
         btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20");
         jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

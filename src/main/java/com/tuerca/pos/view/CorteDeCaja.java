@@ -34,9 +34,13 @@ public class CorteDeCaja extends javax.swing.JPanel {
         btnFinalizarJornada.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
+        jPanel3.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel1 = new javax.swing.JPanel();
+        jPanel1.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel4 = new javax.swing.JPanel();
+        jPanel4.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel5 = new javax.swing.JPanel();
+        jPanel5.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

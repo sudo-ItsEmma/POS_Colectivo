@@ -28,6 +28,7 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();

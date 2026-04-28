@@ -34,15 +34,20 @@ public class GenerarReportes extends javax.swing.JPanel {
         btnDescargarPDF.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel1.putClientProperty("FlatLaf.style", "arc: 20");
         btnGenerarReporte = new javax.swing.JButton();
         btnGenerarReporte.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1.putClientProperty("FlatLaf.style", "arc: 13");
         jSpinner2 = new javax.swing.JSpinner();
+        jSpinner2.putClientProperty("FlatLaf.style", "arc: 20");
         jSpinner1 = new javax.swing.JSpinner();
+        jSpinner1.putClientProperty("FlatLaf.style", "arc: 20");
         jPanel2 = new javax.swing.JPanel();
+        jPanel2.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

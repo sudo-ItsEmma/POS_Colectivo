@@ -33,9 +33,11 @@ public class GestionProductos extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         btnCargaMasiva = new javax.swing.JButton();
         btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
@@ -43,6 +45,7 @@ public class GestionProductos extends javax.swing.JPanel {
         btnNuevoProducto = new javax.swing.JButton();
         btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20");
         jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
         jRadioButton1 = new javax.swing.JRadioButton();
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N

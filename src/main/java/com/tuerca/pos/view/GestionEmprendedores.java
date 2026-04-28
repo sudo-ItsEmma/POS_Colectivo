@@ -33,9 +33,11 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
         jLabel5 = new javax.swing.JLabel();
         txtBuscar = new javax.swing.JTextField();
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         btnNuevoEmprendedor = new javax.swing.JButton();
         btnNuevoEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();

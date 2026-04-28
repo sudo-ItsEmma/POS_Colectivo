@@ -128,6 +128,9 @@
               </Border>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jPanel1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+          </AuxValues>
 
           <Layout>
             <DimensionLayout dim="0">
@@ -236,6 +239,7 @@
                 </Property>
               </Properties>
               <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jComboBox1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 13&quot;);"/>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
@@ -245,6 +249,9 @@
                   <SpinnerModel initial="now" stepSize="5" type="date"/>
                 </Property>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jSpinner2.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JSpinner" name="jSpinner1">
               <Properties>
@@ -252,6 +259,9 @@
                   <SpinnerModel initial="now" stepSize="5" type="date"/>
                 </Property>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jSpinner1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
@@ -265,6 +275,9 @@
               </Border>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jPanel2.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+          </AuxValues>
 
           <Layout>
             <DimensionLayout dim="0">
