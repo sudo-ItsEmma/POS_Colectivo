@@ -100,7 +100,7 @@ public class Ventas extends javax.swing.JPanel {
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel8.setText("Descuento %");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
 
         jButton3.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
         jButton3.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
