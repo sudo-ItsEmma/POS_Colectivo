@@ -35,15 +35,15 @@ public class GestionProductos extends javax.swing.JPanel {
         txtBuscar = new javax.swing.JTextField();
         txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         btnCargaMasiva = new javax.swing.JButton();
-        btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnNuevoProducto = new javax.swing.JButton();
-        btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20");
+        btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
         jRadioButton1 = new javax.swing.JRadioButton();
@@ -55,6 +55,7 @@ public class GestionProductos extends javax.swing.JPanel {
         btnCargaMasiva.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
         btnCargaMasiva.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnCargaMasiva.setForeground(new java.awt.Color(255, 255, 255));
+        btnCargaMasiva.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
         btnCargaMasiva.setText("Carga Masiva");
 
         jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
@@ -84,6 +85,8 @@ public class GestionProductos extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -94,6 +97,7 @@ public class GestionProductos extends javax.swing.JPanel {
         btnNuevoProducto.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnNuevoProducto.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnNuevoProducto.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoProducto.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
         btnNuevoProducto.setText("Nuevo Producto");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -118,15 +122,15 @@ public class GestionProductos extends javax.swing.JPanel {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jRadioButton1))
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(txtBuscar)
-                                .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnNuevoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnCargaMasiva, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnNuevoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCargaMasiva, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(28, 28, 28))))
         );
         layout.setVerticalGroup(
@@ -137,11 +141,11 @@ public class GestionProductos extends javax.swing.JPanel {
                     .addComponent(btnBack))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtBuscar)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnCargaMasiva, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addComponent(btnNuevoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                    .addComponent(jComboBox1))
+                    .addComponent(jComboBox1)
+                    .addComponent(txtBuscar))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -159,7 +163,7 @@ public class GestionProductos extends javax.swing.JPanel {
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
             // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("employee"); 
+            main.showView("employee");
         }
     }//GEN-LAST:event_btnBackActionPerformed
 

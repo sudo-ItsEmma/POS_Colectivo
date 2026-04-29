@@ -32,16 +32,16 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="jRadioButton1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane1" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="txtBuscar" max="32767" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jComboBox1" min="-2" pref="240" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnNuevoProducto" min="-2" pref="240" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="btnCargaMasiva" min="-2" pref="240" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jComboBox1" min="-2" pref="220" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnNuevoProducto" min="-2" pref="220" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnCargaMasiva" min="-2" pref="220" max="-2" attributes="0"/>
                           </Group>
+                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
@@ -58,12 +58,12 @@
               </Group>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="txtBuscar" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnCargaMasiva" alignment="3" pref="40" max="32767" attributes="0"/>
                       <Component id="btnNuevoProducto" alignment="3" pref="40" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="jComboBox1" max="32767" attributes="0"/>
+                  <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="txtBuscar" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="510" max="32767" attributes="0"/>
@@ -103,10 +103,13 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/upload.svg&quot;, 24, 24)" type="code"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Carga Masiva"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCargaMasiva.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCargaMasiva.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -186,13 +189,19 @@
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="af" green="af" id="pink" palette="1" red="ff" type="palette"/>
         </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SF Pro Rounded" size="13" style="0"/>
+        </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/back.svg&quot;, 24, 24)" type="code"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Volver"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnBack.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnBack.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JButton" name="btnNuevoProducto">
@@ -206,10 +215,13 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
         </Property>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/new.svg&quot;, 24, 24)" type="code"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="Nuevo Producto"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnNuevoProducto.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnNuevoProducto.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBox1">
