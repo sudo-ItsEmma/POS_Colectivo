@@ -29,14 +29,14 @@ public class GenerarReportes extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         btnDescargarPDF = new javax.swing.JButton();
-        btnDescargarPDF.putClientProperty("FlatLaf.style", "arc: 20");
+        btnDescargarPDF.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel1.putClientProperty("FlatLaf.style", "arc: 20");
         btnGenerarReporte = new javax.swing.JButton();
-        btnGenerarReporte.putClientProperty("FlatLaf.style", "arc: 20");
+        btnGenerarReporte.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -58,6 +58,8 @@ public class GenerarReportes extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -68,6 +70,7 @@ public class GenerarReportes extends javax.swing.JPanel {
         btnDescargarPDF.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnDescargarPDF.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
         btnDescargarPDF.setForeground(new java.awt.Color(255, 255, 255));
+        btnDescargarPDF.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/download.svg", 36, 36));
         btnDescargarPDF.setText("Descargar PDF");
 
         jPanel4.setLayout(new java.awt.GridLayout(1, 2, 20, 20));
@@ -77,6 +80,7 @@ public class GenerarReportes extends javax.swing.JPanel {
         btnGenerarReporte.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnGenerarReporte.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
         btnGenerarReporte.setForeground(new java.awt.Color(255, 255, 255));
+        btnGenerarReporte.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/create.svg", 36, 36));
         btnGenerarReporte.setText("Generar Reporte");
 
         jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
@@ -99,12 +103,10 @@ public class GenerarReportes extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(btnGenerarReporte, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
