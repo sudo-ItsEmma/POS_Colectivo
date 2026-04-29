@@ -39,9 +39,9 @@ public class GestionApartados extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         btnNuevoApartado = new javax.swing.JButton();
-        btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20");
+        btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
 
@@ -76,6 +76,8 @@ public class GestionApartados extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,8 +86,9 @@ public class GestionApartados extends javax.swing.JPanel {
         });
 
         btnNuevoApartado.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnNuevoApartado.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnNuevoApartado.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnNuevoApartado.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoApartado.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 36, 36));
         btnNuevoApartado.setText("Nuevo Apartado");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendientes", "Vencidos", "Liquidados" }));
