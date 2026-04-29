@@ -30,25 +30,25 @@ public class AdminPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         btnEmpleados = new javax.swing.JButton();
-        btnEmpleados.putClientProperty("FlatLaf.style", "arc: 20");
+        btnEmpleados.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnProductos = new javax.swing.JButton();
-        btnProductos.putClientProperty("FlatLaf.style", "arc: 20");
+        btnProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnVentas = new javax.swing.JButton();
-        btnVentas.putClientProperty("FlatLaf.style", "arc: 20");
+        btnVentas.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnEmprendedores = new javax.swing.JButton();
-        btnEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnEmprendedores.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnApartados = new javax.swing.JButton();
-        btnApartados.putClientProperty("FlatLaf.style", "arc: 20");
+        btnApartados.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnArqueoCaja = new javax.swing.JButton();
-        btnArqueoCaja.putClientProperty("FlatLaf.style", "arc: 20");
+        btnArqueoCaja.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnPagoEmprendedores = new javax.swing.JButton();
-        btnPagoEmprendedores.putClientProperty("FlatLaf.style", "arc: 20");
+        btnPagoEmprendedores.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnDevolucion = new javax.swing.JButton();
-        btnDevolucion.putClientProperty("FlatLaf.style", "arc: 20");
+        btnDevolucion.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnCorteCaja = new javax.swing.JButton();
-        btnCorteCaja.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCorteCaja.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         btnReportes = new javax.swing.JButton();
-        btnReportes.putClientProperty("FlatLaf.style", "arc: 20");
+        btnReportes.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
         jLabel3 = new javax.swing.JLabel();
 
         setBounds(new java.awt.Rectangle(0, 0, 1280, 720));
@@ -66,7 +66,9 @@ public class AdminPanel extends javax.swing.JPanel {
         jPanel1.setLayout(new java.awt.GridLayout(4, 3, 20, 20));
 
         btnEmpleados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnEmpleados.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmpleados.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnEmpleados.setForeground(new java.awt.Color(255, 255, 255));
+        btnEmpleados.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/empleados.svg", 48, 48));
         btnEmpleados.setText("Empleados");
         btnEmpleados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,47 +78,65 @@ public class AdminPanel extends javax.swing.JPanel {
         jPanel1.add(btnEmpleados);
 
         btnProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnProductos.setForeground(new java.awt.Color(255, 255, 255));
+        btnProductos.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/productos.svg", 48, 48));
         btnProductos.setText("Gestión Productos");
         jPanel1.add(btnProductos);
 
         btnVentas.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnVentas.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnVentas.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnVentas.setForeground(new java.awt.Color(255, 255, 255));
+        btnVentas.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/ventas.svg", 48, 48));
         btnVentas.setText("Venta");
         jPanel1.add(btnVentas);
 
         btnEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnEmprendedores.setForeground(new java.awt.Color(255, 255, 255));
+        btnEmprendedores.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/emprendedores.svg", 48, 48));
         btnEmprendedores.setText("Gestión Emprendedores");
         jPanel1.add(btnEmprendedores);
 
         btnApartados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnApartados.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnApartados.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnApartados.setForeground(new java.awt.Color(255, 255, 255));
+        btnApartados.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 48, 48));
         btnApartados.setText("Gestión Apartados");
         jPanel1.add(btnApartados);
 
         btnArqueoCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        btnArqueoCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnArqueoCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnArqueoCaja.setForeground(new java.awt.Color(255, 255, 255));
+        btnArqueoCaja.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/arqueocaja.svg", 48, 48));
         btnArqueoCaja.setText("Arqueo de Caja");
         jPanel1.add(btnArqueoCaja);
 
         btnPagoEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnPagoEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnPagoEmprendedores.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnPagoEmprendedores.setForeground(new java.awt.Color(255, 255, 255));
+        btnPagoEmprendedores.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/pagoemprendedores.svg", 48, 48));
         btnPagoEmprendedores.setText("Pago Emprendedores");
         jPanel1.add(btnPagoEmprendedores);
 
         btnDevolucion.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        btnDevolucion.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnDevolucion.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnDevolucion.setForeground(new java.awt.Color(255, 255, 255));
+        btnDevolucion.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/devolucion.svg", 48, 48));
         btnDevolucion.setText("Devolución");
         jPanel1.add(btnDevolucion);
 
         btnCorteCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        btnCorteCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnCorteCaja.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnCorteCaja.setForeground(new java.awt.Color(255, 255, 255));
+        btnCorteCaja.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/corte.svg", 48, 48));
         btnCorteCaja.setText("Corte de caja");
         jPanel1.add(btnCorteCaja);
 
         btnReportes.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.borderColor"));
-        btnReportes.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
+        btnReportes.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnReportes.setForeground(new java.awt.Color(255, 255, 255));
+        btnReportes.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/reportes.svg", 48, 48));
         btnReportes.setText("Generar Reportes");
         jPanel1.add(btnReportes);
 

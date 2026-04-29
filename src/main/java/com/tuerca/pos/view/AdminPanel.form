@@ -93,7 +93,13 @@
               <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/empleados.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Empleados"/>
           </Properties>
@@ -101,7 +107,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEmpleadosActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmpleados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmpleados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnProductos">
@@ -110,12 +116,18 @@
               <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/productos.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Productos"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnVentas">
@@ -124,12 +136,18 @@
               <Color blue="69" green="a8" id="Actions.Green" palette="3" red="59" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/ventas.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Venta"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVentas.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVentas.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnEmprendedores">
@@ -138,12 +156,18 @@
               <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/emprendedores.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Emprendedores"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnApartados">
@@ -152,12 +176,18 @@
               <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/apartados.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Apartados"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnApartados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnApartados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnArqueoCaja">
@@ -166,12 +196,18 @@
               <Color blue="0" green="a2" id="Actions.Yellow" palette="3" red="ed" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/arqueocaja.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Arqueo de Caja"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnArqueoCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnArqueoCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnPagoEmprendedores">
@@ -180,12 +216,18 @@
               <Color blue="d6" green="9f" id="Actions.Blue" palette="3" red="38" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/pagoemprendedores.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Pago Emprendedores"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnPagoEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnPagoEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnDevolucion">
@@ -194,12 +236,18 @@
               <Color blue="c2" green="c2" id="Button.borderColor" palette="3" red="c2" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/devolucion.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Devoluci&#xf3;n"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnDevolucion.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnDevolucion.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnCorteCaja">
@@ -208,12 +256,18 @@
               <Color blue="0" green="a2" id="Actions.Yellow" palette="3" red="ed" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/corte.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Corte de caja"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCorteCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCorteCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnReportes">
@@ -222,12 +276,18 @@
               <Color blue="c2" green="c2" id="Button.borderColor" palette="3" red="c2" type="palette"/>
             </Property>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="1"/>
+              <Font name="SF Pro Rounded" size="24" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/reportes.svg&quot;, 48, 48)" type="code"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Generar Reportes"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnReportes.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnReportes.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
       </SubComponents>
