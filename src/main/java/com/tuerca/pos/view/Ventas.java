@@ -50,9 +50,9 @@ public class Ventas extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
         btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnPagar = new javax.swing.JButton();
-        btnPagar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 15; focusWidth: 0");
+        btnPagar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
