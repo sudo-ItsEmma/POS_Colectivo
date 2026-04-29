@@ -97,6 +97,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Empleados"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEmpleadosActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmpleados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
           </AuxValues>

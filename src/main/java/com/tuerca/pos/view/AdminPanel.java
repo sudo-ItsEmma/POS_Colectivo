@@ -68,6 +68,11 @@ public class AdminPanel extends javax.swing.JPanel {
         btnEmpleados.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnEmpleados.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnEmpleados.setText("Empleados");
+        btnEmpleados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEmpleadosActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnEmpleados);
 
         btnProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
@@ -148,6 +153,18 @@ public class AdminPanel extends javax.swing.JPanel {
                 .addGap(28, 28, 28))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
+        // TODO add your handling code here:
+        // 1. Buscamos la ventana principal (MainView)
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // 2. Le pedimos que muestre la vista de emprendedores
+            // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
+            main.showView("empleados");
+        }
+    }//GEN-LAST:event_btnEmpleadosActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
