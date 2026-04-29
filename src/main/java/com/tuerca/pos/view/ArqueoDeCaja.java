@@ -32,13 +32,13 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnIntroducirCantidad = new javax.swing.JButton();
-        btnIntroducirCantidad.putClientProperty("FlatLaf.style", "arc: 20");
+        btnIntroducirCantidad.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -76,6 +76,8 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,13 +94,15 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
         jLabel7.setText("Ventas realizadas");
 
         btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 36)); // NOI18N
+        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
         btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btnCancelar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 36, 36));
         btnCancelar.setText("Cancelar");
 
         btnIntroducirCantidad.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnIntroducirCantidad.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        btnIntroducirCantidad.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnIntroducirCantidad.setForeground(new java.awt.Color(255, 255, 255));
+        btnIntroducirCantidad.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/money.svg", 36, 36));
         btnIntroducirCantidad.setText("Introducir cantidad");
 
         jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
@@ -155,13 +159,11 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())))))
         );
         layout.setVerticalGroup(
@@ -177,6 +179,10 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
                 .addGap(11, 11, 11)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel3))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -186,15 +192,10 @@ public class ArqueoDeCaja extends javax.swing.JPanel {
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(11, 11, 11)
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(42, 42, 42)
                         .addComponent(btnIntroducirCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addGap(24, 24, 24)))
-                .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(29, 29, 29))
         );
     }// </editor-fold>//GEN-END:initComponents
