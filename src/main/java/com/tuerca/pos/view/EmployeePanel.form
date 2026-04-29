@@ -95,13 +95,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/emprendedores.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Emprendedores"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEmprendedoresActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnProductos">
@@ -115,13 +118,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/productos.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Productos"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductosActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnVentas">
@@ -135,13 +141,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/ventas.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Ventas"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVentasActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVentas.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVentas.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnPagoEmprendedores">
@@ -155,13 +164,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/pagoemprendedores.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Pago Emprendedores"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnPagoEmprendedoresActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnPagoEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnPagoEmprendedores.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnApartados">
@@ -175,13 +187,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/apartados.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Apartados"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnApartadosActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnApartados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnApartados.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnArqueoCaja">
@@ -195,13 +210,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/arqueocaja.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Arqueo de Caja"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnArqueoCajaActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnArqueoCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnArqueoCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnReportes">
@@ -215,13 +233,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/reportes.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Generar Reportes"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReportesActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnReportes.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnReportes.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnDevolucion">
@@ -235,13 +256,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/devolucion.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Devoluci&#xf3;n"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDevolucionActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnDevolucion.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnDevolucion.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnCorteCaja">
@@ -255,13 +279,16 @@
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new com.formdev.flatlaf.extras.FlatSVGIcon(&quot;com/tuerca/pos/icons/corte.svg&quot;, 48, 48)" type="code"/>
+            </Property>
             <Property name="text" type="java.lang.String" value="Corte de Caja"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCorteCajaActionPerformed"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCorteCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnCorteCaja.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>
         </Component>
       </SubComponents>
