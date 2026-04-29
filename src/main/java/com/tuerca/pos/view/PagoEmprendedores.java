@@ -29,7 +29,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jPanel7.putClientProperty("FlatLaf.style", "arc: 20");
@@ -43,7 +43,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jSpinner2 = new javax.swing.JSpinner();
         jSpinner2.putClientProperty("FlatLaf.style", "arc: 13");
         btnCalcular = new javax.swing.JButton();
-        btnCalcular.putClientProperty("FlatLaf.style", "arc: 20");
+        btnCalcular.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel2.putClientProperty("FlatLaf.style", "arc: 20");
@@ -57,7 +57,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         btnRegistrarPago = new javax.swing.JButton();
-        btnRegistrarPago.putClientProperty("FlatLaf.style", "arc: 20");
+        btnRegistrarPago.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -68,6 +68,8 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,6 +99,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         btnCalcular.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
         btnCalcular.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
         btnCalcular.setForeground(new java.awt.Color(255, 255, 255));
+        btnCalcular.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/calculate.svg", 36, 36));
         btnCalcular.setText("Calcular");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -234,6 +237,7 @@ public class PagoEmprendedores extends javax.swing.JPanel {
         btnRegistrarPago.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnRegistrarPago.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnRegistrarPago.setForeground(new java.awt.Color(255, 255, 255));
+        btnRegistrarPago.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/registrar.svg", 36, 36));
         btnRegistrarPago.setText("Registrar pago");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
