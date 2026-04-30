@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.view;
 
+import javax.swing.JButton;
+
 /**
  *
  * @author mannycalderon
@@ -27,6 +29,32 @@ public class NuevoEmpleado extends javax.swing.JPanel {
         numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 digitos");
         numeroField.putClientProperty("JTextField.showClearButton", true);
     }
+    
+    // Exponemos los datos
+    public String getNombre() { return nombreField.getText().trim(); }
+    public String getPaterno() { return paternoField.getText().trim(); }
+    public String getMaterno() { return maternoField.getText().trim(); }
+    public String getTelefono() { return numeroField.getText().trim(); }
+    public String getRol() { return rolComboBox.getSelectedItem().toString(); }
+    public String getContra() { return new String(contraField.getPassword()); }
+    public String getConfirmarContra() { return new String(confirmarContraField.getPassword()); }
+
+    // Exponemos el boton de registro
+    public JButton getBtnRegistrar() { return btnRegistrar; }
+    public JButton getBtnCancelar() { return btnCancelar;}
+    public JButton getBtnBack() { return btnBack;}
+    
+    // limpiar el formulario
+    public void limpiarFormulario(){
+        nombreField.setText("");
+        paternoField.setText("");
+        maternoField.setText("");
+        numeroField.setText("");
+        contraField.setText("");
+        confirmarContraField.setText("");
+        rolComboBox.setSelectedIndex(0); // Regresa al primer rol (Admin)
+        nombreField.requestFocus();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,20 +72,26 @@ public class NuevoEmpleado extends javax.swing.JPanel {
         formularioRegistro = new javax.swing.JPanel();
         formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         nombreField = new javax.swing.JTextField();
         nombreField.putClientProperty("FlatLaf.style", "arc: 20");
         paternoField = new javax.swing.JTextField();
         paternoField.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         maternoField = new javax.swing.JTextField();
         maternoField.putClientProperty("FlatLaf.style", "arc: 20");
         numeroField = new javax.swing.JTextField();
         numeroField.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         rolComboBox = new javax.swing.JComboBox<>();
         rolComboBox.putClientProperty("FlatLaf.style", "arc: 20");
+        contraField = new javax.swing.JPasswordField();
+        contraField.putClientProperty("FlatLaf.style", "arc: 13");
+        confirmarContraField = new javax.swing.JPasswordField();
+        confirmarContraField.putClientProperty("FlatLaf.style", "arc: 13");
         btnRegistrar = new javax.swing.JButton();
         btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnCancelar = new javax.swing.JButton();
@@ -83,30 +117,36 @@ public class NuevoEmpleado extends javax.swing.JPanel {
 
         formularioRegistro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Personales", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SF Pro Rounded", 1, 18))); // NOI18N
 
-        jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel1.setText("Nombre:");
 
-        nombreField.setFont(new java.awt.Font("SF Pro Rounded", 0, 24)); // NOI18N
-
-        paternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 24)); // NOI18N
-
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel2.setText("Apellido Paterno:");
 
-        jLabel4.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel4.setText("Apellido Materno:");
 
-        maternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 24)); // NOI18N
-
-        numeroField.setFont(new java.awt.Font("SF Pro Rounded", 0, 24)); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel6.setText("Número de teléfono:");
 
-        jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel7.setText("Rol:");
 
-        rolComboBox.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        jLabel8.setText("Contraseña:");
+
+        jLabel9.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        jLabel9.setText("Confirma tu contraseña:");
+
+        nombreField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        paternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        maternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        numeroField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        rolComboBox.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
         rolComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Vendedor" }));
 
         btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
@@ -134,22 +174,26 @@ public class NuevoEmpleado extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(nombreField)
+                    .addGroup(formularioRegistroLayout.createSequentialGroup()
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(paternoField)
                     .addComponent(maternoField)
                     .addComponent(numeroField)
                     .addComponent(rolComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(contraField)
+                    .addComponent(confirmarContraField)
                     .addGroup(formularioRegistroLayout.createSequentialGroup()
                         .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel6)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel4)
-                            .addComponent(jLabel2))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         formularioRegistroLayout.setVerticalGroup(
@@ -158,24 +202,32 @@ public class NuevoEmpleado extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(paternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(maternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numeroField, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(numeroField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rolComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(rolComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(contraField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(confirmarContraField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                 .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -241,6 +293,8 @@ public class NuevoEmpleado extends javax.swing.JPanel {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegistrar;
+    private javax.swing.JPasswordField confirmarContraField;
+    private javax.swing.JPasswordField contraField;
     private javax.swing.JPanel formularioRegistro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -249,6 +303,8 @@ public class NuevoEmpleado extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JTextField maternoField;
     private javax.swing.JTextField nombreField;
     private javax.swing.JTextField numeroField;
