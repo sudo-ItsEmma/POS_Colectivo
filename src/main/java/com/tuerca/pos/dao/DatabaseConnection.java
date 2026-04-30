@@ -10,8 +10,9 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
     // connection data for portable MariaDB
-    private static final String CONNECTION_URL = "jdbc:mariadb://localhost:3306/";
-    private static final String DATABASE_NAME = "pos_colectivo";
+    private static final String CONNECTION_URL = "jdbc:mariadb://localhost:3306/pos_colectivo";
+    //private static final String CONNECTION_URL = "jdbc:mariadb://localhost:3306/";
+    //private static final String DATABASE_NAME = "pos_colectivo";
     private static final String DATABASE_USER = "root";
     private static final String DATABASE_PASSWORD = "";
     

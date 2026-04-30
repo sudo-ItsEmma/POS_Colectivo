@@ -5,6 +5,7 @@
 package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmpleadoDAO;
+import com.tuerca.pos.model.Empleado;
 import com.tuerca.pos.view.NuevoEmpleado;
 import javax.swing.JOptionPane;
 
@@ -31,8 +32,6 @@ public class EmpleadoController {
         // Botón Cancelar
         this.vista.getBtnCancelar().addActionListener(e -> {
             vista.limpiarFormulario();
-            // Aquí podrías llamar a un método del MainView para cambiar la carta
-            // Por ejemplo: mainView.showView("empleados");
         });
 
         // Botón Volver
@@ -79,7 +78,20 @@ public class EmpleadoController {
         // Generamos nombre de usuario
         String rolSeleccionado = vista.getRol(); //Administrador o Vendedor (Admin o Sales)
         String userName = generarUsername(nombre, paterno, materno, rolSeleccionado);
-        System.out.println("Usuario generado" + userName);
+        
+        // Empaquetamos para llamar al DAO
+        Empleado emp = new Empleado();
+        emp.setNombre(nombre);
+        emp.setPaterno(paterno);
+        emp.setMaterno(materno);
+        emp.setTelefono(numero);
+        emp.setUsername(userName);
+        emp.setPassword(contra); // La contraseña ya validada
+        emp.setIdRole(rolSeleccionado.equals("Administrador") ? 1 : 2);
+        if (dao.registrar(emp)) {
+            JOptionPane.showMessageDialog(vista, "¡Empleado registrados con éxito!");
+            vista.limpiarFormulario();
+        }
     }
     
     private String generarUsername(String nom, String pat, String mat, String rol){
