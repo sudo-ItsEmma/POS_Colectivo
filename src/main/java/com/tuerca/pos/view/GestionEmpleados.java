@@ -35,13 +35,13 @@ public class GestionEmpleados extends javax.swing.JPanel {
         txtBuscar = new javax.swing.JTextField();
         txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         btnNuevoEmpleado = new javax.swing.JButton();
-        btnNuevoEmpleado.putClientProperty("FlatLaf.style", "arc: 20");
+        btnNuevoEmpleado.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         jTable1 = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20");
+        btnBack.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -50,7 +50,13 @@ public class GestionEmpleados extends javax.swing.JPanel {
         btnNuevoEmpleado.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnNuevoEmpleado.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
         btnNuevoEmpleado.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoEmpleado.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
         btnNuevoEmpleado.setText("Nuevo Empleado");
+        btnNuevoEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoEmpleadoActionPerformed(evt);
+            }
+        });
 
         jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -79,6 +85,8 @@ public class GestionEmpleados extends javax.swing.JPanel {
         jLabel3.setText("Usuario: ");
 
         btnBack.setBackground(java.awt.Color.pink);
+        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
         btnBack.setText("Volver");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -138,6 +146,17 @@ public class GestionEmpleados extends javax.swing.JPanel {
             main.showView("admin"); 
         }
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana nuevo empleado
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Vamos al formulario de registro de Nuevo Empleado
+            main.showView("nuevoEmpleado"); 
+        }
+    }//GEN-LAST:event_btnNuevoEmpleadoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

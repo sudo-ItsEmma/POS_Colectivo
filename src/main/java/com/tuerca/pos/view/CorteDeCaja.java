@@ -31,7 +31,7 @@ public class CorteDeCaja extends javax.swing.JPanel {
         btnBack = new javax.swing.JButton();
         btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         btnFinalizarJornada = new javax.swing.JButton();
-        putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnFinalizarJornada.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel3.putClientProperty("FlatLaf.style", "arc: 20");
