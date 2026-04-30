@@ -6,6 +6,7 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmpleadoDAO;
 import com.tuerca.pos.model.Empleado;
+import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoEmpleado;
 import javax.swing.JOptionPane;
 
@@ -16,10 +17,12 @@ import javax.swing.JOptionPane;
 public class EmpleadoController {
     private NuevoEmpleado vista;
     private EmpleadoDAO dao;
+    private MainView mainView;
     
     // El constructor recibe la instancia del panel
-    public EmpleadoController(NuevoEmpleado vista){
+    public EmpleadoController(NuevoEmpleado vista, MainView mainView){
         this.vista = vista;
+        this.mainView = mainView;
         this.dao = new EmpleadoDAO();
         
         // inicializamos los listeners
@@ -91,6 +94,7 @@ public class EmpleadoController {
         if (dao.registrar(emp)) {
             JOptionPane.showMessageDialog(vista, "¡Empleado registrados con éxito!");
             vista.limpiarFormulario();
+            mainView.showView("empleados");
         }
     }
     

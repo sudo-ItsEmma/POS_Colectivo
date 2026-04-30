@@ -26,7 +26,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(employeePanel2, "employee");
         
         // conectamos el controlador 
-        com.tuerca.pos.controller.EmpleadoController empController = new com.tuerca.pos.controller.EmpleadoController(nuevoEmpleado1);
+        com.tuerca.pos.controller.EmpleadoController empController = new com.tuerca.pos.controller.EmpleadoController(nuevoEmpleado1, this);
 
         showView("login");
     }
