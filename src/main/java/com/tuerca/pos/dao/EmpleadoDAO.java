@@ -6,6 +6,8 @@ package com.tuerca.pos.dao;
 
 import com.tuerca.pos.model.Empleado;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
@@ -90,5 +92,34 @@ public class EmpleadoDAO {
             }
         }
         
+    }
+    
+    public List<Empleado> listar() {
+        List<Empleado> lista = new ArrayList<>();
+        // JOIN para traer el nombre del rol basado en el idRole de la cuenta
+        String sql = "SELECT e.*, r.roleName FROM Employee e " +
+                     "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
+                     "JOIN Role r ON u.idRole = r.idRole " +
+                     "WHERE e.isEmployeeActive = 1";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Empleado emp = new Empleado();
+                emp.setId(rs.getInt("idEmployee"));
+                emp.setNombre(rs.getString("firstNameEmployee"));
+                emp.setPaterno(rs.getString("lastNameEmployee"));
+                emp.setMaterno(rs.getString("secondLastNameEmployee"));
+                emp.setTelefono(rs.getString("phoneEmployee"));
+                // Usamos un campo temporal o el objeto para el nombre del rol
+                emp.setRoleName(rs.getString("roleName")); 
+                lista.add(emp);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar: " + e.getMessage());
+        }
+        return lista;
     }
 }

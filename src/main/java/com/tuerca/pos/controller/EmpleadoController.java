@@ -6,9 +6,12 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmpleadoDAO;
 import com.tuerca.pos.model.Empleado;
+import com.tuerca.pos.view.GestionEmpleados;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoEmpleado;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,10 +21,12 @@ public class EmpleadoController {
     private NuevoEmpleado vista;
     private EmpleadoDAO dao;
     private MainView mainView;
+    private GestionEmpleados vistaGestion;;
     
     // El constructor recibe la instancia del panel
-    public EmpleadoController(NuevoEmpleado vista, MainView mainView){
+    public EmpleadoController(NuevoEmpleado vista, GestionEmpleados vistaGestion, MainView mainView){
         this.vista = vista;
+        this.vistaGestion = vistaGestion;
         this.mainView = mainView;
         this.dao = new EmpleadoDAO();
         
@@ -94,6 +99,7 @@ public class EmpleadoController {
         if (dao.registrar(emp)) {
             JOptionPane.showMessageDialog(vista, "¡Empleado registrados con éxito!");
             vista.limpiarFormulario();
+            cargarTabla();
             mainView.showView("empleados");
         }
     }
@@ -106,5 +112,25 @@ public class EmpleadoController {
         int random = (int)(Math.random()*90+10);
         
         return prefijo + p1 + p2 + p3 + random;
+    }
+    
+    public void cargarTabla() {
+        DefaultTableModel modelo = vistaGestion.getTableModel(); // vista de gestión
+        modelo.setRowCount(0); // Limpiar datos previos
+
+        List<Empleado> lista = dao.listar();
+        Object[] objeto = new Object[7]; // 7 columnas según tu diseño
+
+        for (int i = 0; i < lista.size(); i++) {
+            objeto[0] = lista.get(i).getId();
+            objeto[1] = lista.get(i).getNombre();
+            objeto[2] = lista.get(i).getPaterno();
+            objeto[3] = lista.get(i).getMaterno();
+            objeto[4] = lista.get(i).getTelefono();
+            objeto[5] = lista.get(i).getRoleName();
+            objeto[6] = "EDITAR / ELIMINAR"; // Aquí irán tus botones de acción
+
+            modelo.addRow(objeto);
+        }
     }
 }
