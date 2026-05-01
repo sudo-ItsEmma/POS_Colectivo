@@ -6,9 +6,12 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmpleadoDAO;
 import com.tuerca.pos.model.Empleado;
+import com.tuerca.pos.view.NuevoEmpleado;
 import com.tuerca.pos.view.GestionEmpleados;
 import com.tuerca.pos.view.MainView;
-import com.tuerca.pos.view.NuevoEmpleado;
+import com.tuerca.pos.view.components.AccionTableEvent;
+import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.AccionesEditar;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -31,21 +34,73 @@ public class EmpleadoController {
         this.dao = new EmpleadoDAO();
         
         // inicializamos los listeners
+        initTablaAcciones();
         initListeners();
     }
     
-    private void initListeners(){
-        // capturamos los datos al dar clic en Registrar
-        this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
-        // Botón Cancelar
-        this.vista.getBtnCancelar().addActionListener(e -> {
-            vista.limpiarFormulario();
-        });
+    private void initTablaAcciones() {
+        // Definimos qué pasa cuando se pulsan los botones
+        AccionTableEvent evento = new AccionTableEvent() {
+            @Override
+            public void onEditar(int row) {
+                // Obtenemos el ID del empleado de la fila seleccionada (columna 0)
+                int id = (int) vistaGestion.getTablaEmpleados().getValueAt(row, 0);
+                prepararEdicion(id);
+            }
 
-        // Botón Volver
+            @Override
+            public void onEliminar(int row) {
+                int id = (int) vistaGestion.getTablaEmpleados().getValueAt(row, 0);
+                confirmarEliminacion(id, row);
+            }
+        };
+
+        // Aplicamos el Render y el Editor a la columna 6 (Acciones)
+        vistaGestion.getTablaEmpleados().getColumnModel().getColumn(6).setCellRenderer(new AccionesRender());
+        vistaGestion.getTablaEmpleados().getColumnModel().getColumn(6).setCellEditor(new AccionesEditar(evento));
+
+        // Tip: Aumenta un poco el alto de las filas para que los botones luzcan mejor
+        vistaGestion.getTablaEmpleados().setRowHeight(40);
+    }
+    
+    private void prepararEdicion(int id) {
+        System.out.println("Cargando datos para editar empleado ID: " + id);
+        // Próximamente: buscar datos en el DAO y llenar el formulario de registro
+    }
+
+    private void confirmarEliminacion(int id, int row) {
+        int confirm = JOptionPane.showConfirmDialog(mainView, 
+            "¿Estás seguro de eliminar al empleado con ID: " + id + "?",
+            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // Próximamente: llamar a dao.eliminar(id)
+            System.out.println("Empleado " + id + " eliminado.");
+            cargarTabla(); // Refrescamos la tabla para que desaparezca el registro
+        }
+    }
+    
+    private void initListeners(){
+        this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
+    
+        this.vista.getBtnCancelar().addActionListener(e -> vista.limpiarFormulario());
+
         this.vista.getBtnBack().addActionListener(e -> {
             vista.limpiarFormulario();
-            // Cambiar de vista
+            mainView.showView("empleados"); // Asegúrate de que este sea el nombre de la vista
+        });
+
+        // AGREGAMOS EL LISTENER DEL MOUSE AQUÍ (UNA SOLA VEZ)
+        vistaGestion.getTablaEmpleados().addMouseMotionListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                int col = vistaGestion.getTablaEmpleados().columnAtPoint(e.getPoint());
+                if (col == 6) {
+                    vistaGestion.getTablaEmpleados().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                } else {
+                    vistaGestion.getTablaEmpleados().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                }
+            }
         });
     }
     
@@ -132,5 +187,6 @@ public class EmpleadoController {
 
             modelo.addRow(objeto);
         }
+        initTablaAcciones();
     }
 }

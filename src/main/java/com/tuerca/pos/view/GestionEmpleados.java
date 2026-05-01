@@ -27,6 +27,10 @@ public class GestionEmpleados extends javax.swing.JPanel {
     public DefaultTableModel getTableModel() {
         return (DefaultTableModel) tablaEmpleados.getModel();
     }
+    
+    public javax.swing.JTable getTablaEmpleados() {
+        return tablaEmpleados; 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
