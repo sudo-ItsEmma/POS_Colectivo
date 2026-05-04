@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -20,6 +21,10 @@ public class EmpleadoDAO {
     // mejora: hacerlo atomico y en cadena, si se registra el empleado correctamente, llamar a otra función
     // que haga el registro del usuario 
     public boolean registrar(Empleado emp){
+        
+        // gensalt() genera el salt y hashpw hace el trabajo pesado
+        String passwordEncriptada = BCrypt.hashpw(emp.getPassword(), BCrypt.gensalt());
+        
         String sqlEmployee = "INSERT INTO Employee (firstNameEmployee, lastNameEmployee, secondLastNameEmployee, phoneEmployee) VALUES (?, ?, ?, ?)";
         String sqlUser = "INSERT INTO UserAccount (idEmployee, idRole, usernameAccount, passwordAccount) VALUES (?, ?, ?, ?)";
         
@@ -62,7 +67,7 @@ public class EmpleadoDAO {
             psUser.setInt(1, idGenerado);
             psUser.setInt(2, emp.getIdRole());
             psUser.setString(3, emp.getUsername());
-            psUser.setString(4, emp.getPassword());
+            psUser.setString(4, passwordEncriptada);
             
             psUser.executeUpdate();
             
