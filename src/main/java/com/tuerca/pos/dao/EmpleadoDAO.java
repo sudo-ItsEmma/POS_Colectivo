@@ -16,6 +16,9 @@ import javax.swing.JOptionPane;
  */
 public class EmpleadoDAO {
     
+    // función para registrar un empleado y su usuario en la base de datos
+    // mejora: hacerlo atomico y en cadena, si se registra el empleado correctamente, llamar a otra función
+    // que haga el registro del usuario 
     public boolean registrar(Empleado emp){
         String sqlEmployee = "INSERT INTO Employee (firstNameEmployee, lastNameEmployee, secondLastNameEmployee, phoneEmployee) VALUES (?, ?, ?, ?)";
         String sqlUser = "INSERT INTO UserAccount (idEmployee, idRole, usernameAccount, passwordAccount) VALUES (?, ?, ?, ?)";
@@ -94,6 +97,7 @@ public class EmpleadoDAO {
         
     }
     
+    // función que muestra los empleados registrados en el sistema
     public List<Empleado> listar() {
         List<Empleado> lista = new ArrayList<>();
         // JOIN para traer el nombre del rol basado en el idRole de la cuenta
@@ -121,5 +125,20 @@ public class EmpleadoDAO {
             System.err.println("Error al listar: " + e.getMessage());
         }
         return lista;
+    }
+    
+    
+    // función para eliminar a los empleados de manera lógica
+    public boolean eliminarLogico(int id) {
+        String sql = "UPDATE Employee SET isEmployeeActive = 0 WHERE idEmployee = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error en eliminación lógica: " + e.getMessage());
+            return false;
+        }
     }
 }

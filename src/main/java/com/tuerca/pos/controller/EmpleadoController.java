@@ -67,18 +67,6 @@ public class EmpleadoController {
         System.out.println("Cargando datos para editar empleado ID: " + id);
         // Próximamente: buscar datos en el DAO y llenar el formulario de registro
     }
-
-    private void confirmarEliminacion(int id, int row) {
-        int confirm = JOptionPane.showConfirmDialog(mainView, 
-            "¿Estás seguro de eliminar al empleado con ID: " + id + "?",
-            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            // Próximamente: llamar a dao.eliminar(id)
-            System.out.println("Empleado " + id + " eliminado.");
-            cargarTabla(); // Refrescamos la tabla para que desaparezca el registro
-        }
-    }
     
     private void initListeners(){
         this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
@@ -183,10 +171,35 @@ public class EmpleadoController {
             objeto[3] = lista.get(i).getMaterno();
             objeto[4] = lista.get(i).getTelefono();
             objeto[5] = lista.get(i).getRoleName();
-            objeto[6] = "EDITAR / ELIMINAR"; // Aquí irán tus botones de acción
+            objeto[6] = "EDITAR / ELIMINAR";
 
             modelo.addRow(objeto);
         }
         initTablaAcciones();
+    }
+    
+    private void confirmarEliminacion(int id, int row) {
+        // 1. Notificación de confirmación
+        int confirm = JOptionPane.showConfirmDialog(
+            mainView, 
+            "¿Estás seguro de que deseas eliminar al empleado con ID: " + id + "?\n" +
+            "Esta acción lo eliminará de la lista de gestión.",
+            "Confirmar Eliminación Lógica", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            // 2. Realizar la petición
+            if (dao.eliminarLogico(id)) {
+                // 3. Notificación de éxito
+                JOptionPane.showMessageDialog(mainView, "Empleado desactivado con éxito.");
+
+                // 4. Refrescar estado (la tabla volverá a consultar solo los activos)
+                cargarTabla(); 
+            } else {
+                JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al empleado.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@ public class AccionesEditar extends DefaultCellEditor {
     public AccionesEditar(AccionTableEvent event) {
         super(new JCheckBox());
         this.event = event;
+        this.setClickCountToStart(1);
         this.panel = new AccionesRender(); // Instanciamos el panel visual
 
         // Agregamos la lógica a los botones del panel del EDITOR
