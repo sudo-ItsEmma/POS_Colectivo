@@ -141,4 +141,90 @@ public class EmpleadoDAO {
             return false;
         }
     }
+    
+    // función para obtener el empleado que vamos a editar
+    public Empleado buscarPorId(int id) {
+        String sql = "SELECT e.*, u.idRole, r.roleName FROM Employee e " +
+                     "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
+                     "JOIN Role r ON u.idRole = r.idRole " +
+                     "WHERE e.idEmployee = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Empleado emp = new Empleado();
+                emp.setId(rs.getInt("idEmployee"));
+                emp.setNombre(rs.getString("firstNameEmployee"));
+                emp.setPaterno(rs.getString("lastNameEmployee"));
+                emp.setMaterno(rs.getString("secondLastNameEmployee"));
+                emp.setTelefono(rs.getString("phoneEmployee"));
+                emp.setRoleName(rs.getString("roleName"));
+                return emp;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar empleado: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    // función para actualizar al empleado
+    public boolean actualizar(Empleado emp) {
+        String sqlEmpleado = "UPDATE Employee SET firstNameEmployee=?, lastNameEmployee=?, "
+                + "secondLastNameEmployee=?, phoneEmployee=? WHERE idEmployee=?";
+
+        String sqlUsuario = "UPDATE UserAccount SET idRole=? WHERE idEmployee=?";
+
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            // Desactivamos el auto-commit para manejar la transacción manualmente
+            con.setAutoCommit(false);
+
+            // 1. Actualizar datos personales en Employee
+            try (PreparedStatement psEmp = con.prepareStatement(sqlEmpleado)) {
+                psEmp.setString(1, emp.getNombre());
+                psEmp.setString(2, emp.getPaterno());
+                psEmp.setString(3, emp.getMaterno());
+                psEmp.setString(4, emp.getTelefono());
+                psEmp.setInt(5, emp.getId());
+                psEmp.executeUpdate();
+            }
+
+            // 2. Actualizar el Rol en UserAccount
+            try (PreparedStatement psUser = con.prepareStatement(sqlUsuario)) {
+                psUser.setInt(1, emp.getIdRole()); // El ID del rol (1 o 2)
+                psUser.setInt(2, emp.getId());
+                psUser.executeUpdate();
+            }
+
+            // Si todo salió bien, confirmamos los cambios
+            con.commit();
+            return true;
+
+        } catch (SQLException e) {
+            // Si algo falla, deshacemos lo que se haya alcanzado a hacer
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Error en rollback: " + rollbackEx.getMessage());
+                }
+            }
+            System.err.println("Error al actualizar (Transaction): " + e.getMessage());
+            return false;
+        } finally {
+            // Siempre restauramos el estado de la conexión
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

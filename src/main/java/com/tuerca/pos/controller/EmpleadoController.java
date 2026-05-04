@@ -6,6 +6,7 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmpleadoDAO;
 import com.tuerca.pos.model.Empleado;
+import com.tuerca.pos.view.EditarEmpleado;
 import com.tuerca.pos.view.NuevoEmpleado;
 import com.tuerca.pos.view.GestionEmpleados;
 import com.tuerca.pos.view.MainView;
@@ -21,16 +22,19 @@ import javax.swing.table.DefaultTableModel;
  * @author mannycalderon
  */
 public class EmpleadoController {
+    private int idEdicion = -1; // Variable para saber qué ID estamos editando
+    private EditarEmpleado vistaEdicion;
     private NuevoEmpleado vista;
     private EmpleadoDAO dao;
     private MainView mainView;
     private GestionEmpleados vistaGestion;;
     
     // El constructor recibe la instancia del panel
-    public EmpleadoController(NuevoEmpleado vista, GestionEmpleados vistaGestion, MainView mainView){
-        this.vista = vista;
-        this.vistaGestion = vistaGestion;
-        this.mainView = mainView;
+    public EmpleadoController(NuevoEmpleado vReg, EditarEmpleado vEdit, GestionEmpleados vGest, MainView main){
+        this.vista = vReg;
+        this.vistaEdicion = vEdit; // <--- ¡ASEGÚRATE DE QUE ESTA LÍNEA EXISTA!
+        this.vistaGestion = vGest;
+        this.mainView = main;
         this.dao = new EmpleadoDAO();
         
         // inicializamos los listeners
@@ -63,15 +67,12 @@ public class EmpleadoController {
         vistaGestion.getTablaEmpleados().setRowHeight(40);
     }
     
-    private void prepararEdicion(int id) {
-        System.out.println("Cargando datos para editar empleado ID: " + id);
-        // Próximamente: buscar datos en el DAO y llenar el formulario de registro
-    }
-    
     private void initListeners(){
         this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
     
         this.vista.getBtnCancelar().addActionListener(e -> vista.limpiarFormulario());
+        
+        this.vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarEmpleado());
 
         this.vista.getBtnBack().addActionListener(e -> {
             vista.limpiarFormulario();
@@ -200,6 +201,61 @@ public class EmpleadoController {
             } else {
                 JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al empleado.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+    
+    // función del controlador para editar un empleado
+    private void prepararEdicion(int id) {
+        Empleado emp = dao.buscarPorId(id);
+
+        if (emp != null) {
+            // Ahora sí usamos getNombreField() que devuelve el JTextField
+            vistaEdicion.getNombreField().setText(emp.getNombre());
+            vistaEdicion.getPaternoField().setText(emp.getPaterno());
+            vistaEdicion.getMaternoField().setText(emp.getMaterno());
+            vistaEdicion.getNumeroField().setText(emp.getTelefono());
+
+            // Para el ComboBox igual
+            vistaEdicion.getRolComboBox().setSelectedItem(emp.getRoleName().equals("Admin") ? "Administrador" : "Vendedor");
+
+            this.idEdicion = id; 
+            mainView.showView("editarEmpleado"); 
+        }
+    }
+    
+    private void actualizarEmpleado() {
+        // 1. Capturamos los datos de la vista de edición usando tus getters
+        // Extraemos el texto directamente de los componentes Field
+        String nombre = vistaEdicion.getNombreField().getText().trim();
+        String paterno = vistaEdicion.getPaternoField().getText().trim();
+        String materno = vistaEdicion.getMaternoField().getText().trim();
+        String numero = vistaEdicion.getNumeroField().getText().trim();
+
+        // Obtenemos el String seleccionado del ComboBox
+        String rol = vistaEdicion.getRolComboBox().getSelectedItem().toString();
+
+        // 2. Validaciones básicas (opcional pero recomendado)
+        if(nombre.isEmpty() || paterno.isEmpty()) {
+            JOptionPane.showMessageDialog(vistaEdicion, "Nombre y Apellido Paterno son obligatorios.");
+            return;
+        }
+
+        // 3. Empaquetamos en el objeto Empleado usando el idEdicion que guardamos antes
+        Empleado emp = new Empleado();
+        emp.setId(this.idEdicion); 
+        emp.setNombre(nombre);
+        emp.setPaterno(paterno);
+        emp.setMaterno(materno.isEmpty() ? "X" : materno);
+        emp.setTelefono(numero);
+        emp.setIdRole(rol.equals("Administrador") ? 1 : 2);
+
+        // 4. Intentamos actualizar en la base de datos
+        if (dao.actualizar(emp)) {
+            JOptionPane.showMessageDialog(vistaEdicion, "¡Datos actualizados con éxito!");
+            cargarTabla(); // Refrescamos la tabla para ver los cambios
+            mainView.showView("empleados"); // Regresamos a la gestión
+        } else {
+            JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar la información.");
         }
     }
 }

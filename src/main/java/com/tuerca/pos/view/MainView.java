@@ -26,7 +26,14 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(employeePanel2, "employee");
         
         // conectamos el controlador 
-        com.tuerca.pos.controller.EmpleadoController empController = new com.tuerca.pos.controller.EmpleadoController(nuevoEmpleado1, gestionEmpleados1, this);
+        // En el constructor de MainView.java
+        com.tuerca.pos.controller.EmpleadoController empController = 
+            new com.tuerca.pos.controller.EmpleadoController(
+                nuevoEmpleado1,   // Vista de Registro
+                editarEmpleado1,  // Vista de Edición (Asegúrate de que este sea el nombre de la variable)
+                gestionEmpleados1,// Vista de Gestión
+                this              // MainView
+            );
         empController.cargarTabla();
         
         showView("login");
@@ -60,6 +67,7 @@ public class MainView extends javax.swing.JFrame {
         generarReportes1 = new com.tuerca.pos.view.GenerarReportes();
         gestionEmpleados1 = new com.tuerca.pos.view.GestionEmpleados();
         nuevoEmpleado1 = new com.tuerca.pos.view.NuevoEmpleado();
+        editarEmpleado1 = new com.tuerca.pos.view.EditarEmpleado();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -77,6 +85,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(generarReportes1, "reportes");
         getContentPane().add(gestionEmpleados1, "empleados");
         getContentPane().add(nuevoEmpleado1, "nuevoEmpleado");
+        getContentPane().add(editarEmpleado1, "editarEmpleado");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -120,6 +129,7 @@ public class MainView extends javax.swing.JFrame {
     private com.tuerca.pos.view.AdminPanel adminPanel2;
     private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
     private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
+    private com.tuerca.pos.view.EditarEmpleado editarEmpleado1;
     private com.tuerca.pos.view.EmployeePanel employeePanel2;
     private com.tuerca.pos.view.GenerarReportes generarReportes1;
     private com.tuerca.pos.view.GestionApartados gestionApartados1;
