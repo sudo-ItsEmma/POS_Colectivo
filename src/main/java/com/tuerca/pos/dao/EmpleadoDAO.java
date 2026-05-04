@@ -135,15 +135,48 @@ public class EmpleadoDAO {
     
     // función para eliminar a los empleados de manera lógica
     public boolean eliminarLogico(int id) {
-        String sql = "UPDATE Employee SET isEmployeeActive = 0 WHERE idEmployee = ?";
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        String sqlEmpleado = "UPDATE Employee SET isEmployeeActive = 0 WHERE idEmployee = ?";
+        String sqlUsuario = "UPDATE UserAccount SET isAccountActive = 0 WHERE idEmployee = ?";
 
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false); // Iniciamos la transacción
+
+            // 1. Desactivar al Empleado
+            try (PreparedStatement psEmp = con.prepareStatement(sqlEmpleado)) {
+                psEmp.setInt(1, id);
+                psEmp.executeUpdate();
+            }
+
+            // 2. Desactivar la Cuenta de Usuario
+            try (PreparedStatement psUser = con.prepareStatement(sqlUsuario)) {
+                psUser.setInt(1, id);
+                psUser.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+
         } catch (SQLException e) {
-            System.err.println("Error en eliminación lógica: " + e.getMessage());
+            if (con != null) {
+                try {
+                    con.rollback(); // Si falla uno, deshacemos ambos
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Error en rollback: " + rollbackEx.getMessage());
+                }
+            }
+            System.err.println("Error en eliminación lógica (Transaction): " + e.getMessage());
             return false;
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
     
