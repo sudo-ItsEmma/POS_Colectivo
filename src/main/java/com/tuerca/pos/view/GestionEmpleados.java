@@ -4,6 +4,7 @@
  */
 package com.tuerca.pos.view;
 
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -23,6 +24,16 @@ public class GestionEmpleados extends javax.swing.JPanel {
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
     }
+
+    public JTextField getTxtBuscar() {
+        return txtBuscar;
+    }
+
+    public void setTxtBuscar(JTextField txtBuscar) {
+        this.txtBuscar = txtBuscar;
+    }
+    
+    
     
     public DefaultTableModel getTableModel() {
         return (DefaultTableModel) tablaEmpleados.getModel();

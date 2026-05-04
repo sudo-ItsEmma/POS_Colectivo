@@ -232,4 +232,41 @@ public class EmpleadoDAO {
             }
         }
     }
+    
+    public List<Empleado> buscar(String texto) {
+        List<Empleado> lista = new java.util.ArrayList<>();
+        // Buscamos por nombre, paterno o materno que contengan el texto
+        String sql = "SELECT e.*, r.roleName FROM Employee e " +
+                     "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
+                     "JOIN Role r ON u.idRole = r.idRole " +
+                     "WHERE e.isEmployeeActive = 1 AND (" +
+                     "e.firstNameEmployee LIKE ? OR " +
+                     "e.lastNameEmployee LIKE ? OR " +
+                     "e.secondLastNameEmployee LIKE ?) " +
+                     "ORDER BY e.idEmployee ASC";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String query = "%" + texto + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+            ps.setString(3, query);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Empleado emp = new Empleado();
+                emp.setId(rs.getInt("idEmployee"));
+                emp.setNombre(rs.getString("firstNameEmployee"));
+                emp.setPaterno(rs.getString("lastNameEmployee"));
+                emp.setMaterno(rs.getString("secondLastNameEmployee"));
+                emp.setTelefono(rs.getString("phoneEmployee"));
+                emp.setRoleName(rs.getString("roleName"));
+                lista.add(emp);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en búsqueda: " + e.getMessage());
+        }
+        return lista;
+    }
 }

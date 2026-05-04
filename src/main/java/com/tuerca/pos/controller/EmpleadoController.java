@@ -79,7 +79,7 @@ public class EmpleadoController {
             mainView.showView("empleados"); // Asegúrate de que este sea el nombre de la vista
         });
 
-        // AGREGAMOS EL LISTENER DEL MOUSE AQUÍ (UNA SOLA VEZ)
+        // AGREGAMOS EL LISTENER DEL MOUSE
         vistaGestion.getTablaEmpleados().addMouseMotionListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseMoved(java.awt.event.MouseEvent e) {
@@ -90,6 +90,16 @@ public class EmpleadoController {
                     vistaGestion.getTablaEmpleados().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
                 }
             }
+        });
+        
+        // listener para buscar por la barra de busqueda
+        vistaGestion.getTxtBuscar().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
         });
     }
     
@@ -257,5 +267,28 @@ public class EmpleadoController {
         } else {
             JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar la información.");
         }
+    }
+    
+    private void filtrarTabla() {
+        String texto = vistaGestion.getTxtBuscar().getText().trim();
+        DefaultTableModel modelo = vistaGestion.getTableModel();
+        modelo.setRowCount(0);
+
+        // Si el campo está vacío, cargamos todos. Si no, buscamos.
+        List<Empleado> lista = texto.isEmpty() ? dao.listar() : dao.buscar(texto);
+
+        for (Empleado emp : lista) {
+            modelo.addRow(new Object[]{
+                emp.getId(),
+                emp.getNombre(),
+                emp.getPaterno(),
+                emp.getMaterno(),
+                emp.getTelefono(),
+                emp.getRoleName(),
+                "" // Columna de acciones
+            });
+        }
+        // Re-aplicamos el renderizador para que no se pierdan los botones
+        initTablaAcciones();
     }
 }
