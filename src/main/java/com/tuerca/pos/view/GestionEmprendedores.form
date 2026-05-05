@@ -53,12 +53,12 @@
                   <Component id="btnBack" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="txtBuscar" max="32767" attributes="0"/>
-                  <Component id="btnNuevoEmprendedor" pref="40" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txtBuscar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                  <Component id="btnNuevoEmprendedor" alignment="3" pref="40" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="510" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="509" max="32767" attributes="0"/>
               <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -97,6 +97,9 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Nuevo Emprendedor"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoEmprendedorActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnNuevoEmprendedor.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>

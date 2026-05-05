@@ -52,6 +52,11 @@ public class GestionEmprendedores extends javax.swing.JPanel {
         btnNuevoEmprendedor.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevoEmprendedor.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
         btnNuevoEmprendedor.setText("Nuevo Emprendedor");
+        btnNuevoEmprendedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoEmprendedorActionPerformed(evt);
+            }
+        });
 
         jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -120,11 +125,11 @@ public class GestionEmprendedores extends javax.swing.JPanel {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBack))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtBuscar)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnNuevoEmprendedor, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
                 .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addGap(25, 25, 25))
@@ -138,9 +143,20 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
             // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("employee"); 
+            main.showView("admin"); 
         }
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNuevoEmprendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmprendedorActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana principal
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Regresamos al panel del empleado (el dashboard de los 9 botones)
+            main.showView("nuevoEmprendedor"); 
+        }
+    }//GEN-LAST:event_btnNuevoEmprendedorActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
