@@ -32,7 +32,7 @@ public class EmpleadoController {
     // El constructor recibe la instancia del panel
     public EmpleadoController(NuevoEmpleado vReg, EditarEmpleado vEdit, GestionEmpleados vGest, MainView main){
         this.vista = vReg;
-        this.vistaEdicion = vEdit; // <--- ¡ASEGÚRATE DE QUE ESTA LÍNEA EXISTA!
+        this.vistaEdicion = vEdit;
         this.vistaGestion = vGest;
         this.mainView = main;
         this.dao = new EmpleadoDAO();

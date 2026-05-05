@@ -16,21 +16,38 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
      */
     public NuevoEmprendedor() {
         initComponents();
-        nombreField.putClientProperty("JTextField.placeholderText", "Introduce el nombre del emprendimiento");
-        nombreField.putClientProperty("JTextField.showClearButton", true);
+        brandNameField.putClientProperty("JTextField.placeholderText", "Introduce el nombre del emprendimiento");
+        brandNameField.putClientProperty("JTextField.showClearButton", true);
         
-        numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 digitos");
-        numeroField.putClientProperty("JTextField.showClearButton", true);
-        
-        rentaField.putClientProperty("JTextField.placeholderText", "Introduce la renta mensual (Ej: 400)");
-        rentaField.putClientProperty("JTextField.showClearButton", true);
+        contactNameField.putClientProperty("JTextField.placeholderText", "Introduce el nombre del emprendedor");
+        contactNameField.putClientProperty("JTextField.showClearButton", true);
         
         
+        contactPhoneField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 digitos");
+        contactPhoneField.putClientProperty("JTextField.showClearButton", true);
+        
+        emailField.putClientProperty("JTextField.placeholderText", "Introduce el correo electronico del emprendedor");
+        emailField.putClientProperty("JTextField.showClearButton", true);
+        
+        rentField.putClientProperty("JTextField.placeholderText", "Introduce la renta mensual (Ej: 400)");
+        rentField.putClientProperty("JTextField.showClearButton", true);
+        
+       // Accedemos al editor interno para poner el placeholder
+        javax.swing.JTextField dateEditor = (javax.swing.JTextField) datePicker.getDateEditor().getUiComponent();
+        dateEditor.putClientProperty("JTextField.placeholderText", "Selecciona la fecha de contrato");
+        dateEditor.putClientProperty("JTextField.showClearButton", true);
+
+        // Opcional: Hacer que no puedan escribir manualmente para evitar errores de formato
+        dateEditor.setEditable(false);
     }
     
     // Exponemos los datos
-    public String getNombre() { return nombreField.getText().trim(); }
-    public String getTelefono() { return numeroField.getText().trim(); }
+    public String getBrandName() { return brandNameField.getText().trim(); }
+    public String getContactName() { return contactNameField.getText().trim(); }
+    public String getContactPhone() { return contactPhoneField.getText().trim(); }
+    public String getEmail() { return emailField.getText().trim(); }
+    public String getRent() { return rentField.getText().trim(); }
+    public java.util.Date getFechaSeleccionada() { return datePicker.getDate(); }
 
     // Exponemos el boton de registro
     public JButton getBtnRegistrar() { return btnRegistrar; }
@@ -39,8 +56,14 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
     
     // limpiar el formulario
     public void limpiarFormulario(){
-        nombreField.setText("");
-        numeroField.setText("");
+        brandNameField.setText("");
+        contactPhoneField.setText("");
+        contactNameField.setText("");
+        emailField.setText("");
+        rentField.setText("");
+        datePicker.setDate(null); 
+
+        brandNameField.requestFocus();
     }
 
     /**
@@ -60,20 +83,26 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
         formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel1 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        nombreField = new javax.swing.JTextField();
-        nombreField.putClientProperty("FlatLaf.style", "arc: 20");
-        numeroField = new javax.swing.JTextField();
-        numeroField.putClientProperty("FlatLaf.style", "arc: 20");
+        brandNameField = new javax.swing.JTextField();
+        brandNameField.putClientProperty("FlatLaf.style", "arc: 20");
+        contactPhoneField = new javax.swing.JTextField();
+        contactPhoneField.putClientProperty("FlatLaf.style", "arc: 20");
         btnRegistrar = new javax.swing.JButton();
         btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnCancelar = new javax.swing.JButton();
         btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jLabel10 = new javax.swing.JLabel();
-        rentaField = new javax.swing.JTextField();
-        numeroField.putClientProperty("FlatLaf.style", "arc: 20");
-        numeroField2 = new javax.swing.JTextField();
-        numeroField.putClientProperty("FlatLaf.style", "arc: 20");
+        rentField = new javax.swing.JTextField();
+        rentField.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel11 = new javax.swing.JLabel();
+        contactNameField = new javax.swing.JTextField();
+        contactNameField.putClientProperty("FlatLaf.style", "arc: 20");
+        jLabel2 = new javax.swing.JLabel();
+        emailField = new javax.swing.JTextField();
+        emailField.putClientProperty("FlatLaf.style", "arc: 20");
+        jLabel12 = new javax.swing.JLabel();
+        datePicker = new com.toedter.calendar.JDateChooser();
+        datePicker.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -101,9 +130,9 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
         jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel6.setText("Número de teléfono:");
 
-        nombreField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+        brandNameField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
 
-        numeroField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+        contactPhoneField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
 
         btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
         btnRegistrar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
@@ -130,12 +159,20 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
         jLabel10.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel10.setText("Costo de renta mensual:");
 
-        rentaField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        numeroField2.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+        rentField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
 
         jLabel11.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel11.setText("Fecha de inicio");
+
+        contactNameField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        jLabel2.setText("Emprendedor:");
+
+        emailField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
+
+        jLabel12.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
+        jLabel12.setText("Correo electronico:");
 
         javax.swing.GroupLayout formularioRegistroLayout = new javax.swing.GroupLayout(formularioRegistro);
         formularioRegistro.setLayout(formularioRegistroLayout);
@@ -144,21 +181,25 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
             .addGroup(formularioRegistroLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nombreField)
+                    .addComponent(brandNameField)
                     .addGroup(formularioRegistroLayout.createSequentialGroup()
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(numeroField)
-                    .addComponent(rentaField)
-                    .addComponent(numeroField2)
+                    .addComponent(contactNameField)
+                    .addComponent(contactPhoneField)
+                    .addComponent(emailField)
+                    .addComponent(rentField)
                     .addGroup(formularioRegistroLayout.createSequentialGroup()
                         .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel6)
+                            .addComponent(jLabel12)
                             .addComponent(jLabel10)
                             .addComponent(jLabel11))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(datePicker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         formularioRegistroLayout.setVerticalGroup(
@@ -167,20 +208,28 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(brandNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(contactNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numeroField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(contactPhoneField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(emailField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rentaField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(rentField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel11)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numeroField2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 235, Short.MAX_VALUE)
+                .addComponent(datePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                 .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -247,19 +296,23 @@ public class NuevoEmprendedor extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField brandNameField;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegistrar;
+    private javax.swing.JTextField contactNameField;
+    private javax.swing.JTextField contactPhoneField;
+    private com.toedter.calendar.JDateChooser datePicker;
+    private javax.swing.JTextField emailField;
     private javax.swing.JPanel formularioRegistro;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JTextField nombreField;
-    private javax.swing.JTextField numeroField;
-    private javax.swing.JTextField numeroField2;
-    private javax.swing.JTextField rentaField;
+    private javax.swing.JTextField rentField;
     // End of variables declaration//GEN-END:variables
 }

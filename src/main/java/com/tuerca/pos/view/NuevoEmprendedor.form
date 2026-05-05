@@ -110,24 +110,28 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="nombreField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="brandNameField" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnCancelar" min="-2" pref="240" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="btnRegistrar" min="-2" pref="240" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="numeroField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="rentaField" alignment="0" max="32767" attributes="0"/>
-                      <Component id="numeroField2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="contactNameField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="contactPhoneField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="emailField" alignment="0" max="32767" attributes="0"/>
+                      <Component id="rentField" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="datePicker" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -139,20 +143,28 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="nombreField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="brandNameField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="contactNameField" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="numeroField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="contactPhoneField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="emailField" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="rentaField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <Component id="rentField" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="numeroField2" min="-2" pref="30" max="-2" attributes="0"/>
-                  <EmptySpace pref="235" max="32767" attributes="0"/>
+                  <Component id="datePicker" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace pref="91" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnCancelar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                       <Component id="btnRegistrar" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
@@ -179,24 +191,24 @@
             <Property name="text" type="java.lang.String" value="N&#xfa;mero de tel&#xe9;fono:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="nombreField">
+        <Component class="javax.swing.JTextField" name="brandNameField">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Pro Rounded" size="18" style="0"/>
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="nombreField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="brandNameField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
           </AuxValues>
         </Component>
-        <Component class="javax.swing.JTextField" name="numeroField">
+        <Component class="javax.swing.JTextField" name="contactPhoneField">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Pro Rounded" size="18" style="0"/>
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="numeroField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="contactPhoneField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JButton" name="btnRegistrar">
@@ -253,24 +265,14 @@
             <Property name="text" type="java.lang.String" value="Costo de renta mensual:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="rentaField">
+        <Component class="javax.swing.JTextField" name="rentField">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Pro Rounded" size="18" style="0"/>
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="numeroField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JTextField" name="numeroField2">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Pro Rounded" size="18" style="0"/>
-            </Property>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="numeroField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="rentField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel11">
@@ -280,6 +282,47 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Fecha de inicio"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="contactNameField">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="SF Pro Rounded" size="18" style="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="contactNameField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="SF Pro Rounded" size="14" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Emprendedor:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="emailField">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="SF Pro Rounded" size="18" style="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="emailField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);&#xa;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel12">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="SF Pro Rounded" size="14" style="1"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Correo electronico:"/>
+          </Properties>
+        </Component>
+        <Component class="com.toedter.calendar.JDateChooser" name="datePicker">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="datePicker.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

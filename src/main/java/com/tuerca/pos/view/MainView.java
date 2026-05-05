@@ -36,6 +36,8 @@ public class MainView extends javax.swing.JFrame {
             );
         empController.cargarTabla();
         
+        com.tuerca.pos.controller.EmprendedorController empreController = new com.tuerca.pos.controller.EmprendedorController(nuevoEmprendedor1, this);
+        
         showView("login");
     }
     
