@@ -11,7 +11,6 @@ import javax.swing.JButton;
  * @author mannycalderon
  */
 public class NuevoEmpleado extends javax.swing.JPanel {
-
     /**
      * Creates new form GestionEmprendedores
      */
@@ -28,6 +27,15 @@ public class NuevoEmpleado extends javax.swing.JPanel {
         
         numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 digitos");
         numeroField.putClientProperty("JTextField.showClearButton", true);
+        
+        // COMBINA EL ARCO Y EL BOTÓN EN UN SOLO ESTILO
+        contraField.putClientProperty("FlatLaf.style", "arc: 13; showRevealButton: true");
+        confirmarContraField.putClientProperty("FlatLaf.style", "arc: 13; showRevealButton: true");
+
+        // También puedes usar la llave directa, pero asegúrate de que sea DESPUÉS de initComponents
+        contraField.putClientProperty("JPasswordField.showRevealButton", true);
+        confirmarContraField.putClientProperty("JPasswordField.showRevealButton", true);
+        
     }
     
     // Exponemos los datos
@@ -182,18 +190,21 @@ public class NuevoEmpleado extends javax.swing.JPanel {
                     .addComponent(maternoField)
                     .addComponent(numeroField)
                     .addComponent(rolComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(contraField)
-                    .addComponent(confirmarContraField)
                     .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel9))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(confirmarContraField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(contraField, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, formularioRegistroLayout.createSequentialGroup()
+                                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(128, 128, 128)))
                 .addContainerGap())
         );
         formularioRegistroLayout.setVerticalGroup(
