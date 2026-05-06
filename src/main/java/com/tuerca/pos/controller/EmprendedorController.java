@@ -6,21 +6,26 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmprendedorDAO;
 import com.tuerca.pos.model.Emprendedor;
+import com.tuerca.pos.view.GestionEmprendedores;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoEmprendedor;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author mannycalderon
  */
 public class EmprendedorController {
+    private GestionEmprendedores vistaGestion;
     private NuevoEmprendedor vistaRegistro;
     private EmprendedorDAO dao;
     private MainView mainView;
     
-    public EmprendedorController(NuevoEmprendedor vReg, MainView main) {
+    public EmprendedorController(NuevoEmprendedor vReg, GestionEmprendedores vGest, MainView main) {
         this.vistaRegistro = vReg;
+        this.vistaGestion = vGest;
         this.mainView = main; // <--- Se asigna aquí
         this.dao = new EmprendedorDAO();
         
@@ -97,5 +102,25 @@ public class EmprendedorController {
         }
     }
 
-    
+    // consultar emprendedores
+    public void cargarTabla() {
+        DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaEmprendedores().getModel();
+        modelo.setRowCount(0); // Limpiar tabla
+
+        List<Emprendedor> lista = dao.listar();
+        for (Emprendedor e : lista) {
+            modelo.addRow(new Object[]{
+                e.getId(),
+                e.getMarca(),
+                e.getNombreContacto(),
+                e.getTelefono(),
+                e.getEmail(),
+                e.getFechaContrato(),
+                "$" + e.getRentaMensual(),
+                "" // Espacio para los botones de acción
+            });
+        }
+        // IMPORTANTE: Aquí llamas a tu componente de botones de acción
+        //configurarBotonesAccion(); 
+    }
 }

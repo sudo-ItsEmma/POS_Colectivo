@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.view;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author mannycalderon
@@ -20,6 +22,21 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
+    }
+    
+    // En la Vista de Gestión
+    public void configurarTabla() {
+        tablaEmprendedores.setRowHeight(35); // Más espacio para los botones
+        // Ocultar la columna del ID si no quieres que el usuario la vea, 
+        // pero que el sistema la use para editar/eliminar.
+    }
+    
+    public DefaultTableModel getTableModel() {
+        return (DefaultTableModel) tablaEmprendedores.getModel();
+    }
+    
+    public javax.swing.JTable getTablaEmprendedores() {
+        return tablaEmprendedores; 
     }
 
     /**
@@ -38,7 +55,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
         btnNuevoEmprendedor.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        jTable1 = new javax.swing.JTable();
+        tablaEmprendedores = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
@@ -58,27 +75,27 @@ public class GestionEmprendedores extends javax.swing.JPanel {
             }
         });
 
-        jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaEmprendedores.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
+        tablaEmprendedores.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombre", "Contacto", "Costo de renta", "Contrato", "Acciones"
+                "ID", "Emprendiemiento", "Dueño", "Número de telefono", "Correo", "Fecha de contrato", "Costo de renta", "Acciones"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaEmprendedores);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -165,7 +182,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablaEmprendedores;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }
