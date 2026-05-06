@@ -9,6 +9,9 @@ import com.tuerca.pos.model.Emprendedor;
 import com.tuerca.pos.view.GestionEmprendedores;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoEmprendedor;
+import com.tuerca.pos.view.components.AccionTableEvent;
+import com.tuerca.pos.view.components.AccionesEditar;
+import com.tuerca.pos.view.components.AccionesRender;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,14 +29,54 @@ public class EmprendedorController {
     public EmprendedorController(NuevoEmprendedor vReg, GestionEmprendedores vGest, MainView main) {
         this.vistaRegistro = vReg;
         this.vistaGestion = vGest;
-        this.mainView = main; // <--- Se asigna aquí
+        this.mainView = main;
         this.dao = new EmprendedorDAO();
         
+        initTablaAcciones();
         initListeners();
     }
     
     private void initListeners() {
         this.vistaRegistro.getBtnRegistrar().addActionListener(e -> registrarEmprendedor());
+        
+        
+        // AGREGAMOS EL LISTENER DEL MOUSE
+        vistaGestion.getTablaEmprendedores().addMouseMotionListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                int col = vistaGestion.getTablaEmprendedores().columnAtPoint(e.getPoint());
+                if (col == 7) {
+                    vistaGestion.getTablaEmprendedores().setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+                } else {
+                    vistaGestion.getTablaEmprendedores().setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                }
+            }
+        });
+    }
+    
+    private void initTablaAcciones() {
+        // Definimos qué pasa cuando se pulsan los botones
+        AccionTableEvent evento = new AccionTableEvent() {
+            @Override
+            public void onEditar(int row) {
+                // Obtenemos el ID del empleado de la fila seleccionada (columna 0)
+                int id = (int) vistaGestion.getTablaEmprendedores().getValueAt(row, 0);
+                //prepararEdicion(id);
+            }
+
+            @Override
+            public void onEliminar(int row) {
+                int id = (int) vistaGestion.getTablaEmprendedores().getValueAt(row, 0);
+                confirmarEliminacion(id, row);
+            }
+        };
+
+        // Aplicamos el Render y el Editor a la columna 7 (Acciones)
+        vistaGestion.getTablaEmprendedores().getColumnModel().getColumn(7).setCellRenderer(new AccionesRender());
+        vistaGestion.getTablaEmprendedores().getColumnModel().getColumn(7).setCellEditor(new AccionesEditar(evento));
+
+        // Tip: Aumenta un poco el alto de las filas para que los botones luzcan mejor
+        vistaGestion.getTablaEmprendedores().setRowHeight(40);
     }
     
     // registrar nuevo emprendimiento
@@ -120,7 +163,31 @@ public class EmprendedorController {
                 "" // Espacio para los botones de acción
             });
         }
-        // IMPORTANTE: Aquí llamas a tu componente de botones de acción
-        //configurarBotonesAccion(); 
+        initTablaAcciones();
+    }
+    
+    private void confirmarEliminacion(int id, int row) {
+        // 1. Notificación de confirmación
+        int confirm = JOptionPane.showConfirmDialog(
+            mainView, 
+            "¿Estás seguro de que deseas eliminar al emprendedor con ID: " + id + "?\n" +
+            "Esta acción lo eliminará de la lista de gestión.",
+            "Confirmar Eliminación Lógica", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+//            // 2. Realizar la petición
+//            if (dao.eliminarLogico(id)) {
+//                // 3. Notificación de éxito
+//                JOptionPane.showMessageDialog(mainView, "Empleado desactivado con éxito.");
+//
+//                // 4. Refrescar estado (la tabla volverá a consultar solo los activos)
+//                cargarTabla(); 
+//            } else {
+//                JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al empleado.", "Error", JOptionPane.ERROR_MESSAGE);
+//            }
+        }
     }
 }
