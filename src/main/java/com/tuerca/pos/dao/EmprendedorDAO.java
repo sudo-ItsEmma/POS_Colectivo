@@ -190,4 +190,26 @@ public class EmprendedorDAO {
         }
         return lista;
     }
+    
+    // Método para llenar el ComboBox de filtros en la Gestión de Productos
+    public List<Emprendedor> listarNombresYId() {
+        List<Emprendedor> lista = new ArrayList<>();
+        // Solo necesitamos el ID y el Nombre para el Combo
+        String sql = "SELECT idEntrepreneur, brandName FROM Entrepreneur WHERE isEntityActive = 1 ORDER BY brandName ASC";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Emprendedor emp = new Emprendedor();
+                emp.setId(rs.getInt("idEntrepreneur"));
+                emp.setMarca(rs.getString("brandName"));
+                lista.add(emp);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al listar nombres de emprendedores: " + e.getMessage());
+        }
+        return lista;
+    }
 }

@@ -126,6 +126,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Gesti&#xf3;n Productos"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProductosActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>

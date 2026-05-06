@@ -84,4 +84,9 @@ public class Emprendedor {
         this.activo = activo;
     }
     
+    @Override
+    public String toString() {
+        return this.marca; // Lo que se verá en el combo
+    }
+    
 }

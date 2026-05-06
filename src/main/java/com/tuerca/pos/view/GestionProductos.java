@@ -21,6 +21,15 @@ public class GestionProductos extends javax.swing.JPanel {
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
     }
+    
+    
+    // Getters para el controlador
+    public javax.swing.JTable getTablaProductos() { return tablaProductos; }
+    public javax.swing.JComboBox<Object> getCbFiltroEmprendedor() { return cbFiltroEmprendedor; }
+    public javax.swing.JTextField getTxtBuscar() { return txtBuscar; }
+    public javax.swing.JButton getBtnNuevoProducto() { return btnNuevoProducto; }
+    public javax.swing.JButton getBtnCargaMasiva() { return btnCargaMasiva; }
+    public javax.swing.JRadioButton getRbVerInactivos() { return rbVerInactivos; }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -38,19 +47,22 @@ public class GestionProductos extends javax.swing.JPanel {
         btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        jTable1 = new javax.swing.JTable();
+        tablaProductos = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         btnBack.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnNuevoProducto = new javax.swing.JButton();
         btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
-        jRadioButton1 = new javax.swing.JRadioButton();
+        cbFiltroEmprendedor = new javax.swing.JComboBox<>();
+        cbFiltroEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
+        rbVerInactivos = new javax.swing.JRadioButton();
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Gestión de Productos");
+
+        txtBuscar.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        txtBuscar.setToolTipText("");
 
         btnCargaMasiva.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
         btnCargaMasiva.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
@@ -58,8 +70,8 @@ public class GestionProductos extends javax.swing.JPanel {
         btnCargaMasiva.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
         btnCargaMasiva.setText("Carga Masiva");
 
-        jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaProductos.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
+        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -78,7 +90,7 @@ public class GestionProductos extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaProductos);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -100,9 +112,10 @@ public class GestionProductos extends javax.swing.JPanel {
         btnNuevoProducto.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
         btnNuevoProducto.setText("Nuevo Producto");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbFiltroEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        cbFiltroEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jRadioButton1.setText("Ver Inactivos");
+        rbVerInactivos.setText("Ver Inactivos");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -121,11 +134,11 @@ public class GestionProductos extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jRadioButton1))
+                                .addComponent(rbVerInactivos))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addComponent(txtBuscar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbFiltroEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnNuevoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -144,14 +157,14 @@ public class GestionProductos extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnCargaMasiva, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addComponent(btnNuevoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                    .addComponent(jComboBox1)
+                    .addComponent(cbFiltroEmprendedor)
                     .addComponent(txtBuscar))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jRadioButton1))
+                    .addComponent(rbVerInactivos))
                 .addGap(22, 22, 22))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -163,7 +176,7 @@ public class GestionProductos extends javax.swing.JPanel {
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
             // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("employee");
+            main.showView("admin");
         }
     }//GEN-LAST:event_btnBackActionPerformed
 
@@ -172,12 +185,12 @@ public class GestionProductos extends javax.swing.JPanel {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCargaMasiva;
     private javax.swing.JButton btnNuevoProducto;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<Object> cbFiltroEmprendedor;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JRadioButton rbVerInactivos;
+    private javax.swing.JTable tablaProductos;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }
