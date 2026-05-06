@@ -158,4 +158,36 @@ public class EmprendedorDAO {
             return false;
         }
     }
+    
+    public List<Emprendedor> buscar(String texto) {
+        List<Emprendedor> lista = new java.util.ArrayList<>();
+        // Buscamos coincidencia en marca O en nombre del contacto, solo para activos
+        String sql = "SELECT * FROM Entrepreneur WHERE (brandName LIKE ? OR contactName LIKE ?) AND isEntityActive = 1";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            // El comodín % permite buscar coincidencias en cualquier parte de la cadena
+            String busqueda = "%" + texto + "%";
+            ps.setString(1, busqueda);
+            ps.setString(2, busqueda);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Emprendedor emp = new Emprendedor();
+                    emp.setId(rs.getInt("idEntrepreneur")); //
+                    emp.setMarca(rs.getString("brandName")); //
+                    emp.setNombreContacto(rs.getString("contactName")); //
+                    emp.setTelefono(rs.getString("contactPhone")); //
+                    emp.setEmail(rs.getString("emailEntrepreneur")); //
+                    emp.setFechaContrato(rs.getDate("contractSignDate")); //
+                    emp.setRentaMensual(rs.getDouble("monthlyRentAmount")); //
+                    lista.add(emp);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar emprendedores: " + e.getMessage());
+        }
+        return lista;
+    }
 }

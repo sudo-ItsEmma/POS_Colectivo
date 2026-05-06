@@ -58,6 +58,16 @@ public class EmprendedorController {
                 }
             }
         });
+        
+        // listener para buscar por la barra de busqueda
+        vistaGestion.getTxtBuscar().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
+        });
     }
     
     private void initTablaAcciones() {
@@ -254,5 +264,29 @@ public class EmprendedorController {
         } else {
             JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar la información.");
         }
+    }
+    
+    private void filtrarTabla() {
+        String texto = vistaGestion.getTxtBuscar().getText().trim();
+        DefaultTableModel modelo = vistaGestion.getTableModel();
+        modelo.setRowCount(0);
+
+        // Si el campo está vacío, cargamos todos. Si no, buscamos.
+        List<Emprendedor> lista = texto.isEmpty() ? dao.listar() : dao.buscar(texto);
+
+        for (Emprendedor emp : lista) {
+            modelo.addRow(new Object[]{
+                emp.getId(),
+                emp.getMarca(),
+                emp.getNombreContacto(),
+                emp.getTelefono(),
+                emp.getEmail(),
+                emp.getFechaContrato(),
+                "$" + emp.getRentaMensual(),
+                "" // Espacio para los botones de acción
+            });
+        }
+        // Re-aplicamos el renderizador para que no se pierdan los botones
+        initTablaAcciones();
     }
 }
