@@ -66,4 +66,44 @@ public class EmprendedorDAO {
         }
         return lista;
     }
+    
+    // función para eliminar a los empleados de manera lógica
+    public boolean eliminarLogico(int id) {
+        String sqlEmprendedor = "UPDATE Entrepreneur SET isEntityActive = 0 WHERE idEntrepreneur = ?";
+
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false); // Iniciamos la transacción
+
+            // 1. Desactivar al Empleado
+            try (PreparedStatement psEmp = con.prepareStatement(sqlEmprendedor)) {
+                psEmp.setInt(1, id);
+                psEmp.executeUpdate();
+            }
+
+            con.commit();
+            return true;
+
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.rollback(); // Si falla uno, deshacemos ambos
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Error en rollback: " + rollbackEx.getMessage());
+                }
+            }
+            System.err.println("Error en eliminación lógica (Transaction): " + e.getMessage());
+            return false;
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }

@@ -136,6 +136,7 @@ public class EmprendedorController {
             if (dao.registrar(emp)) {
                 JOptionPane.showMessageDialog(vistaRegistro, "¡Emprendedor registrado con éxito!");
                 vistaRegistro.limpiarFormulario(); // El método que ya ajustamos con setDate(null)
+                cargarTabla();
                 mainView.showView("entrepreneur"); // Regresar a la tabla
             } else {
                 JOptionPane.showMessageDialog(vistaRegistro, "Error al guardar en la base de datos.");
@@ -161,6 +162,7 @@ public class EmprendedorController {
                 e.getFechaContrato(),
                 "$" + e.getRentaMensual(),
                 "" // Espacio para los botones de acción
+                    
             });
         }
         initTablaAcciones();
@@ -170,7 +172,7 @@ public class EmprendedorController {
         // 1. Notificación de confirmación
         int confirm = JOptionPane.showConfirmDialog(
             mainView, 
-            "¿Estás seguro de que deseas eliminar al emprendedor con ID: " + id + "?\n" +
+            "¿Estás seguro de que deseas eliminar al emprendimiento con ID: " + id + "?\n" +
             "Esta acción lo eliminará de la lista de gestión.",
             "Confirmar Eliminación Lógica", 
             JOptionPane.YES_NO_OPTION,
@@ -178,16 +180,16 @@ public class EmprendedorController {
         );
 
         if (confirm == JOptionPane.YES_OPTION) {
-//            // 2. Realizar la petición
-//            if (dao.eliminarLogico(id)) {
-//                // 3. Notificación de éxito
-//                JOptionPane.showMessageDialog(mainView, "Empleado desactivado con éxito.");
-//
-//                // 4. Refrescar estado (la tabla volverá a consultar solo los activos)
-//                cargarTabla(); 
-//            } else {
-//                JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al empleado.", "Error", JOptionPane.ERROR_MESSAGE);
-//            }
+            // 2. Realizar la petición
+            if (dao.eliminarLogico(id)) {
+                // 3. Notificación de éxito
+                JOptionPane.showMessageDialog(mainView, "Emprendimiento desactivado con éxito.");
+
+                // 4. Refrescar estado (la tabla volverá a consultar solo los activos)
+                cargarTabla(); 
+            } else {
+                JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al Emprendimiento.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
