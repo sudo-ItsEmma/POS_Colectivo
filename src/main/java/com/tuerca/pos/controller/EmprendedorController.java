@@ -5,7 +5,6 @@
 package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmprendedorDAO;
-import com.tuerca.pos.model.Empleado;
 import com.tuerca.pos.model.Emprendedor;
 import com.tuerca.pos.view.EditarEmprendimiento;
 import com.tuerca.pos.view.GestionEmprendedores;
@@ -43,6 +42,8 @@ public class EmprendedorController {
     
     private void initListeners() {
         this.vistaRegistro.getBtnRegistrar().addActionListener(e -> registrarEmprendedor());
+        
+        this.vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarEmpleado());
         
         
         // AGREGAMOS EL LISTENER DEL MOUSE
@@ -213,6 +214,45 @@ public class EmprendedorController {
             vistaEdicion.getDatePicker().setDate(emp.getFechaContrato());
             
             mainView.showView("editarEmprendimiento"); 
+        }
+    }
+    
+    private void actualizarEmpleado() {
+        // 1. Capturamops los datos de la vista de edición usando los getters
+        // Extraemos el texto directamente de los componentes Field
+        String marca = vistaEdicion.getBrandName().getText().trim();
+        String contacto = vistaEdicion.getContactName().getText().trim();
+        String tel = vistaEdicion.getContactPhone().getText().trim();
+        String correo = vistaEdicion.getEmail().getText().trim();
+        String rentaStr = vistaEdicion.getRent().getText().trim();
+        java.util.Date fechaUtil = vistaEdicion.getDatePicker().getDate();
+        
+        // Validación de seguridad para evitar el NullPointerException
+        if (fechaUtil == null) {
+            JOptionPane.showMessageDialog(vistaEdicion, "Por favor, selecciona una fecha válida.");
+            return;
+        }
+        
+        // Convertimos a SQL Date para MariaDB
+        java.sql.Date fechaSQL = new java.sql.Date(fechaUtil.getTime());
+        
+        // 2. Empaquetamos los datos
+        Emprendedor emp = new Emprendedor();
+        emp.setId(this.idEdicion); 
+        emp.setMarca(marca);
+        emp.setNombreContacto(contacto);
+        emp.setTelefono(tel);
+        emp.setEmail(correo);
+        emp.setRentaMensual(Double.parseDouble(rentaStr));
+        emp.setFechaContrato(fechaSQL);
+        
+        //3. Intentamos actualizar en la base de datos
+        if(dao.actualizar(emp)){
+            JOptionPane.showMessageDialog(vistaEdicion, "¡Datos actualizados con éxito!");
+            cargarTabla(); // Refrescamos la tabla para ver los cambios
+             mainView.showView("entrepreneur"); // Regresamos a la gestión
+        } else {
+            JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar la información.");
         }
     }
 }

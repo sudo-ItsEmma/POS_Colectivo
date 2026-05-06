@@ -133,4 +133,29 @@ public class EmprendedorDAO {
         }
         return null;
     }
+    
+    // función para actualizar al emprendimiento
+    public boolean actualizar(Emprendedor emp) {
+        String sql = "UPDATE Entrepreneur SET brandName = ?, contactName = ?, contactPhone = ?, "
+               + "emailEntrepreneur = ?, contractSignDate = ?, monthlyRentAmount = ? "
+               + "WHERE idEntrepreneur = ?";
+    
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, emp.getMarca());
+            ps.setString(2, emp.getNombreContacto());
+            ps.setString(3, emp.getTelefono());
+            ps.setString(4, emp.getEmail());
+            ps.setDate(5, emp.getFechaContrato());
+            ps.setDouble(6, emp.getRentaMensual());
+            ps.setInt(7, emp.getId()); // El ID que recuperamos en prepararEdicion
+
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar emprendedor: " + e.getMessage());
+            return false;
+        }
+    }
 }

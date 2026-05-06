@@ -50,7 +50,7 @@ public class EditarEmprendimiento extends javax.swing.JPanel {
     public com.toedter.calendar.JDateChooser getDatePicker() { return datePicker; }
 
     // Exponemos el boton de registro
-    public JButton getBtnRegistrar() { return btnActualizar; }
+    public JButton getBtnActualizar() { return btnActualizar; }
     public JButton getBtnCancelar() { return btnCancelar;}
     public JButton getBtnBack() { return btnBack;}
     
