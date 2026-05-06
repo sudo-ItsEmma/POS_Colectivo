@@ -36,7 +36,13 @@ public class MainView extends javax.swing.JFrame {
             );
         empController.cargarTabla();
         
-        com.tuerca.pos.controller.EmprendedorController empreController = new com.tuerca.pos.controller.EmprendedorController(nuevoEmprendedor1, gestionEmprendedores1, this);
+        com.tuerca.pos.controller.EmprendedorController empreController = 
+                new com.tuerca.pos.controller.EmprendedorController(
+                        nuevoEmprendedor1,
+                        editarEmprendimiento1,
+                        gestionEmprendedores1, 
+                        this
+                );
         empreController.cargarTabla();
         showView("login");
     }
@@ -71,6 +77,7 @@ public class MainView extends javax.swing.JFrame {
         nuevoEmpleado1 = new com.tuerca.pos.view.NuevoEmpleado();
         editarEmpleado1 = new com.tuerca.pos.view.EditarEmpleado();
         nuevoEmprendedor1 = new com.tuerca.pos.view.NuevoEmprendedor();
+        editarEmprendimiento1 = new com.tuerca.pos.view.EditarEmprendimiento();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -90,6 +97,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(nuevoEmpleado1, "nuevoEmpleado");
         getContentPane().add(editarEmpleado1, "editarEmpleado");
         getContentPane().add(nuevoEmprendedor1, "nuevoEmprendedor");
+        getContentPane().add(editarEmprendimiento1, "editarEmprendimiento");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -134,6 +142,7 @@ public class MainView extends javax.swing.JFrame {
     private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
     private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
     private com.tuerca.pos.view.EditarEmpleado editarEmpleado1;
+    private com.tuerca.pos.view.EditarEmprendimiento editarEmprendimiento1;
     private com.tuerca.pos.view.EmployeePanel employeePanel2;
     private com.tuerca.pos.view.GenerarReportes generarReportes1;
     private com.tuerca.pos.view.GestionApartados gestionApartados1;

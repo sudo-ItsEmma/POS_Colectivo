@@ -106,4 +106,31 @@ public class EmprendedorDAO {
             }
         }
     }
+    
+    // buscar al emprendimiento por id
+    public Emprendedor buscarPorId(int id) {
+        String sql = "SELECT * FROM Entrepreneur WHERE idEntrepreneur = ?";
+        
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Emprendedor emp = new Emprendedor();
+                emp.setId(rs.getInt("idEntrepreneur"));
+                emp.setMarca(rs.getString("brandName"));
+                emp.setNombreContacto(rs.getString("contactName"));
+                emp.setTelefono(rs.getString("contactPhone"));
+                emp.setEmail(rs.getString("emailEntrepreneur"));
+                emp.setRentaMensual(rs.getDouble("monthlyRentAmount"));
+                emp.setFechaContrato(rs.getDate("contractSignDate"));
+                return emp;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar empleado: " + e.getMessage());
+        }
+        return null;
+    }
 }

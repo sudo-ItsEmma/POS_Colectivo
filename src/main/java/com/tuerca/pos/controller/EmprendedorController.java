@@ -5,7 +5,9 @@
 package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.EmprendedorDAO;
+import com.tuerca.pos.model.Empleado;
 import com.tuerca.pos.model.Emprendedor;
+import com.tuerca.pos.view.EditarEmprendimiento;
 import com.tuerca.pos.view.GestionEmprendedores;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoEmprendedor;
@@ -21,14 +23,17 @@ import javax.swing.table.DefaultTableModel;
  * @author mannycalderon
  */
 public class EmprendedorController {
+    private int idEdicion = -1; // Variable para saber qué ID estamos editando
     private GestionEmprendedores vistaGestion;
     private NuevoEmprendedor vistaRegistro;
+    private EditarEmprendimiento vistaEdicion;
     private EmprendedorDAO dao;
     private MainView mainView;
     
-    public EmprendedorController(NuevoEmprendedor vReg, GestionEmprendedores vGest, MainView main) {
+    public EmprendedorController(NuevoEmprendedor vReg, EditarEmprendimiento vEdit, GestionEmprendedores vGest, MainView main) {
         this.vistaRegistro = vReg;
         this.vistaGestion = vGest;
+        this.vistaEdicion = vEdit;
         this.mainView = main;
         this.dao = new EmprendedorDAO();
         
@@ -61,7 +66,7 @@ public class EmprendedorController {
             public void onEditar(int row) {
                 // Obtenemos el ID del empleado de la fila seleccionada (columna 0)
                 int id = (int) vistaGestion.getTablaEmprendedores().getValueAt(row, 0);
-                //prepararEdicion(id);
+                prepararEdicion(id);
             }
 
             @Override
@@ -190,6 +195,25 @@ public class EmprendedorController {
             } else {
                 JOptionPane.showMessageDialog(mainView, "Error al intentar desactivar al Emprendimiento.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }
+    }
+    
+    // función del controlador para editar un empleado
+    private void prepararEdicion(int id) {
+        Emprendedor emp = dao.buscarPorId(id);
+
+        if (emp != null) {
+            this.idEdicion = id;
+            vistaEdicion.getBrandName().setText(emp.getMarca());
+            vistaEdicion.getContactName().setText(emp.getNombreContacto());
+            vistaEdicion.getContactPhone().setText(emp.getTelefono());
+            vistaEdicion.getEmail().setText(emp.getEmail());
+            // convierte el dato numerico en cadena de caracteres
+            vistaEdicion.getRent().setText(String.valueOf(emp.getRentaMensual()));
+            // CARGAR LA FECHA (No olvides exponer el datePicker en la vista de edición)
+            vistaEdicion.getDatePicker().setDate(emp.getFechaContrato());
+            
+            mainView.showView("editarEmprendimiento"); 
         }
     }
 }
