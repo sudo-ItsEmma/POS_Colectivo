@@ -210,7 +210,6 @@ public class EmprendedorController {
             vistaEdicion.getEmail().setText(emp.getEmail());
             // convierte el dato numerico en cadena de caracteres
             vistaEdicion.getRent().setText(String.valueOf(emp.getRentaMensual()));
-            // CARGAR LA FECHA (No olvides exponer el datePicker en la vista de edición)
             vistaEdicion.getDatePicker().setDate(emp.getFechaContrato());
             
             mainView.showView("editarEmprendimiento"); 
