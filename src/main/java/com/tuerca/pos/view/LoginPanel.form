@@ -45,7 +45,7 @@
                   <Component id="btnEmployee" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="160" max="32767" attributes="0"/>
+              <EmptySpace pref="153" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -97,11 +97,11 @@
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="passwordField" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="0" pref="315" max="32767" attributes="0"/>
                           <Component id="btnIniciarSesion" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="contraField" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -113,12 +113,12 @@
                   <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="userField" min="-2" max="-2" attributes="0"/>
+                  <Component id="userField" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="passwordField" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="30" max="32767" attributes="0"/>
+                  <Component id="contraField" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace pref="23" max="32767" attributes="0"/>
                   <Component id="btnIniciarSesion" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
@@ -147,11 +147,6 @@
             <Property name="text" type="java.lang.String" value="Contrase&#xf1;a:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JPasswordField" name="passwordField">
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="passwordField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 13&quot;);"/>
-          </AuxValues>
-        </Component>
         <Component class="javax.swing.JButton" name="btnIniciarSesion">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -167,6 +162,11 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnIniciarSesion.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="contraField">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="contraField.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 13&quot;);"/>
           </AuxValues>
         </Component>
       </SubComponents>

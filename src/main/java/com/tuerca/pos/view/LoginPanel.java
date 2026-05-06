@@ -16,6 +16,9 @@ public class LoginPanel extends javax.swing.JPanel {
     public LoginPanel() {
         initComponents();
         
+        contraField.putClientProperty("FlatLaf.style", "arc: 13; showRevealButton: true");
+        contraField.putClientProperty("JPasswordField.showRevealButton", true);
+        
     }
 
     /**
@@ -35,10 +38,10 @@ public class LoginPanel extends javax.swing.JPanel {
         userField = new javax.swing.JTextField();
         userField.putClientProperty("FlatLaf.style", "arc: 13");
         jLabel3 = new javax.swing.JLabel();
-        passwordField = new javax.swing.JPasswordField();
-        passwordField.putClientProperty("FlatLaf.style", "arc: 13");
         btnIniciarSesion = new javax.swing.JButton();
         btnIniciarSesion.putClientProperty("FlatLaf.style", "arc: 20");
+        contraField = new javax.swing.JPasswordField();
+        contraField.putClientProperty("FlatLaf.style", "arc: 13");
         btnEmployee = new javax.swing.JButton();
         btnAdmin = new javax.swing.JButton();
 
@@ -76,10 +79,10 @@ public class LoginPanel extends javax.swing.JPanel {
                             .addComponent(jLabel1)
                             .addComponent(jLabel3))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(passwordField)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardInicioLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnIniciarSesion)))
+                        .addGap(0, 315, Short.MAX_VALUE)
+                        .addComponent(btnIniciarSesion))
+                    .addComponent(contraField, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         cardInicioLayout.setVerticalGroup(
@@ -88,12 +91,12 @@ public class LoginPanel extends javax.swing.JPanel {
                 .addGap(43, 43, 43)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(contraField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(btnIniciarSesion)
                 .addGap(21, 21, 21))
         );
@@ -140,7 +143,7 @@ public class LoginPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEmployee)
                     .addComponent(btnAdmin))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -176,11 +179,11 @@ public class LoginPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnEmployee;
     private javax.swing.JButton btnIniciarSesion;
     private javax.swing.JPanel cardInicio;
+    private javax.swing.JPasswordField contraField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JPasswordField passwordField;
     private javax.swing.JTextField userField;
     // End of variables declaration//GEN-END:variables
 }
