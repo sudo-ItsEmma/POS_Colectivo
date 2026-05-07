@@ -73,17 +73,17 @@ public class GestionProductos extends javax.swing.JPanel {
         tablaProductos.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null}
             },
             new String [] {
-                "Código", "Descripción", "Emprendedor", "Precio", "Stock", "Acciones"
+                "ID", "Código", "Descripción", "Emprendimiento", "Precio", "Stock", "Acciones"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -117,7 +117,7 @@ public class GestionProductos extends javax.swing.JPanel {
             }
         });
 
-        cbFiltroEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
+        cbFiltroEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
         cbFiltroEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         rbVerInactivos.setText("Ver Inactivos");

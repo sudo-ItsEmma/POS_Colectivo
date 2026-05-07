@@ -19,7 +19,7 @@ public class ProductoDAO {
         List<Producto> lista = new ArrayList<>();
         String sql = "SELECT p.*, e.brandName FROM Product p " +
                      "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
-                     "WHERE p.isProductActive = 1 ORDER BY p.idProduct DESC";
+                     "WHERE p.isProductActive = 1 ORDER BY p.idProduct ASC";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
@@ -89,5 +89,29 @@ public class ProductoDAO {
         p.setCurrentStock(rs.getInt("currentStock"));
         p.setMinStockAlert(rs.getInt("minStockAlert"));
         return p;
+    }
+    
+    // registrar producto
+    public boolean registrar(Producto p) {
+        String sql = "INSERT INTO Product (idEntrepreneur, fullProductCode, productDescription, " +
+                     "department, currentPrice, currentStock, minStockAlert) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getIdEntrepreneur());
+            ps.setString(2, p.getFullProductCode());
+            ps.setString(3, p.getProductDescription());
+            ps.setString(4, p.getDepartment());
+            ps.setDouble(5, p.getCurrentPrice());
+            ps.setInt(6, p.getCurrentStock());
+            ps.setInt(7, p.getMinStockAlert());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al registrar producto: " + e.getMessage());
+            return false;
+        }
     }
 }

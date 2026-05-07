@@ -31,6 +31,8 @@ public class NuevoProducto extends javax.swing.JPanel {
         stockField.putClientProperty("JTextField.placeholderText", "Introduce el stock del producto (EJ. 10)");
         stockField.putClientProperty("JTextField.showClearButton", true);
         
+        limpiarFormulario();
+        
     }
     
     // Exponemos los datos
@@ -49,6 +51,14 @@ public class NuevoProducto extends javax.swing.JPanel {
     // limpiar el formulario
     public void limpiarFormulario(){
         codigoField.setText("");
+        descripcionField.setText("");
+        departamentoField.setText("");
+        precioField.setText("");
+        stockField.setText("");
+        // Restablecer el combo al primer elemento (índice 0)
+        if (cbEmprendedor.getItemCount() > 0) {
+            cbEmprendedor.setSelectedIndex(0);
+        }
 
         codigoField.requestFocus();
     }
@@ -113,6 +123,7 @@ public class NuevoProducto extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel1.setText("Selecciona el emprendimiento:");
 
+        cbEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
         cbEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         codigoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
