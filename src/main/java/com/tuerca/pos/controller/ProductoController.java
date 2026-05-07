@@ -37,6 +37,7 @@ public class ProductoController {
 
         // 1. Cargamos los datos iniciales al arrancar
         cargarCombos();
+        vistaGestion.limpiarFiltro();
         configurarTabla();
         cargarTablaProductos();
         
@@ -93,11 +94,13 @@ public class ProductoController {
 
         // Acción para el botón cancelar o volver 
         vistaRegistro.getBtnBack().addActionListener(e -> {
+            vistaGestion.limpiarFiltro();
             vistaRegistro.limpiarFormulario();
             mainView.showView("gestionProductos");
         });
         
         vistaRegistro.getBtnCancelar().addActionListener(e -> {
+            vistaGestion.limpiarFiltro();
             vistaRegistro.limpiarFormulario();
             mainView.showView("gestionProductos");
         });
@@ -165,6 +168,10 @@ public class ProductoController {
         initTablaAcciones();
     }
     
+    public void refrescarCatalogos() {
+        // Volvemos a llamar a la función que ya tenías
+        cargarCombos();
+    }
     
     public void cargarCombos() {
         EmprendedorDAO empDao = new EmprendedorDAO();
@@ -230,7 +237,7 @@ public class ProductoController {
             if (productoDao.registrar(p)) {
                 JOptionPane.showMessageDialog(vistaRegistro, "¡Producto " + codigo + " registrado!");
                 // El controlador le da la orden a la vista
-                vistaRegistro.limpiarFormulario();
+                vistaGestion.limpiarFiltro();
                 cargarTablaProductos(); // Refrescamos la tabla de gestión
                 mainView.showView("products"); // Regresamos a la tabla
             } else {

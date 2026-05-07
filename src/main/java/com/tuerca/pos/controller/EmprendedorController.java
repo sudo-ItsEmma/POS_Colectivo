@@ -151,6 +151,7 @@ public class EmprendedorController {
             // 4. Ejecutar registro
             if (dao.registrar(emp)) {
                 JOptionPane.showMessageDialog(vistaRegistro, "¡Emprendedor registrado con éxito!");
+                mainView.getProdController().refrescarCatalogos();
                 vistaRegistro.limpiarFormulario(); // El método que ya ajustamos con setDate(null)
                 cargarTabla();
                 mainView.showView("entrepreneur"); // Regresar a la tabla

@@ -23,6 +23,12 @@ public class GestionEmprendedores extends javax.swing.JPanel {
 
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
+        limpiarFiltro();
+    }
+    
+    public void limpiarFiltro(){
+        // 1. Limpiar el buscador
+        txtBuscar.setText("");
     }
     
     public JTextField getTxtBuscar() {
@@ -165,6 +171,7 @@ public class GestionEmprendedores extends javax.swing.JPanel {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         // Buscamos la ventana principal
+        limpiarFiltro();
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
 
         if (window instanceof com.tuerca.pos.view.MainView main) {

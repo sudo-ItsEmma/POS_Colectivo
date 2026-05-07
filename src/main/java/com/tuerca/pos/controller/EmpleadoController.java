@@ -37,6 +37,7 @@ public class EmpleadoController {
         this.mainView = main;
         this.dao = new EmpleadoDAO();
         
+        vistaGestion.limpiarFiltro();
         // inicializamos los listeners
         initTablaAcciones();
         initListeners();
@@ -70,11 +71,18 @@ public class EmpleadoController {
     private void initListeners(){
         this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
     
-        this.vista.getBtnCancelar().addActionListener(e -> vista.limpiarFormulario());
+        this.vista.getBtnCancelar().addActionListener(e -> {
+            vistaGestion.limpiarFiltro();
+            vista.limpiarFormulario();
+        });
         
-        this.vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarEmpleado());
+        this.vistaEdicion.getBtnActualizar().addActionListener(e -> {
+            vistaGestion.limpiarFiltro();
+            actualizarEmpleado();
+        });
 
         this.vista.getBtnBack().addActionListener(e -> {
+            vistaGestion.limpiarFiltro();
             vista.limpiarFormulario();
             mainView.showView("empleados"); // Asegúrate de que este sea el nombre de la vista
         });
@@ -152,6 +160,7 @@ public class EmpleadoController {
         emp.setIdRole(rolSeleccionado.equals("Administrador") ? 1 : 2);
         if (dao.registrar(emp)) {
             JOptionPane.showMessageDialog(vista, "¡Empleado registrados con éxito!");
+            vistaGestion.limpiarFiltro();
             vista.limpiarFormulario();
             cargarTabla();
             mainView.showView("empleados");

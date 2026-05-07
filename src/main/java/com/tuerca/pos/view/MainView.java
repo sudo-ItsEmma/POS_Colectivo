@@ -4,11 +4,18 @@
  */
 package com.tuerca.pos.view;
 
+import com.tuerca.pos.controller.EmpleadoController;
+import com.tuerca.pos.controller.EmprendedorController;
+import com.tuerca.pos.controller.ProductoController;
+
 /**
  *
  * @author mannycalderon
  */
 public class MainView extends javax.swing.JFrame {
+    private EmpleadoController empController;
+    private EmprendedorController empreController;
+    private ProductoController prodController;
 
     /**
      * Creates new form MainView
@@ -27,7 +34,7 @@ public class MainView extends javax.swing.JFrame {
         
         // conectamos el controlador 
         // En el constructor de MainView.java
-        com.tuerca.pos.controller.EmpleadoController empController = 
+        empController = 
             new com.tuerca.pos.controller.EmpleadoController(
                 nuevoEmpleado1,   // Vista de Registro
                 editarEmpleado1,  // Vista de Edición (Asegúrate de que este sea el nombre de la variable)
@@ -36,7 +43,7 @@ public class MainView extends javax.swing.JFrame {
             );
         empController.cargarTabla();
         
-        com.tuerca.pos.controller.EmprendedorController empreController = 
+        empreController = 
                 new com.tuerca.pos.controller.EmprendedorController(
                         nuevoEmprendedor1,
                         editarEmprendimiento1,
@@ -46,7 +53,7 @@ public class MainView extends javax.swing.JFrame {
         empreController.cargarTabla();
         
         // Dentro del constructor de MainView.java
-        com.tuerca.pos.controller.ProductoController prodController = 
+        prodController = 
                 new com.tuerca.pos.controller.ProductoController(
                         gestionProductos1,
                         nuevoProducto1,
@@ -54,6 +61,10 @@ public class MainView extends javax.swing.JFrame {
                 );
         
         showView("login");
+    }
+    
+    public ProductoController getProdController() {
+        return prodController;
     }
     
     public void showView(String viewName) {

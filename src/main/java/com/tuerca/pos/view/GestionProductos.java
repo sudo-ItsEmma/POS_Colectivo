@@ -20,6 +20,8 @@ public class GestionProductos extends javax.swing.JPanel {
 
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
+        
+        limpiarFiltro();
     }
     
     
@@ -30,6 +32,16 @@ public class GestionProductos extends javax.swing.JPanel {
     public javax.swing.JButton getBtnNuevoProducto() { return btnNuevoProducto; }
     public javax.swing.JButton getBtnCargaMasiva() { return btnCargaMasiva; }
     public javax.swing.JRadioButton getRbVerInactivos() { return rbVerInactivos; }
+    
+    // limpiar el filtro de emprendedor
+    public void limpiarFiltro(){
+        // 1. Limpiar el buscador
+        txtBuscar.setText("");
+        // Restablecer el combo al primer elemento (índice 0)
+        if (cbFiltroEmprendedor.getItemCount() > 0) {
+            cbFiltroEmprendedor.setSelectedIndex(0);
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -177,6 +189,7 @@ public class GestionProductos extends javax.swing.JPanel {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         // Buscamos la ventana principal
+        limpiarFiltro();
         java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
