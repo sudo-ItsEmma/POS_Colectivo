@@ -68,34 +68,36 @@ public class EmprendedorDAO {
     }
     
     // función para eliminar a los empleados de manera lógica
-    public boolean eliminarLogico(int id) {
-        String sqlEmprendedor = "UPDATE Entrepreneur SET isEntityActive = 0 WHERE idEntrepreneur = ?";
+        public boolean eliminarLogico(int id) {
+        String sqlEmp = "UPDATE Entrepreneur SET isEntityActive = 0 WHERE idEntrepreneur = ?";
+        String sqlProd = "UPDATE Product SET isProductActive = 0 WHERE idEntrepreneur = ?";
 
         Connection con = null;
         try {
             con = DatabaseConnection.getConnection();
-            con.setAutoCommit(false); // Iniciamos la transacción
+            con.setAutoCommit(false); // Iniciamos transacción
 
-            // 1. Desactivar al Empleado
-            try (PreparedStatement psEmp = con.prepareStatement(sqlEmprendedor)) {
+            // 1. Desactivar todos sus productos ligados primero
+            try (PreparedStatement psProd = con.prepareStatement(sqlProd)) {
+                psProd.setInt(1, id);
+                psProd.executeUpdate();
+            }
+
+            // 2. Desactivar Emprendedor después
+            try (PreparedStatement psEmp = con.prepareStatement(sqlEmp)) {
                 psEmp.setInt(1, id);
                 psEmp.executeUpdate();
             }
 
             con.commit();
             return true;
-
-        } catch (SQLException e) {
-            if (con != null) {
-                try {
-                    con.rollback(); // Si falla uno, deshacemos ambos
-                } catch (SQLException rollbackEx) {
-                    System.err.println("Error en rollback: " + rollbackEx.getMessage());
-                }
-            }
-            System.err.println("Error en eliminación lógica (Transaction): " + e.getMessage());
+        }catch (SQLException e) {
+            // ESTO TE DIRÁ EL ERROR REAL (Ej: "Foreign key constraint fails")
+            System.err.println("Error detallado: " + e.getMessage()); 
+            if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             return false;
-        } finally {
+        }
+        finally {
             if (con != null) {
                 try {
                     con.setAutoCommit(true);
@@ -106,6 +108,8 @@ public class EmprendedorDAO {
             }
         }
     }
+    
+    
     
     // buscar al emprendimiento por id
     public Emprendedor buscarPorId(int id) {

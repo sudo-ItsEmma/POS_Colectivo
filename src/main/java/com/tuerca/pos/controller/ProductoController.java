@@ -38,6 +38,14 @@ public class ProductoController {
         this.vistaEdicion = vistaEdicion;
         this.mainView = mainView;
         this.productoDao = new ProductoDAO();
+        
+        this.vistaGestion.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                // Este código se ejecuta SOLITO cada vez que el panel se muestra
+                refrescarPantallaCompleta();
+            }
+        });
 
         // 1. Cargamos los datos iniciales al arrancar
         cargarCombos();
@@ -48,6 +56,13 @@ public class ProductoController {
         // 2. Aquí conectaremos los botones y eventos más adelante
         initTablaAcciones();
         initListeners();
+    }
+    
+    // Método auxiliar para agrupar el refresco
+    private void refrescarPantallaCompleta() {
+        vistaGestion.getRbVerInactivos().setSelected(false);
+        cargarCombos();   // Por si se agregaron/eliminaron emprendedores
+        filtrarTabla();   // Recarga la tabla desde la DB
     }
     
     private void initTablaAcciones() {
@@ -201,6 +216,7 @@ public class ProductoController {
     public void refrescarCatalogos() {
         // Volvemos a llamar a la función que ya tenías
         cargarCombos();
+        cargarTablaProductos();
     }
     
     public void cargarCombos() {
@@ -408,9 +424,18 @@ public class ProductoController {
             "Reactivar Producto", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            if (productoDao.activarProducto(id)) {
-                JOptionPane.showMessageDialog(mainView, "Producto reactivado.");
+            int resultado = productoDao.activarProductoConValidacion(id);
+
+            if (resultado == 1) {
+                JOptionPane.showMessageDialog(mainView, "Producto reactivado con éxito.");
                 filtrarTabla();
+            } else if (resultado == -1) {
+                JOptionPane.showMessageDialog(mainView, 
+                    "No se puede activar el producto porque el Emprendedor ligado está DESACTIVADO.\n" +
+                    "Primero debes activar al emprendedor en el módulo de Emprendedores.", 
+                    "Acción Denegada", JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(mainView, "Error al intentar activar el producto.");
             }
         }
     }

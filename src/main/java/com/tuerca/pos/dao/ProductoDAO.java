@@ -277,15 +277,35 @@ public class ProductoDAO {
         return lista;
     }
     
-    public boolean activarProducto(int id) {
-        String sql = "UPDATE Product SET isProductActive = 1 WHERE idProduct = ?";
-        try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+    public int activarProductoConValidacion(int idProducto) {
+        // Esta consulta verifica si el emprendedor está activo antes de proceder
+        String sqlCheck = "SELECT e.isEntrepreneurActive FROM Product p " +
+                          "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
+                          "WHERE p.idProduct = ?";
+
+        String sqlUpdate = "UPDATE Product SET isProductActive = 1 WHERE idProduct = ?";
+
+        try (Connection con = DatabaseConnection.getConnection()) {
+            // 1. Verificar estado del emprendedor
+            try (PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
+                psCheck.setInt(1, idProducto);
+                ResultSet rs = psCheck.executeQuery();
+
+                if (rs.next()) {
+                    int emprendedorActivo = rs.getInt("isEntrepreneurActive");
+                    if (emprendedorActivo == 0) {
+                        return -1; // Código para indicar que el emprendedor está desactivado
+                    }
+                }
+            }
+
+            // 2. Si pasó la validación, activar
+            try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdate)) {
+                psUpdate.setInt(1, idProducto);
+                return psUpdate.executeUpdate() > 0 ? 1 : 0;
+            }
         } catch (SQLException e) {
-            System.err.println("Error al activar producto: " + e.getMessage());
-            return false;
+            return 0;
         }
     }
 }
