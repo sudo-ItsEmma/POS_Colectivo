@@ -114,4 +114,41 @@ public class ProductoDAO {
             return false;
         }
     }
+    
+     // función para eliminar a los empleados de manera lógica
+    public boolean eliminarLogico(int id) {
+        String sql = "UPDATE Product SET isProductActive = 0 WHERE idProduct = ?";
+        Connection con = null;
+
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false); // Iniciamos transacción
+
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                int filasAfectadas = ps.executeUpdate();
+
+                if (filasAfectadas > 0) {
+                    con.commit();
+                    return true;
+                } else {
+                    con.rollback();
+                    return false;
+                }
+            }
+        } catch (SQLException e) {
+            if (con != null) {
+                try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            }
+            System.err.println("Error en eliminación lógica de producto: " + e.getMessage());
+            return false;
+        } finally {
+            if (con != null) {
+                try { 
+                    con.setAutoCommit(true); 
+                    con.close(); 
+                } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+    }
 }

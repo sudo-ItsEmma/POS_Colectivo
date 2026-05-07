@@ -58,7 +58,7 @@ public class ProductoController {
             @Override
             public void onEliminar(int row) {
                 int id = (int) vistaGestion.getTablaProductos().getValueAt(row, 0);
-                // confirmarEliminacion(id, row);
+                confirmarEliminacion(id, row);
             }
         };
 
@@ -246,6 +246,30 @@ public class ProductoController {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(vistaRegistro, "El precio y el stock deben ser valores numéricos.");
+        }
+    }
+    
+    
+    private void confirmarEliminacion(int id, int row) {
+    // Extraemos el código de la columna 1 para una mejor UX
+        String codigo = vistaGestion.getTablaProductos().getValueAt(row, 1).toString();
+
+        int confirm = JOptionPane.showConfirmDialog(
+            mainView, 
+            "¿Estás seguro de que deseas desactivar el producto: " + codigo + "?\n" +
+            "Ya no aparecerá en el inventario activo.",
+            "Confirmar Baja de Producto", 
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (productoDao.eliminarLogico(id)) {
+                JOptionPane.showMessageDialog(mainView, "El producto " + codigo + " ha sido desactivado.");
+                cargarTablaProductos();
+            } else {
+                JOptionPane.showMessageDialog(mainView, "No se pudo desactivar el producto.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
     
