@@ -34,7 +34,7 @@ public class NuevoProducto extends javax.swing.JPanel {
     }
     
     // Exponemos los datos
-    public javax.swing.JComboBox<Object> getCbFiltroEmprendedor() { return cbFiltroEmprendedor; }
+    public javax.swing.JComboBox<Object> getCbEmprendedor() { return cbEmprendedor; }
     public String getCodigoField() { return codigoField.getText().trim(); }
     public String getDescripcionField() { return descripcionField.getText().trim(); }
     public String getDepartamentoField() { return departamentoField.getText().trim(); }
@@ -69,7 +69,7 @@ public class NuevoProducto extends javax.swing.JPanel {
         formularioRegistro = new javax.swing.JPanel();
         formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
         jLabel1 = new javax.swing.JLabel();
-        cbFiltroEmprendedor = new javax.swing.JComboBox<>();
+        cbEmprendedor = new javax.swing.JComboBox<>();
         codigoField = new javax.swing.JTextField();
         codigoField.putClientProperty("FlatLaf.style", "arc: 20");
         btnRegistrar = new javax.swing.JButton();
@@ -113,7 +113,7 @@ public class NuevoProducto extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel1.setText("Selecciona el emprendimiento:");
 
-        cbFiltroEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         codigoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
 
@@ -174,7 +174,7 @@ public class NuevoProducto extends javax.swing.JPanel {
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbFiltroEmprendedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbEmprendedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(descripcionField)
                     .addComponent(departamentoField)
                     .addComponent(precioField)
@@ -196,7 +196,7 @@ public class NuevoProducto extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbFiltroEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cbEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -287,7 +287,7 @@ public class NuevoProducto extends javax.swing.JPanel {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JComboBox<Object> cbFiltroEmprendedor;
+    private javax.swing.JComboBox<Object> cbEmprendedor;
     private javax.swing.JTextField codigoField;
     private javax.swing.JTextField departamentoField;
     private javax.swing.JTextField descripcionField;

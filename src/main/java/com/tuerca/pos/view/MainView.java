@@ -48,7 +48,8 @@ public class MainView extends javax.swing.JFrame {
         // Dentro del constructor de MainView.java
         com.tuerca.pos.controller.ProductoController prodController = 
                 new com.tuerca.pos.controller.ProductoController(
-                        gestionProductos1, 
+                        gestionProductos1,
+                        nuevoProducto1,
                         this
                 );
         

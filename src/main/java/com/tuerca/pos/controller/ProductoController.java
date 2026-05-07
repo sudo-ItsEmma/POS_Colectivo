@@ -9,6 +9,7 @@ import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.model.Emprendedor;
 import com.tuerca.pos.view.GestionProductos;
 import com.tuerca.pos.view.MainView;
+import com.tuerca.pos.view.NuevoProducto;
 import java.util.List;
 
 /**
@@ -17,17 +18,19 @@ import java.util.List;
  */
 public class ProductoController {
     private GestionProductos vistaGestion;
+    private NuevoProducto vistaRegistro;
     private MainView mainView;
     private ProductoDAO productoDao;
     
     // EL CONSTRUCTOR: Es el corazón de la conexión
-    public ProductoController(GestionProductos vistaGestion, MainView mainView) {
+    public ProductoController(GestionProductos vistaGestion, NuevoProducto vistaRegistro, MainView mainView) {
         this.vistaGestion = vistaGestion;
+        this.vistaRegistro = vistaRegistro;
         this.mainView = mainView;
         this.productoDao = new ProductoDAO();
 
         // 1. Cargamos los datos iniciales al arrancar
-        cargarComboEmprendedores();
+        cargarCombos();
         
         // 2. Aquí conectaremos los botones y eventos más adelante
         initListeners();
@@ -39,21 +42,21 @@ public class ProductoController {
     }
     
     
-    public void cargarComboEmprendedores() {
-        // 1. Limpiamos el combo
-        vistaGestion.getCbFiltroEmprendedor().removeAllItems();
-
-        // 2. Agregamos la opción por defecto
-        // Usamos un String o un objeto "dummy" para representar el ID 0
-        vistaGestion.getCbFiltroEmprendedor().addItem("--- Todos ---");
-
-        // 3. Traemos la lista del DAO
+    public void cargarCombos() {
         EmprendedorDAO empDao = new EmprendedorDAO();
         List<Emprendedor> lista = empDao.listarNombresYId();
 
-        // 4. Llenamos el combo con los OBJETOS completos
+        // Limpiar y llenar combo de la tabla (filtro)
+        vistaGestion.getCbFiltroEmprendedor().removeAllItems();
+        vistaGestion.getCbFiltroEmprendedor().addItem("--- Todos ---");
+        
+        // Limpiar y llenar combo del registro (obligatorio)
+        vistaRegistro.getCbEmprendedor().removeAllItems();
+        vistaRegistro.getCbEmprendedor().addItem("Selecciona un emprendedor...");
+
         for (Emprendedor emp : lista) {
             vistaGestion.getCbFiltroEmprendedor().addItem(emp);
+            vistaRegistro.getCbEmprendedor().addItem(emp);
         }
     }
     
