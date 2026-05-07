@@ -197,4 +197,85 @@ public class ProductoDAO {
             return false;
         }
     }
+    
+    public List<Producto> buscar(String criterio) {
+        List<Producto> lista = new ArrayList<>();
+        // Buscamos en código O en descripción, siempre que estén activos
+        String sql = "SELECT p.*, e.brandName FROM Product p " +
+                     "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
+                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) " +
+                     "AND p.isProductActive = 1";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String query = "%" + criterio + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto pro = new Producto();
+                pro.setIdProduct(rs.getInt("idProduct"));
+                pro.setFullProductCode(rs.getString("fullProductCode"));
+                pro.setProductDescription(rs.getString("productDescription"));
+                pro.setBrandName(rs.getString("brandName")); // Para mostrar en la tabla
+                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentStock(rs.getInt("currentStock"));
+                lista.add(pro);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en búsqueda dinámica: " + e.getMessage());
+        }
+        return lista;
+    }
+    
+    public List<Producto> buscarAvanzado(String texto, int idEmp) {
+        List<Producto> lista = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder(
+            "SELECT p.*, e.brandName FROM Product p " +
+            "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
+            "WHERE p.isProductActive = 1 "
+        );
+
+        if (!texto.isEmpty()) {
+            // SQL detectará coincidencias sin importar si el usuario escribe minúsculas
+            sql.append("AND (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) ");
+        }
+
+        // Si seleccionó un emprendedor específico (ID > 0), filtramos por él
+        if (idEmp > 0) {
+            sql.append("AND p.idEntrepreneur = ? ");
+        }
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+            if (!texto.isEmpty()) {
+                String query = "%" + texto.toUpperCase() + "%";
+                ps.setString(paramIndex++, query);
+                ps.setString(paramIndex++, query);
+            }
+            if (idEmp > 0) {
+                ps.setInt(paramIndex, idEmp);
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto pro = new Producto();
+                pro.setIdProduct(rs.getInt("idProduct"));
+                pro.setFullProductCode(rs.getString("fullProductCode"));
+                pro.setProductDescription(rs.getString("productDescription"));
+                pro.setBrandName(rs.getString("brandName")); // <-- Verifica que este nombre coincida con tu JOIN
+                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentStock(rs.getInt("currentStock"));
+                lista.add(pro);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en búsqueda avanzada: " + e.getMessage());
+        }
+        return lista;
+    }
 }

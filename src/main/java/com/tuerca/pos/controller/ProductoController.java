@@ -93,6 +93,17 @@ public class ProductoController {
     }
 
     private void initListeners() {
+        // Cuando el usuario escribe en el buscador
+        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                filtrarTabla(); // Llama a la lógica unificada
+            }
+        });
+
+        // Cuando el usuario selecciona un emprendedor en el combo
+        vistaGestion.getCbFiltroEmprendedor().addActionListener(e -> filtrarTabla());
+        
         // Acción para el botón registrar
         vistaRegistro.getBtnRegistrar().addActionListener(e -> registrarProducto());
         
@@ -343,6 +354,36 @@ public class ProductoController {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(vistaEdicion, "Verifica que el precio y stock sean números válidos.");
+        }
+    }
+    
+    public void filtrarTabla() {
+        // Capturamos el estado de ambos filtros
+        String texto = vistaGestion.getTxtBuscar().getText().trim().toUpperCase();
+
+        int idEmp = 0;
+        Object seleccionado = vistaGestion.getCbFiltroEmprendedor().getSelectedItem();
+        if (seleccionado instanceof Emprendedor emp) {
+            idEmp = emp.getId();
+        }
+
+        // Pedimos al DAO que nos de la lista filtrada por ambos criterios
+        List<Producto> lista = productoDao.buscarAvanzado(texto, idEmp);
+
+        // Actualizamos la tabla
+        DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaProductos().getModel();
+        modelo.setRowCount(0);
+
+        for (Producto p : lista) {
+            modelo.addRow(new Object[]{
+                p.getIdProduct(),        // Índice 0 (Oculto)
+                p.getFullProductCode(),   // Índice 1 (Código)
+                p.getProductDescription(),// Índice 2 (Descripción)
+                p.getBrandName(),         // Índice 3 (Emprendimiento)
+                "$" + String.format("%.2f", p.getCurrentPrice()), // Índice 4 (Precio)
+                p.getCurrentStock(),      // Índice 5 (Stock)
+                ""                        // Índice 6 (Acciones)
+            });
         }
     }
 }
