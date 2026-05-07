@@ -230,21 +230,19 @@ public class ProductoDAO {
         return lista;
     }
     
-    public List<Producto> buscarAvanzado(String texto, int idEmp) {
+    public List<Producto> buscarAvanzado(String texto, int idEmp, boolean verInactivos) {
         List<Producto> lista = new ArrayList<>();
+        int estado = verInactivos ? 0 : 1; // Si verInactivos es true, buscamos 0, si no 1.
 
         StringBuilder sql = new StringBuilder(
             "SELECT p.*, e.brandName FROM Product p " +
             "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
-            "WHERE p.isProductActive = 1 "
+            "WHERE p.isProductActive = " + estado + " " // Filtramos por el estado elegido
         );
 
         if (!texto.isEmpty()) {
-            // SQL detectará coincidencias sin importar si el usuario escribe minúsculas
             sql.append("AND (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) ");
         }
-
-        // Si seleccionó un emprendedor específico (ID > 0), filtramos por él
         if (idEmp > 0) {
             sql.append("AND p.idEntrepreneur = ? ");
         }
@@ -263,19 +261,31 @@ public class ProductoDAO {
             }
 
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            while (rs.next()) { // ¡Solo un while! ;)
                 Producto pro = new Producto();
                 pro.setIdProduct(rs.getInt("idProduct"));
                 pro.setFullProductCode(rs.getString("fullProductCode"));
                 pro.setProductDescription(rs.getString("productDescription"));
-                pro.setBrandName(rs.getString("brandName")); // <-- Verifica que este nombre coincida con tu JOIN
+                pro.setBrandName(rs.getString("brandName"));
                 pro.setCurrentPrice(rs.getDouble("currentPrice"));
                 pro.setCurrentStock(rs.getInt("currentStock"));
                 lista.add(pro);
             }
         } catch (SQLException e) {
-            System.err.println("Error en búsqueda avanzada: " + e.getMessage());
+            System.err.println("Error en búsqueda: " + e.getMessage());
         }
         return lista;
+    }
+    
+    public boolean activarProducto(int id) {
+        String sql = "UPDATE Product SET isProductActive = 1 WHERE idProduct = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al activar producto: " + e.getMessage());
+            return false;
+        }
     }
 }

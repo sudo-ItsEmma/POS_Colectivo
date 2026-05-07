@@ -62,7 +62,15 @@ public class ProductoController {
             @Override
             public void onEliminar(int row) {
                 int id = (int) vistaGestion.getTablaProductos().getValueAt(row, 0);
-                confirmarEliminacion(id, row);
+                String codigo = vistaGestion.getTablaProductos().getValueAt(row, 1).toString();
+
+                if (vistaGestion.getRbVerInactivos().isSelected()) {
+                    // Si estamos viendo inactivos, la acción es ACTIVAR
+                    confirmarActivacion(id, codigo);
+                } else {
+                    // Si estamos viendo activos, la acción es DESACTIVAR
+                    confirmarEliminacion(id, row);
+                }
             }
         };
 
@@ -93,6 +101,10 @@ public class ProductoController {
     }
 
     private void initListeners() {
+        
+        // En initListeners
+        vistaGestion.getRbVerInactivos().addActionListener(e -> filtrarTabla());
+        
         // Cuando el usuario escribe en el buscador
         vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
@@ -366,9 +378,12 @@ public class ProductoController {
         if (seleccionado instanceof Emprendedor emp) {
             idEmp = emp.getId();
         }
+        
+        // Leemos si el Radio Button está seleccionado
+        boolean mostrarInactivos = vistaGestion.getRbVerInactivos().isSelected();
 
         // Pedimos al DAO que nos de la lista filtrada por ambos criterios
-        List<Producto> lista = productoDao.buscarAvanzado(texto, idEmp);
+        List<Producto> lista = productoDao.buscarAvanzado(texto, idEmp, mostrarInactivos);
 
         // Actualizamos la tabla
         DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaProductos().getModel();
@@ -384,6 +399,19 @@ public class ProductoController {
                 p.getCurrentStock(),      // Índice 5 (Stock)
                 ""                        // Índice 6 (Acciones)
             });
+        }
+    }
+    
+    private void confirmarActivacion(int id, String codigo) {
+        int confirm = JOptionPane.showConfirmDialog(mainView, 
+            "¿Deseas reactivar el producto " + codigo + "?", 
+            "Reactivar Producto", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (productoDao.activarProducto(id)) {
+                JOptionPane.showMessageDialog(mainView, "Producto reactivado.");
+                filtrarTabla();
+            }
         }
     }
 }
