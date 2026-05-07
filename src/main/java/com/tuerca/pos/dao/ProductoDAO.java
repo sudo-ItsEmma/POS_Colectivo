@@ -151,4 +151,50 @@ public class ProductoDAO {
             }
         }
     }
+    
+    // buscar el producto por id
+    public Producto buscarPorId(int id) {
+        String sql = "SELECT * FROM Product WHERE idProduct = ?";
+        
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Producto pro = new Producto();
+                pro.setIdProduct(rs.getInt("idProduct"));
+                pro.setIdEntrepreneur(rs.getInt("idEntrepreneur"));
+                pro.setFullProductCode(rs.getString("fullProductCode"));
+                pro.setProductDescription(rs.getString("productDescription"));
+                pro.setDepartment(rs.getString("department"));
+                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentStock(rs.getInt("currentStock"));
+                return pro;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar empleado: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public boolean actualizar(Producto p) {
+        String sql = "UPDATE Product SET idEntrepreneur = ?, fullProductCode = ?, productDescription = ?, " +
+                     "department = ?, currentPrice = ?, currentStock = ? WHERE idProduct = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, p.getIdEntrepreneur());
+            ps.setString(2, p.getFullProductCode());
+            ps.setString(3, p.getProductDescription());
+            ps.setString(4, p.getDepartment());
+            ps.setDouble(5, p.getCurrentPrice());
+            ps.setInt(6, p.getCurrentStock());
+            ps.setInt(7, p.getIdProduct());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar producto: " + e.getMessage());
+            return false;
+        }
+    }
 }

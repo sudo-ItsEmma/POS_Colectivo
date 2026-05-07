@@ -8,6 +8,7 @@ import com.tuerca.pos.dao.EmprendedorDAO;
 import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.model.Emprendedor;
 import com.tuerca.pos.model.Producto;
+import com.tuerca.pos.view.EditarProducto;
 import com.tuerca.pos.view.GestionProductos;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.NuevoProducto;
@@ -23,15 +24,18 @@ import javax.swing.table.DefaultTableModel;
  * @author mannycalderon
  */
 public class ProductoController {
+    private int idEdicion = -1; // Variable para saber qué ID estamos editando
+    private EditarProducto vistaEdicion;
     private GestionProductos vistaGestion;
     private NuevoProducto vistaRegistro;
     private MainView mainView;
     private ProductoDAO productoDao;
     
     // EL CONSTRUCTOR: Es el corazón de la conexión
-    public ProductoController(GestionProductos vistaGestion, NuevoProducto vistaRegistro, MainView mainView) {
+    public ProductoController(GestionProductos vistaGestion, NuevoProducto vistaRegistro, EditarProducto vistaEdicion,MainView mainView) {
         this.vistaGestion = vistaGestion;
         this.vistaRegistro = vistaRegistro;
+        this.vistaEdicion = vistaEdicion;
         this.mainView = mainView;
         this.productoDao = new ProductoDAO();
 
@@ -52,7 +56,7 @@ public class ProductoController {
             public void onEditar(int row) {
                 // Obtenemos el ID de la columna 0
                 int id = (int) vistaGestion.getTablaProductos().getValueAt(row, 0);
-                // prepararEdicion(id);
+                prepararEdicion(id);
             }
 
             @Override
@@ -91,6 +95,9 @@ public class ProductoController {
     private void initListeners() {
         // Acción para el botón registrar
         vistaRegistro.getBtnRegistrar().addActionListener(e -> registrarProducto());
+        
+        // Accion para el boton de actualizar
+        vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarProducto());
 
         // Acción para el botón cancelar o volver 
         vistaRegistro.getBtnBack().addActionListener(e -> {
@@ -184,10 +191,14 @@ public class ProductoController {
         // Limpiar y llenar combo del registro (obligatorio)
         vistaRegistro.getCbEmprendedor().removeAllItems();
         vistaRegistro.getCbEmprendedor().addItem("Selecciona un emprendedor...");
+        
+        vistaEdicion.getCbEmprendedor().removeAllItems();
+        vistaEdicion.getCbEmprendedor().addItem("Selecciona un emprendedor...");
 
         for (Emprendedor emp : lista) {
             vistaGestion.getCbFiltroEmprendedor().addItem(emp);
             vistaRegistro.getCbEmprendedor().addItem(emp);
+            vistaEdicion.getCbEmprendedor().addItem(emp);
         }
     }
     
@@ -273,5 +284,65 @@ public class ProductoController {
         }
     }
     
+    // función del controlador para editar un empleado
+    private void prepararEdicion(int id) {
+        Producto pro = productoDao.buscarPorId(id);
+        cargarCombos();
 
+        if (pro != null) {
+            this.idEdicion = id;
+
+            // Seteamos los textos (Estandarizados en mayúsculas por seguridad)
+            vistaEdicion.getCodigoField().setText(pro.getFullProductCode());
+            vistaEdicion.getDescripcionField().setText(pro.getProductDescription());
+            vistaEdicion.getDepartamentoField().setText(pro.getDepartment());
+            vistaEdicion.getPrecioField().setText(String.valueOf(pro.getCurrentPrice()));
+            vistaEdicion.getStockField().setText(String.valueOf(pro.getCurrentStock()));
+
+            // Seleccionar el emprendedor correcto en el Combo
+            for (int i = 0; i < vistaEdicion.getCbEmprendedor().getItemCount(); i++) {
+                Object item = vistaEdicion.getCbEmprendedor().getItemAt(i);
+                if (item instanceof Emprendedor emp) {
+                    if (emp.getId() == pro.getIdEntrepreneur()) {
+                        vistaEdicion.getCbEmprendedor().setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+
+            mainView.showView("editarProducto"); 
+        }
+    }
+    
+    private void actualizarProducto() {
+        // 1. Validar combo
+        Object seleccion = vistaEdicion.getCbEmprendedor().getSelectedItem();
+        if (!(seleccion instanceof Emprendedor emp)) {
+            JOptionPane.showMessageDialog(vistaEdicion, "Selecciona un emprendedor.");
+            return;
+        }
+
+        try {
+            // 2. Empaquetar y Estandarizar
+            Producto p = new Producto();
+            p.setIdProduct(this.idEdicion);
+            p.setIdEntrepreneur(emp.getId());
+            p.setFullProductCode(vistaEdicion.getCodigoField().getText().toUpperCase());
+            p.setProductDescription(vistaEdicion.getDescripcionField().getText().toUpperCase());
+            p.setDepartment(vistaEdicion.getDepartamentoField().getText().toUpperCase());
+            p.setCurrentPrice(Double.parseDouble(vistaEdicion.getPrecioField().getText()));
+            p.setCurrentStock(Integer.parseInt(vistaEdicion.getStockField().getText()));
+
+            // 3. Guardar en DB
+            if (productoDao.actualizar(p)) {
+                JOptionPane.showMessageDialog(vistaEdicion, "Producto actualizado correctamente.");
+                cargarTablaProductos();
+                mainView.showView("products");
+            } else {
+                JOptionPane.showMessageDialog(vistaEdicion, "Error al actualizar. Posible código duplicado.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vistaEdicion, "Verifica que el precio y stock sean números válidos.");
+        }
+    }
 }

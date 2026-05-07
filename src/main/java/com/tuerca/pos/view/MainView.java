@@ -57,6 +57,7 @@ public class MainView extends javax.swing.JFrame {
                 new com.tuerca.pos.controller.ProductoController(
                         gestionProductos1,
                         nuevoProducto1,
+                        editarProducto1,
                         this
                 );
         
@@ -99,6 +100,7 @@ public class MainView extends javax.swing.JFrame {
         nuevoEmprendedor1 = new com.tuerca.pos.view.NuevoEmprendedor();
         editarEmprendimiento1 = new com.tuerca.pos.view.EditarEmprendimiento();
         nuevoProducto1 = new com.tuerca.pos.view.NuevoProducto();
+        editarProducto1 = new com.tuerca.pos.view.EditarProducto();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -120,6 +122,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(nuevoEmprendedor1, "nuevoEmprendedor");
         getContentPane().add(editarEmprendimiento1, "editarEmprendimiento");
         getContentPane().add(nuevoProducto1, "nuevoProducto");
+        getContentPane().add(editarProducto1, "editarProducto");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -165,6 +168,7 @@ public class MainView extends javax.swing.JFrame {
     private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
     private com.tuerca.pos.view.EditarEmpleado editarEmpleado1;
     private com.tuerca.pos.view.EditarEmprendimiento editarEmprendimiento1;
+    private com.tuerca.pos.view.EditarProducto editarProducto1;
     private com.tuerca.pos.view.EmployeePanel employeePanel2;
     private com.tuerca.pos.view.GenerarReportes generarReportes1;
     private com.tuerca.pos.view.GestionApartados gestionApartados1;
