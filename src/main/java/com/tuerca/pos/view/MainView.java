@@ -86,6 +86,7 @@ public class MainView extends javax.swing.JFrame {
         editarEmpleado1 = new com.tuerca.pos.view.EditarEmpleado();
         nuevoEmprendedor1 = new com.tuerca.pos.view.NuevoEmprendedor();
         editarEmprendimiento1 = new com.tuerca.pos.view.EditarEmprendimiento();
+        nuevoProducto1 = new com.tuerca.pos.view.NuevoProducto();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -106,6 +107,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(editarEmpleado1, "editarEmpleado");
         getContentPane().add(nuevoEmprendedor1, "nuevoEmprendedor");
         getContentPane().add(editarEmprendimiento1, "editarEmprendimiento");
+        getContentPane().add(nuevoProducto1, "nuevoProducto");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -161,6 +163,7 @@ public class MainView extends javax.swing.JFrame {
     private com.tuerca.pos.view.LoginPanel loginPanel1;
     private com.tuerca.pos.view.NuevoEmpleado nuevoEmpleado1;
     private com.tuerca.pos.view.NuevoEmprendedor nuevoEmprendedor1;
+    private com.tuerca.pos.view.NuevoProducto nuevoProducto1;
     private com.tuerca.pos.view.PagoEmprendedores pagoEmprendedores1;
     private com.tuerca.pos.view.Ventas ventas1;
     // End of variables declaration//GEN-END:variables

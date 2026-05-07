@@ -111,6 +111,11 @@ public class GestionProductos extends javax.swing.JPanel {
         btnNuevoProducto.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevoProducto.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
         btnNuevoProducto.setText("Nuevo Producto");
+        btnNuevoProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoProductoActionPerformed(evt);
+            }
+        });
 
         cbFiltroEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
         cbFiltroEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -179,6 +184,17 @@ public class GestionProductos extends javax.swing.JPanel {
             main.showView("admin");
         }
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProductoActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana principal
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Regresamos al panel del empleado (el dashboard de los 9 botones)
+            main.showView("nuevoProducto"); 
+        }
+    }//GEN-LAST:event_btnNuevoProductoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
