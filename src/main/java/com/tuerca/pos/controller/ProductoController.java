@@ -238,6 +238,7 @@ public class ProductoController {
                 JOptionPane.showMessageDialog(vistaRegistro, "¡Producto " + codigo + " registrado!");
                 // El controlador le da la orden a la vista
                 vistaGestion.limpiarFiltro();
+                vistaRegistro.limpiarFormulario();
                 cargarTablaProductos(); // Refrescamos la tabla de gestión
                 mainView.showView("products"); // Regresamos a la tabla
             } else {
