@@ -163,36 +163,57 @@ public class EmprendedorDAO {
         }
     }
     
-    public List<Emprendedor> buscar(String texto) {
-        List<Emprendedor> lista = new java.util.ArrayList<>();
-        // Buscamos coincidencia en marca O en nombre del contacto, solo para activos
-        String sql = "SELECT * FROM Entrepreneur WHERE (brandName LIKE ? OR contactName LIKE ?) AND isEntityActive = 1";
+    public List<Emprendedor> buscarAvanzado(String texto, boolean verInactivos) {
+        List<Emprendedor> lista = new ArrayList<>();
+        int estado = verInactivos ? 0 : 1;
+
+        // Usamos StringBuilder para manejar el texto opcional
+        StringBuilder sql = new StringBuilder("SELECT * FROM Entrepreneur WHERE isEntityActive = " + estado);
+
+        if (!texto.isEmpty()) {
+            sql.append(" AND (brandName LIKE ? OR contactName LIKE ?)");
+        }
+
+        sql.append(" ORDER BY brandName ASC");
 
         try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
 
-            // El comodín % permite buscar coincidencias en cualquier parte de la cadena
-            String busqueda = "%" + texto + "%";
-            ps.setString(1, busqueda);
-            ps.setString(2, busqueda);
+            if (!texto.isEmpty()) {
+                String busqueda = "%" + texto + "%";
+                ps.setString(1, busqueda);
+                ps.setString(2, busqueda);
+            }
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Emprendedor emp = new Emprendedor();
-                    emp.setId(rs.getInt("idEntrepreneur")); //
-                    emp.setMarca(rs.getString("brandName")); //
-                    emp.setNombreContacto(rs.getString("contactName")); //
-                    emp.setTelefono(rs.getString("contactPhone")); //
-                    emp.setEmail(rs.getString("emailEntrepreneur")); //
-                    emp.setFechaContrato(rs.getDate("contractSignDate")); //
-                    emp.setRentaMensual(rs.getDouble("monthlyRentAmount")); //
+                    emp.setId(rs.getInt("idEntrepreneur"));
+                    emp.setMarca(rs.getString("brandName"));
+                    emp.setNombreContacto(rs.getString("contactName"));
+                    emp.setTelefono(rs.getString("contactPhone"));
+                    emp.setEmail(rs.getString("emailEntrepreneur"));
+                    emp.setFechaContrato(rs.getDate("contractSignDate"));
+                    emp.setRentaMensual(rs.getDouble("monthlyRentAmount"));
                     lista.add(emp);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Error al buscar emprendedores: " + e.getMessage());
+            System.err.println("Error en búsqueda avanzada de emprendedores: " + e.getMessage());
         }
         return lista;
+    }
+
+    public boolean activar(int id) {
+        String sql = "UPDATE Entrepreneur SET isEntityActive = 1 WHERE idEntrepreneur = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al activar emprendedor: " + e.getMessage());
+            return false;
+        }
     }
     
     // Método para llenar el ComboBox de filtros en la Gestión de Productos

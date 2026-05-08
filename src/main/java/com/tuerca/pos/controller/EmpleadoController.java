@@ -110,6 +110,13 @@ public class EmpleadoController {
             vista.limpiarFormulario();
             mainView.showView("empleados"); // Asegúrate de que este sea el nombre de la vista
         });
+        
+        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                filtrarTabla();
+            }
+        });
 
         // AGREGAMOS EL LISTENER DEL MOUSE
         vistaGestion.getTablaEmpleados().addMouseMotionListener(new java.awt.event.MouseAdapter() {
@@ -133,6 +140,7 @@ public class EmpleadoController {
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
         });
+        
     }
     
     private void registrarEmpleado(){

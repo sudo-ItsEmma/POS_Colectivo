@@ -36,11 +36,30 @@ public class EmprendedorController {
         this.mainView = main;
         this.dao = new EmprendedorDAO();
         
+        this.vistaGestion.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                // Este código se ejecuta SOLITO cada vez que el panel se muestra
+                refrescarPantallaCompleta();
+            }
+        });
+        
+        
         initTablaAcciones();
         initListeners();
     }
     
+    // Método auxiliar para agrupar el refresco
+    private void refrescarPantallaCompleta() {
+        vistaGestion.getRbVerInactivos().setSelected(false);
+        filtrarTabla();   // Recarga la tabla desde la DB
+    }
+    
+    
     private void initListeners() {
+        
+        vistaGestion.getRbVerInactivos().addActionListener(e -> filtrarTabla());
+        
         this.vistaRegistro.getBtnRegistrar().addActionListener(e -> registrarEmprendedor());
         
         this.vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarEmpleado());
@@ -68,6 +87,13 @@ public class EmprendedorController {
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
         });
+        
+        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                filtrarTabla();
+            }
+        });
     }
     
     private void initTablaAcciones() {
@@ -83,7 +109,13 @@ public class EmprendedorController {
             @Override
             public void onEliminar(int row) {
                 int id = (int) vistaGestion.getTablaEmprendedores().getValueAt(row, 0);
-                confirmarEliminacion(id, row);
+                String marca = vistaGestion.getTablaEmprendedores().getValueAt(row, 1).toString();
+
+                if (vistaGestion.getRbVerInactivos().isSelected()) {
+                    confirmarActivacion(id, marca);
+                } else {
+                    confirmarEliminacion(id, row); // Tu método que desactiva en cascada
+                }
             }
         };
 
@@ -269,11 +301,13 @@ public class EmprendedorController {
     
     private void filtrarTabla() {
         String texto = vistaGestion.getTxtBuscar().getText().trim();
-        DefaultTableModel modelo = vistaGestion.getTableModel();
-        modelo.setRowCount(0);
+        boolean mostrarInactivos = vistaGestion.getRbVerInactivos().isSelected();
 
-        // Si el campo está vacío, cargamos todos. Si no, buscamos.
-        List<Emprendedor> lista = texto.isEmpty() ? dao.listar() : dao.buscar(texto);
+        // Usamos el nuevo método del DAO
+        List<Emprendedor> lista = dao.buscarAvanzado(texto, mostrarInactivos);
+
+        DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaEmprendedores().getModel();
+        modelo.setRowCount(0);
 
         for (Emprendedor emp : lista) {
             modelo.addRow(new Object[]{
@@ -284,10 +318,25 @@ public class EmprendedorController {
                 emp.getEmail(),
                 emp.getFechaContrato(),
                 "$" + emp.getRentaMensual(),
-                "" // Espacio para los botones de acción
+                "" 
             });
         }
-        // Re-aplicamos el renderizador para que no se pierdan los botones
         initTablaAcciones();
+    }
+    
+        private void confirmarActivacion(int id, String marca) {
+        int confirm = JOptionPane.showConfirmDialog(mainView, 
+            "¿Deseas reactivar al emprendimiento: " + marca + "?\n" +
+            "Esto permitirá volver a gestionar sus productos.", 
+            "Reactivar Emprendedor", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (dao.activar(id)) {
+                JOptionPane.showMessageDialog(mainView, "Emprendimiento reactivado con éxito.");
+                filtrarTabla();
+            } else {
+                JOptionPane.showMessageDialog(mainView, "Error al reactivar.");
+            }
+        }
     }
 }

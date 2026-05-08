@@ -279,7 +279,7 @@ public class ProductoDAO {
     
     public int activarProductoConValidacion(int idProducto) {
         // Esta consulta verifica si el emprendedor está activo antes de proceder
-        String sqlCheck = "SELECT e.isEntrepreneurActive FROM Product p " +
+        String sqlCheck = "SELECT e.isEntityActive FROM Product p " +
                           "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
                           "WHERE p.idProduct = ?";
 
@@ -292,7 +292,7 @@ public class ProductoDAO {
                 ResultSet rs = psCheck.executeQuery();
 
                 if (rs.next()) {
-                    int emprendedorActivo = rs.getInt("isEntrepreneurActive");
+                    int emprendedorActivo = rs.getInt("isEntityActive");
                     if (emprendedorActivo == 0) {
                         return -1; // Código para indicar que el emprendedor está desactivado
                     }
