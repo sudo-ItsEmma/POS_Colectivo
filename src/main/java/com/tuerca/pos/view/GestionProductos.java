@@ -81,6 +81,11 @@ public class GestionProductos extends javax.swing.JPanel {
         btnCargaMasiva.setForeground(new java.awt.Color(255, 255, 255));
         btnCargaMasiva.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
         btnCargaMasiva.setText("Carga Masiva");
+        btnCargaMasiva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargaMasivaActionPerformed(evt);
+            }
+        });
 
         tablaProductos.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
         tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
@@ -208,6 +213,17 @@ public class GestionProductos extends javax.swing.JPanel {
             main.showView("nuevoProducto"); 
         }
     }//GEN-LAST:event_btnNuevoProductoActionPerformed
+
+    private void btnCargaMasivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaMasivaActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana principal
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Regresamos al panel del empleado (el dashboard de los 9 botones)
+            main.showView("cargaMasiva"); 
+        }
+    }//GEN-LAST:event_btnCargaMasivaActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

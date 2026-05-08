@@ -19,6 +19,14 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import com.tuerca.pos.view.CargaMasivaProductos;
+import java.io.File;
+import java.io.FileInputStream;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author mannycalderon
@@ -30,14 +38,28 @@ public class ProductoController {
     private NuevoProducto vistaRegistro;
     private MainView mainView;
     private ProductoDAO productoDao;
+    private CargaMasivaProductos vistaCarga; // Nueva variable
+    private File archivoExcel; // Para el manejo de archivos
+    
     
     // EL CONSTRUCTOR: Es el corazón de la conexión
-    public ProductoController(GestionProductos vistaGestion, NuevoProducto vistaRegistro, EditarProducto vistaEdicion,MainView mainView) {
+    public ProductoController(GestionProductos vistaGestion, NuevoProducto vistaRegistro, EditarProducto vistaEdicion, CargaMasivaProductos vistaCarga, MainView mainView) {
         this.vistaGestion = vistaGestion;
         this.vistaRegistro = vistaRegistro;
         this.vistaEdicion = vistaEdicion;
+        this.vistaCarga = vistaCarga;
         this.mainView = mainView;
         this.productoDao = new ProductoDAO();
+        
+        
+        // Listener de visibilidad para carga masiva
+        this.vistaCarga.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                limpiarVistaCargaMasiva();
+                cargarCombos(); // Actualiza los emprendedores antes de cargar el Excel
+            }
+        });
         
         this.vistaGestion.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
@@ -150,6 +172,13 @@ public class ProductoController {
             mainView.showView("gestionProductos");
         });
         
+        // BOTONES DE CARGA MASIVA
+        vistaCarga.getBtnSeleccionarArchivo().addActionListener(e -> seleccionarArchivo());
+        vistaCarga.getBtnVisualizar().addActionListener(e -> visualizarExcel());
+        vistaCarga.getBtnRegistrar().addActionListener(e -> ejecutarCargaMasiva());
+        vistaCarga.getBtnCancelar().addActionListener(e -> mainView.showView("gestionProductos"));
+        vistaCarga.getBtnBack().addActionListener(e -> mainView.showView("gestionProductos"));
+        
         // AGREGAMOS EL LISTENER DEL MOUSE
         vistaGestion.getTablaProductos().addMouseMotionListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -233,11 +262,15 @@ public class ProductoController {
         
         vistaEdicion.getCbEmprendedor().removeAllItems();
         vistaEdicion.getCbEmprendedor().addItem("Selecciona un emprendedor...");
+        
+        vistaCarga.getCbEmprendedor().removeAllItems();
+        vistaCarga.getCbEmprendedor().addItem("Selecciona un emprendedor...");
 
         for (Emprendedor emp : lista) {
             vistaGestion.getCbFiltroEmprendedor().addItem(emp);
             vistaRegistro.getCbEmprendedor().addItem(emp);
             vistaEdicion.getCbEmprendedor().addItem(emp);
+            vistaCarga.getCbEmprendedor().addItem(emp);
         }
     }
     
@@ -437,6 +470,135 @@ public class ProductoController {
             } else {
                 JOptionPane.showMessageDialog(mainView, "Error al intentar activar el producto.");
             }
+        }
+    }
+    
+    private void seleccionarArchivo() {
+        JFileChooser buscador = new JFileChooser();
+        buscador.setFileFilter(new FileNameExtensionFilter("Excel (.xlsx, .xls)", "xlsx", "xls"));
+
+        if (buscador.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            archivoExcel = buscador.getSelectedFile();
+            vistaCarga.getLblNombreArchivo().setText("Archivo: " + archivoExcel.getName());
+        }
+    }
+    
+    private void visualizarExcel() {
+        if (archivoExcel == null) {
+            JOptionPane.showMessageDialog(vistaCarga, "Selecciona un archivo primero.");
+            return;
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) vistaCarga.getVistaTablaProductos().getModel();
+        modelo.setRowCount(0);
+
+        try (FileInputStream fis = new FileInputStream(archivoExcel);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet hoja = workbook.getSheetAt(0);
+
+            // Empezamos en i = 2 para saltar encabezados (Ajusta si es necesario)
+            // Pero lo más seguro es validar el contenido:
+            for (int i = 1; i <= hoja.getLastRowNum(); i++) {
+                Row fila = hoja.getRow(i);
+                if (fila == null) continue;
+
+                // 1. LEER LOS DATOS
+                String codigo = getCellValue(fila.getCell(1)).trim();
+                String desc = getCellValue(fila.getCell(2)).trim();
+
+                // 2. FILTRO DE SEGURIDAD: 
+                // Si el código es igual a "CODIGO" (título) o está vacío, saltamos la fila
+                if (codigo.isEmpty() || codigo.equalsIgnoreCase("CODIGO")) {
+                    continue; 
+                }
+
+                double precio = getNumericValue(fila.getCell(3));
+                int stock = (int) getNumericValue(fila.getCell(4));
+                String depto = getCellValue(fila.getCell(5)).trim();
+
+                // Solo agregamos si realmente hay información útil
+                modelo.addRow(new Object[]{codigo, desc, precio, stock, depto});
+            }
+
+            if (modelo.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(vistaCarga, "No se encontraron productos válidos en el archivo.");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(vistaCarga, "Error al leer Excel: " + e.getMessage());
+        }
+    }
+
+    private void ejecutarCargaMasiva() {
+        Object seleccion = vistaCarga.getCbEmprendedor().getSelectedItem();
+        if (!(seleccion instanceof Emprendedor emp)) {
+            JOptionPane.showMessageDialog(vistaCarga, "Selecciona un emprendedor.");
+            return;
+        }
+
+        DefaultTableModel modelo = (DefaultTableModel) vistaCarga.getVistaTablaProductos().getModel();
+        int exitos = 0, errores = 0;
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            try {
+                // Validar que la celda de código no sea null o vacía en la tabla
+                Object valCodigo = modelo.getValueAt(i, 0);
+                if (valCodigo == null || valCodigo.toString().trim().isEmpty()) {
+                    continue; // Si el usuario dejó la fila vacía en la tabla, la ignoramos
+                }
+
+                Producto p = new Producto();
+                p.setIdEntrepreneur(emp.getId());
+                p.setFullProductCode(valCodigo.toString().toUpperCase().trim());
+                p.setProductDescription(modelo.getValueAt(i, 1).toString().toUpperCase().trim());
+                p.setCurrentPrice(Double.parseDouble(modelo.getValueAt(i, 2).toString()));
+                p.setCurrentStock(Integer.parseInt(modelo.getValueAt(i, 3).toString()));
+                p.setDepartment(modelo.getValueAt(i, 4).toString().toUpperCase().trim());
+                p.setMinStockAlert(1);
+
+                if (productoDao.registrar(p)) {
+                    exitos++;
+                } else {
+                    errores++;
+                }
+            } catch (Exception e) {
+                errores++;
+                System.err.println("Error en fila " + i + ": " + e.getMessage());
+            }
+        }
+
+        JOptionPane.showMessageDialog(vistaCarga, "Carga terminada.\nÉxitos: " + exitos + "\nErrores: " + errores);
+
+        if (exitos > 0) {
+            limpiarVistaCargaMasiva(); // <--- Limpiar después de cargar con éxito
+            filtrarTabla();
+            mainView.showView("products");
+        }
+    }
+
+    // Métodos de apoyo para POI
+    private String getCellValue(Cell cell) {
+        if (cell == null) return "";
+        return switch (cell.getCellType()) {
+            case STRING -> cell.getStringCellValue();
+            case NUMERIC -> String.valueOf((int) cell.getNumericCellValue());
+            default -> "";
+        };
+    }
+
+    private double getNumericValue(Cell cell) {
+        if (cell == null) return 0;
+        try { return cell.getNumericCellValue(); } catch (Exception e) { return 0; }
+    }
+    
+    private void limpiarVistaCargaMasiva() {
+        archivoExcel = null;
+        vistaCarga.getLblNombreArchivo().setText("Ningún archivo seleccionado");
+        DefaultTableModel modelo = (DefaultTableModel) vistaCarga.getVistaTablaProductos().getModel();
+        modelo.setRowCount(0);
+        if (vistaCarga.getCbEmprendedor().getItemCount() > 0) {
+            vistaCarga.getCbEmprendedor().setSelectedIndex(0);
         }
     }
 }

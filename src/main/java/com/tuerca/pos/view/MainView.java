@@ -58,6 +58,7 @@ public class MainView extends javax.swing.JFrame {
                         gestionProductos1,
                         nuevoProducto1,
                         editarProducto1,
+                        cargaMasivaProductos1,
                         this
                 );
         
@@ -101,6 +102,7 @@ public class MainView extends javax.swing.JFrame {
         editarEmprendimiento1 = new com.tuerca.pos.view.EditarEmprendimiento();
         nuevoProducto1 = new com.tuerca.pos.view.NuevoProducto();
         editarProducto1 = new com.tuerca.pos.view.EditarProducto();
+        cargaMasivaProductos1 = new com.tuerca.pos.view.CargaMasivaProductos();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -123,6 +125,7 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(editarEmprendimiento1, "editarEmprendimiento");
         getContentPane().add(nuevoProducto1, "nuevoProducto");
         getContentPane().add(editarProducto1, "editarProducto");
+        getContentPane().add(cargaMasivaProductos1, "cargaMasiva");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -165,6 +168,7 @@ public class MainView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.tuerca.pos.view.AdminPanel adminPanel2;
     private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
+    private com.tuerca.pos.view.CargaMasivaProductos cargaMasivaProductos1;
     private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
     private com.tuerca.pos.view.EditarEmpleado editarEmpleado1;
     private com.tuerca.pos.view.EditarEmprendimiento editarEmprendimiento1;

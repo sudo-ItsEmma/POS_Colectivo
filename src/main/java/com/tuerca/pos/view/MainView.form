@@ -156,5 +156,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="com.tuerca.pos.view.CargaMasivaProductos" name="cargaMasivaProductos1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="cargaMasiva"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
