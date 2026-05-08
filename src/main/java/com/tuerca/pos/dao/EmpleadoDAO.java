@@ -266,25 +266,31 @@ public class EmpleadoDAO {
         }
     }
     
-    public List<Empleado> buscar(String texto) {
-        List<Empleado> lista = new java.util.ArrayList<>();
-        // Buscamos por nombre, paterno o materno que contengan el texto
-        String sql = "SELECT e.*, r.roleName FROM Employee e " +
-                     "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
-                     "JOIN Role r ON u.idRole = r.idRole " +
-                     "WHERE e.isEmployeeActive = 1 AND (" +
-                     "e.firstNameEmployee LIKE ? OR " +
-                     "e.lastNameEmployee LIKE ? OR " +
-                     "e.secondLastNameEmployee LIKE ?) " +
-                     "ORDER BY e.idEmployee ASC";
+    public List<Empleado> buscarAvanzado(String texto, boolean verInactivos) {
+        List<Empleado> lista = new ArrayList<>();
+        int estado = verInactivos ? 0 : 1;
+
+        StringBuilder sql = new StringBuilder(
+            "SELECT e.*, r.roleName " +
+            "FROM Employee e " +
+            "JOIN UserAccount ua ON e.idEmployee = ua.idEmployee " + // Primer salto
+            "JOIN Role r ON ua.idRole = r.idRole " +                // Segundo salto
+            "WHERE e.isEmployeeActive = " + estado + " "
+        );
+
+        if (!texto.isEmpty()) {
+            sql.append("AND (e.firstNameEmployee LIKE ? OR e.lastNameEmployee LIKE ?) ");
+        }
 
         try (Connection con = DatabaseConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+             PreparedStatement ps = con.prepareStatement(sql.toString())) {
 
-            String query = "%" + texto + "%";
-            ps.setString(1, query);
-            ps.setString(2, query);
-            ps.setString(3, query);
+            if (!texto.isEmpty()) {
+                String query = "%" + texto.toUpperCase() + "%";
+                ps.setString(1, query);
+                ps.setString(2, query);
+                ps.setString(3, query);
+            }
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -298,8 +304,56 @@ public class EmpleadoDAO {
                 lista.add(emp);
             }
         } catch (SQLException e) {
-            System.err.println("Error en búsqueda: " + e.getMessage());
+            System.err.println("Error en búsqueda de empleados: " + e.getMessage());
         }
         return lista;
     }
+    
+    
+    
+    public boolean activarEmpleado(int id) {
+        String sqlEmpleado = "UPDATE Employee SET isEmployeeActive = 1 WHERE idEmployee = ?";
+        String sqlUsuario = "UPDATE UserAccount SET isAccountActive = 1 WHERE idEmployee = ?";
+
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false); // Iniciamos transacción
+
+            // 1. Reactivar al Empleado
+            try (PreparedStatement psEmp = con.prepareStatement(sqlEmpleado)) {
+                psEmp.setInt(1, id);
+                psEmp.executeUpdate();
+            }
+
+            // 2. Reactivar la Cuenta de Usuario vinculada
+            try (PreparedStatement psUser = con.prepareStatement(sqlUsuario)) {
+                psUser.setInt(1, id);
+                psUser.executeUpdate();
+            }
+
+            con.commit(); // Si ambos tienen éxito, guardamos cambios
+            return true;
+
+        } catch (SQLException e) {
+            if (con != null) {
+                try {
+                    con.rollback(); // Si falla uno, no activamos nada
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Error en rollback: " + rollbackEx.getMessage());
+                }
+            }
+            System.err.println("Error en reactivación (Transaction): " + e.getMessage());
+            return false;
+        } finally {
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+}
 }

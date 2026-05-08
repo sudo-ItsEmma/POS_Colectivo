@@ -37,10 +37,24 @@ public class EmpleadoController {
         this.mainView = main;
         this.dao = new EmpleadoDAO();
         
+        this.vistaGestion.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                // Este código se ejecuta SOLITO cada vez que el panel se muestra
+                refrescarPantallaCompleta();
+            }
+        });
+        
         vistaGestion.limpiarFiltro();
         // inicializamos los listeners
         initTablaAcciones();
         initListeners();
+    }
+    
+    // Método auxiliar para agrupar el refresco
+    private void refrescarPantallaCompleta() {
+        vistaGestion.getRbVerInactivos().setSelected(false);
+        filtrarTabla();   // Recarga la tabla desde la DB
     }
     
     private void initTablaAcciones() {
@@ -56,7 +70,13 @@ public class EmpleadoController {
             @Override
             public void onEliminar(int row) {
                 int id = (int) vistaGestion.getTablaEmpleados().getValueAt(row, 0);
-                confirmarEliminacion(id, row);
+                String nombre = vistaGestion.getTablaEmpleados().getValueAt(row, 1).toString();
+
+                if (vistaGestion.getRbVerInactivos().isSelected()) {
+                    confirmarActivacion(id, nombre);
+                } else {
+                    confirmarEliminacion(id, nombre);
+                }
             }
         };
 
@@ -69,6 +89,10 @@ public class EmpleadoController {
     }
     
     private void initListeners(){
+        
+        // Escuchar el Radio Button de empleados inactivos
+        vistaGestion.getRbVerInactivos().addActionListener(e -> filtrarTabla());
+        
         this.vista.getBtnRegistrar().addActionListener(e -> registrarEmpleado());
     
         this.vista.getBtnCancelar().addActionListener(e -> {
@@ -198,11 +222,11 @@ public class EmpleadoController {
         initTablaAcciones();
     }
     
-    private void confirmarEliminacion(int id, int row) {
+    private void confirmarEliminacion(int id, String nombre) {
         // 1. Notificación de confirmación
         int confirm = JOptionPane.showConfirmDialog(
             mainView, 
-            "¿Estás seguro de que deseas eliminar al empleado con ID: " + id + "?\n" +
+            "¿Estás seguro de que deseas eliminar al empleado " + nombre + "?\n" +
             "Esta acción lo eliminará de la lista de gestión.",
             "Confirmar Eliminación Lógica", 
             JOptionPane.YES_NO_OPTION,
@@ -278,13 +302,14 @@ public class EmpleadoController {
         }
     }
     
-    private void filtrarTabla() {
-        String texto = vistaGestion.getTxtBuscar().getText().trim();
-        DefaultTableModel modelo = vistaGestion.getTableModel();
-        modelo.setRowCount(0);
+    public void filtrarTabla() {
+        String texto = vistaGestion.getTxtBuscar().getText().trim().toUpperCase();
+        boolean mostrarInactivos = vistaGestion.getRbVerInactivos().isSelected();
 
-        // Si el campo está vacío, cargamos todos. Si no, buscamos.
-        List<Empleado> lista = texto.isEmpty() ? dao.listar() : dao.buscar(texto);
+        List<Empleado> lista = dao.buscarAvanzado(texto, mostrarInactivos);
+
+        DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaEmpleados().getModel();
+        modelo.setRowCount(0);
 
         for (Empleado emp : lista) {
             modelo.addRow(new Object[]{
@@ -297,7 +322,20 @@ public class EmpleadoController {
                 "" // Columna de acciones
             });
         }
-        // Re-aplicamos el renderizador para que no se pierdan los botones
-        initTablaAcciones();
+    }
+    
+    private void confirmarActivacion(int id, String nombre) {
+        int confirm = JOptionPane.showConfirmDialog(mainView, 
+            "¿Deseas reactivar al empleado: " + nombre + "?", 
+            "Reactivar Empleado", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            if (dao.activarEmpleado(id)) {
+                JOptionPane.showMessageDialog(mainView, "Empleado reactivado con éxito.");
+                filtrarTabla();
+            }
+        }
     }
 }
+
+
