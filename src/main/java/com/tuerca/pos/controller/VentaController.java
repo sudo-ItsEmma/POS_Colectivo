@@ -5,7 +5,10 @@
 package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.ProductoDAO;
+import com.tuerca.pos.dao.VentaDAO;
+import com.tuerca.pos.model.DetalleVenta;
 import com.tuerca.pos.model.Producto;
+import com.tuerca.pos.model.Venta;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.Ventas; // Ajusta al nombre real de tu clase de vista
 import com.tuerca.pos.view.components.AccionTableEvent;
@@ -14,6 +17,7 @@ import com.tuerca.pos.view.components.AccionesRender;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -40,6 +44,7 @@ public class VentaController {
     private final int COL_DSCTO_PER = 4; // Nueva columna
     private final int COL_SUBTOTAL = 5;  // Se recorrió
     private final int COL_ACCION = 6;    // Se recorrió
+    private final int ID_USUARIO_PRUEBA=2;
 
     public VentaController(Ventas vista, MainView mainView) {
         this.vista = vista;
@@ -286,6 +291,8 @@ public class VentaController {
 
     private void agregarProductoAlCarrito(Producto p) {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+        
+        //System.out.println("Producto: " + p.getProductDescription() + " | Stock recibido: " + p.getCurrentStock());
 
         double precioU = p.getCurrentPrice();
 
@@ -294,6 +301,12 @@ public class VentaController {
 
         // El subtotal inicial será simplemente el precio unitario (cantidad 1 * precioU)
         double subtotalInicial = precioU;
+        
+        // Dentro de tu lógica de búsqueda/agregado
+        if (p.getCurrentStock() <= 0) {
+            JOptionPane.showMessageDialog(vista, "Producto sin stock disponible.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         modelo.addRow(new Object[]{
             1,                         // COL_CANTIDAD (0)
@@ -378,12 +391,116 @@ public class VentaController {
     }
 
     private void procesarCobro() {
-        if (vista.getTablaVenta().getRowCount() == 0) {
-            JOptionPane.showMessageDialog(vista, "El carrito está vacío");
+        DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+
+        // 1. Validación de Carrito Vacío
+        if (modelo.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(vista, "No hay productos para cobrar.");
             return;
         }
-        // Próximo paso: Abrir ventana de cobro y guardar en DB
-        JOptionPane.showMessageDialog(vista, "Iniciando proceso de cobro...");
+
+        // 2. Obtener el Total (Directo de la tabla para mayor precisión)
+        double totalVenta = 0;
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            totalVenta += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+        }
+
+        // 3. Selección de Método de Pago
+        String metodoPago = vista.getCbMetodoPago().getSelectedItem().toString();
+
+        if (metodoPago.equals("Seleccionar...") || metodoPago.isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "Por favor, selecciona un método de pago.");
+            return;
+        }
+
+        double cambio = 0;
+
+        // 4. Lógica de Efectivo
+        if (metodoPago.equalsIgnoreCase("Efectivo")) {
+            String input = JOptionPane.showInputDialog(vista, 
+                "TOTAL A COBRAR: $" + String.format("%.2f", totalVenta) + "\n\nIngrese monto recibido:", 
+                "Cobro en Efectivo", 
+                JOptionPane.QUESTION_MESSAGE);
+
+            if (input == null) return; // El usuario canceló el cobro
+
+            try {
+                double recibido = Double.parseDouble(input);
+                if (recibido < totalVenta) {
+                    JOptionPane.showMessageDialog(vista, "Monto insuficiente. Faltan: $" + (totalVenta - recibido));
+                    return;
+                }
+                cambio = recibido - totalVenta;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(vista, "Ingrese un monto numérico válido.");
+                return;
+            }
+        }
+
+        // 5. REGISTRO EN BASE DE DATOS (Tarea 5.1)
+        // Aquí es donde llamarás a tu DAO de Ventas
+        boolean exito = registrarVentaEnBD(metodoPago, totalVenta);
+
+        if (exito) {
+            // Notificación de Cambio
+            if (metodoPago.equalsIgnoreCase("Efectivo")) {
+                JOptionPane.showMessageDialog(vista, 
+                    "VENTA EXITOSA\n\nCambio a entregar: $" + String.format("%.2f", cambio), 
+                    "Cierre de Caja", 
+                    JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(vista, "Venta registrada con éxito.");
+            }
+
+            // 6. LIMPIEZA TOTAL (Tarea 6)
+            limpiarModulo();
+        }
     }
     
+    private boolean registrarVentaEnBD(String metodo, double total) {
+        VentaDAO ventaDao = new VentaDAO();
+
+        // Objeto cabecera
+        Venta v = new Venta();
+        v.setIdUsuario(this.ID_USUARIO_PRUEBA);
+        v.setTotal(total);
+        v.setMetodoPago(metodo);
+
+        // Lista de detalles recorriendo la tabla
+        List<DetalleVenta> detalles = new ArrayList<>();
+        DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            try {
+                DetalleVenta dv = new DetalleVenta();
+
+                // 1. Obtener ID real desde el Código (Columna 1)
+                String codigo = modelo.getValueAt(i, 1).toString();
+                int idReal = productoDao.obtenerIdPorCodigo(codigo); 
+
+                if (idReal == -1) {
+                    JOptionPane.showMessageDialog(vista, "Error crítico: El producto " + codigo + " no existe en la base de datos.");
+                    return false; 
+                }
+
+                // 2. Llenado de datos con parseo seguro
+                dv.setIdProducto(idReal);
+                dv.setCantidad(Integer.parseInt(modelo.getValueAt(i, 0).toString()));
+                dv.setPrecioUnitario(Double.parseDouble(modelo.getValueAt(i, 3).toString()));
+                dv.setDescuento(Double.parseDouble(modelo.getValueAt(i, 4).toString()));
+                dv.setSubtotal(Double.parseDouble(modelo.getValueAt(i, 5).toString()));
+
+                // 3. Agregar a la lista que enviaremos al DAO
+                detalles.add(dv);
+
+            } catch (NumberFormatException | NullPointerException e) {
+                System.err.println("Error de datos en la fila " + i + ": " + e.getMessage());
+                JOptionPane.showMessageDialog(vista, "Error en los datos de la tabla. Revisa cantidades y precios.");
+                return false;
+            }
+        }
+
+        return ventaDao.registrarVenta(v, detalles);
+    }
+
 }

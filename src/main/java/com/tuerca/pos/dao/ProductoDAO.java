@@ -311,32 +311,47 @@ public class ProductoDAO {
     
     public List<Producto> buscarPorCriterio(String texto) {
         List<Producto> lista = new ArrayList<>();
-        // Buscamos por código O descripción, solo productos ACTIVOS
-        String sql = "SELECT p.*, e.brandName FROM Product p " +
-                     "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
-                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) " +
-                     "AND p.isProductActive = 1 LIMIT 10"; // Limitamos a 10 para no saturar el menú
+        // Asegúrate de que el SELECT incluya currentStock
+        String sql = "SELECT * FROM Product WHERE fullProductCode LIKE ? OR productDescription LIKE ? AND isProductActive = 1";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            String query = "%" + texto + "%";
-            ps.setString(1, query);
-            ps.setString(2, query);
+            ps.setString(1, "%" + texto + "%");
+            ps.setString(2, "%" + texto + "%");
 
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Producto p = new Producto();
-                p.setIdProduct(rs.getInt("idProduct"));
-                p.setFullProductCode(rs.getString("fullProductCode"));
-                p.setProductDescription(rs.getString("productDescription"));
-                p.setCurrentPrice(rs.getDouble("currentPrice"));
-                p.setBrandName(rs.getString("brandName")); // Para mostrar quién es el dueño
-                lista.add(p);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Producto p = new Producto();
+                    p.setIdProduct(rs.getInt("idProduct"));
+                    p.setFullProductCode(rs.getString("fullProductCode"));
+                    p.setProductDescription(rs.getString("productDescription"));
+                    p.setCurrentPrice(rs.getDouble("currentPrice"));
+                    p.setCurrentStock(rs.getInt("currentStock")); 
+
+                    lista.add(p);
+                }
             }
         } catch (SQLException e) {
-            System.err.println("Error en búsqueda rápida: " + e.getMessage());
+            System.err.println("Error al buscar productos: " + e.getMessage());
         }
         return lista;
+    }
+    
+    public int obtenerIdPorCodigo(String codigo) {
+        String sql = "SELECT idProduct FROM Product WHERE fullProductCode = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idProduct");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener ID del producto: " + e.getMessage());
+        }
+        return -1; // Retorna -1 si no lo encuentra
     }
 }
