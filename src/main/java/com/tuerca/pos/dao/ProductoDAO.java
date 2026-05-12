@@ -311,8 +311,15 @@ public class ProductoDAO {
     
     public List<Producto> buscarPorCriterio(String texto) {
         List<Producto> lista = new ArrayList<>();
-        // Asegúrate de que el SELECT incluya currentStock
-        String sql = "SELECT * FROM Product WHERE fullProductCode LIKE ? OR productDescription LIKE ? AND isProductActive = 1";
+
+        // 1. Modificamos el SQL para unir las dos tablas (INNER JOIN)
+        // Traemos todos los campos de Product (p.*) y el brandName de Entrepreneur (e.brandName)
+        String sql = "SELECT p.*, e.brandName " +
+                     "FROM Product p " +
+                     "INNER JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
+                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) " +
+                     "AND p.isProductActive = 1 " +
+                     "AND p.currentStock > 0";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -328,6 +335,9 @@ public class ProductoDAO {
                     p.setProductDescription(rs.getString("productDescription"));
                     p.setCurrentPrice(rs.getDouble("currentPrice"));
                     p.setCurrentStock(rs.getInt("currentStock")); 
+
+                    // 2. Ahora sí, el rs contiene la columna brandName gracias al JOIN
+                    p.setBrandName(rs.getString("brandName")); 
 
                     lista.add(p);
                 }
@@ -353,5 +363,17 @@ public class ProductoDAO {
             System.err.println("Error al obtener ID del producto: " + e.getMessage());
         }
         return -1; // Retorna -1 si no lo encuentra
+    }
+      
+    public int obtenerStockReal(String codigo) {
+        String sql = "SELECT currentStock FROM Product WHERE fullProductCode = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("currentStock");
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return 0;
     }
 }

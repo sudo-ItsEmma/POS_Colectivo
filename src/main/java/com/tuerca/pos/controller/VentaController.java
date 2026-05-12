@@ -291,8 +291,6 @@ public class VentaController {
 
     private void agregarProductoAlCarrito(Producto p) {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
-        
-        //System.out.println("Producto: " + p.getProductDescription() + " | Stock recibido: " + p.getCurrentStock());
 
         double precioU = p.getCurrentPrice();
 
@@ -365,8 +363,6 @@ public class VentaController {
             System.err.println("Error inesperado al actualizar fila: " + e.getMessage());
         }
     }
-    
-    
 
     private void recalcularTodo() {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
@@ -397,6 +393,11 @@ public class VentaController {
         if (modelo.getRowCount() == 0) {
             JOptionPane.showMessageDialog(vista, "No hay productos para cobrar.");
             return;
+        }
+        
+        // 2. ¿La cantidad solicitada cabe en el stock real?
+        if (!validarStockAntesDeCobrar()) {
+            return; // Si el stock no alcanza, salimos y no abrimos el cobro
         }
 
         // 2. Obtener el Total (Directo de la tabla para mayor precisión)
@@ -455,6 +456,30 @@ public class VentaController {
             // 6. LIMPIEZA TOTAL (Tarea 6)
             limpiarModulo();
         }
+    }
+    
+    private boolean validarStockAntesDeCobrar() {
+        DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            String codigo = modelo.getValueAt(i, 1).toString();
+            int cantidadAVender = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+
+            // Consultamos el stock actual directo del DAO
+            // Reutilizamos el método que ya tienes o uno similar que devuelva el stock
+            int stockActual = productoDao.obtenerStockReal(codigo); 
+
+            if (cantidadAVender > stockActual) {
+                String desc = modelo.getValueAt(i, 2).toString();
+                JOptionPane.showMessageDialog(vista, 
+                    "No puedes vender " + cantidadAVender + " unidades de:\n" + desc + 
+                    "\n\nStock disponible: " + stockActual, 
+                    "Error de Inventario", 
+                    JOptionPane.ERROR_MESSAGE);
+                return false; // Detiene todo el proceso
+            }
+        }
+        return true; // Todo en orden
     }
     
     private boolean registrarVentaEnBD(String metodo, double total) {
