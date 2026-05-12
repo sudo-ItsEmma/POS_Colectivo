@@ -94,6 +94,11 @@ public class AdminPanel extends javax.swing.JPanel {
         btnVentas.setForeground(new java.awt.Color(255, 255, 255));
         btnVentas.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/ventas.svg", 48, 48));
         btnVentas.setText("Venta");
+        btnVentas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVentasActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnVentas);
 
         btnEmprendedores.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
@@ -218,6 +223,17 @@ public class AdminPanel extends javax.swing.JPanel {
             main.showView("products");
         }
     }//GEN-LAST:event_btnProductosActionPerformed
+
+    private void btnVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentasActionPerformed
+        // TODO add your handling code here:
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // 2. Le pedimos que muestre la vista de emprendedores
+            // Asegúrate de que "entrepreneur" sea el Card Name que le pusiste en MainView
+            main.showView("ventas");
+        }
+    }//GEN-LAST:event_btnVentasActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

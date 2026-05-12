@@ -33,7 +33,7 @@
                               <Component id="btnApartarProductos" min="-2" pref="240" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
-                          <Component id="txtBuscar" max="32767" attributes="0"/>
+                          <Component id="txtBusqueda" max="32767" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
@@ -41,13 +41,8 @@
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="btnPagar" pref="315" max="32767" attributes="0"/>
                                   <Component id="btnCancelar" pref="315" max="32767" attributes="0"/>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Component id="jTextField1" max="32767" attributes="0"/>
-                                  </Group>
-                                  <Component id="jComboBox1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jLabel6" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="cbMetodoPago" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="lblTotal" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -73,21 +68,16 @@
                   <Group type="102" attributes="0">
                       <Component id="jLabel7" min="-2" pref="60" max="-2" attributes="0"/>
                       <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" pref="60" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="jLabel8" pref="60" max="32767" attributes="0"/>
-                          <Component id="jTextField1" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                      <Component id="jComboBox1" min="-2" pref="61" max="-2" attributes="0"/>
+                      <Component id="lblTotal" min="-2" pref="60" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                      <Component id="cbMetodoPago" min="-2" pref="61" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnPagar" min="-2" pref="74" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="btnCancelar" min="-2" pref="74" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="txtBuscar" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="txtBusqueda" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" pref="505" max="32767" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -112,9 +102,9 @@
         <Property name="text" type="java.lang.String" value="POS"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtBuscar">
+    <Component class="javax.swing.JTextField" name="txtBusqueda">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="txtBuscar.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="txtBusqueda.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
       </AuxValues>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -124,19 +114,19 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="tablaVenta">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="SF Compact Rounded" size="13" style="0"/>
+              <Font name="SF Compact Rounded" size="18" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
               <Table columnCount="6" rowCount="4">
-                <Column editable="false" title="Cantidad" type="java.lang.Object"/>
+                <Column editable="true" title="Cantidad" type="java.lang.Object"/>
                 <Column editable="false" title="C&#xf3;digo" type="java.lang.Object"/>
                 <Column editable="false" title="Descripci&#xf3;n" type="java.lang.Object"/>
                 <Column editable="false" title="Precio Unitario" type="java.lang.Object"/>
                 <Column editable="false" title="Subtotal" type="java.lang.Object"/>
-                <Column editable="false" title="Eliminar" type="java.lang.Object"/>
+                <Column editable="true" title="Eliminar" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -229,7 +219,7 @@
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnApartarProductos.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel6">
+    <Component class="javax.swing.JLabel" name="lblTotal">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SF Pro Rounded" size="48" style="1"/>
@@ -247,21 +237,7 @@
         <Property name="text" type="java.lang.String" value="Total"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel8">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="SF Pro Rounded" size="28" style="1"/>
-        </Property>
-        <Property name="horizontalAlignment" type="int" value="2"/>
-        <Property name="text" type="java.lang.String" value="Descuento %"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jTextField1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
-      </AuxValues>
-    </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JComboBox" name="cbMetodoPago">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
@@ -271,7 +247,7 @@
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jComboBox1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cbMetodoPago.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>

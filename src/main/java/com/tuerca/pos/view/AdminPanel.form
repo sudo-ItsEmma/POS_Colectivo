@@ -149,6 +149,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Venta"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVentasActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnVentas.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 15; focusWidth: 0&quot;);"/>
           </AuxValues>

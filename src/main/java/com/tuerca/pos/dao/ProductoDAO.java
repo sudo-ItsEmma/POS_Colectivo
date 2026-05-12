@@ -308,4 +308,35 @@ public class ProductoDAO {
             return 0;
         }
     }
+    
+    public List<Producto> buscarPorCriterio(String texto) {
+        List<Producto> lista = new ArrayList<>();
+        // Buscamos por código O descripción, solo productos ACTIVOS
+        String sql = "SELECT p.*, e.brandName FROM Product p " +
+                     "JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
+                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) " +
+                     "AND p.isProductActive = 1 LIMIT 10"; // Limitamos a 10 para no saturar el menú
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            String query = "%" + texto + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Producto p = new Producto();
+                p.setIdProduct(rs.getInt("idProduct"));
+                p.setFullProductCode(rs.getString("fullProductCode"));
+                p.setProductDescription(rs.getString("productDescription"));
+                p.setCurrentPrice(rs.getDouble("currentPrice"));
+                p.setBrandName(rs.getString("brandName")); // Para mostrar quién es el dueño
+                lista.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en búsqueda rápida: " + e.getMessage());
+        }
+        return lista;
+    }
 }

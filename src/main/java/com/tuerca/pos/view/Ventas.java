@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.view;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author mannycalderon
@@ -16,12 +18,51 @@ public class Ventas extends javax.swing.JPanel {
     public Ventas() {
         initComponents();
         // 1. Esto pone el texto gris que desaparece solo al escribir
-        txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar Producto...");
+        txtBusqueda.putClientProperty("JTextField.placeholderText", "Buscar Producto...");
 
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
-        txtBuscar.putClientProperty("JTextField.showClearButton", true);
+        txtBusqueda.putClientProperty("JTextField.showClearButton", true);
+    }
+    
+    // --- GETTERS PARA ELEMENTOS DE VENTA ---
+
+    // 1. Barra de búsqueda superior
+    public javax.swing.JTextField getTxtBusqueda() {
+        return txtBusqueda;
     }
 
+    // 2. Tabla del carrito de compras
+    public javax.swing.JTable getTablaVenta() {
+        return tablaVenta;
+    }
+
+    // 3. Etiqueta donde se muestra el Total ($0.00)
+    public javax.swing.JLabel getLblTotal() {
+        return lblTotal;
+    }
+
+    // 4. ComboBox para seleccionar el método de pago
+    public javax.swing.JComboBox<String> getCbMetodoPago() {
+        return cbMetodoPago;
+    }
+
+    // 5. Botones de acción principal
+    public javax.swing.JButton getBtnCobrar() {
+        return btnPagar;
+    }
+
+    public javax.swing.JButton getBtnCancelar() {
+        return btnCancelar;
+    }
+    
+    public DefaultTableModel getTableModel() {
+        return (DefaultTableModel) tablaVenta.getModel();
+    }
+    
+    public javax.swing.JTable getTablaVentas() {
+        return tablaVenta; 
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,23 +73,20 @@ public class Ventas extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel5 = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
-        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
+        txtBusqueda = new javax.swing.JTextField();
+        txtBusqueda.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        jTable1 = new javax.swing.JTable();
+        tablaVenta = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         btnApartarProductos = new javax.swing.JButton();
         btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jLabel6 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField1.putClientProperty("FlatLaf.style", "arc: 20");
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
+        cbMetodoPago = new javax.swing.JComboBox<>();
+        cbMetodoPago.putClientProperty("FlatLaf.style", "arc: 20");
         btnCancelar = new javax.swing.JButton();
         btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnPagar = new javax.swing.JButton();
@@ -58,8 +96,8 @@ public class Ventas extends javax.swing.JPanel {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("POS");
 
-        jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaVenta.setFont(new java.awt.Font("SF Compact Rounded", 0, 18)); // NOI18N
+        tablaVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -71,14 +109,14 @@ public class Ventas extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                true, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaVenta);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -100,19 +138,15 @@ public class Ventas extends javax.swing.JPanel {
         btnApartarProductos.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 24, 24));
         btnApartarProductos.setText("Apartar Productos");
 
-        jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 48)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("$");
+        lblTotal.setFont(new java.awt.Font("SF Pro Rounded", 1, 48)); // NOI18N
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTotal.setText("$");
 
         jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel7.setText("Total");
 
-        jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel8.setText("Descuento %");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
+        cbMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia" }));
 
         btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
         btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
@@ -145,19 +179,15 @@ public class Ventas extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnApartarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1)
-                            .addComponent(txtBuscar))
+                            .addComponent(txtBusqueda))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(btnPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
                                     .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jTextField1))
-                                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(cbMetodoPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -174,19 +204,15 @@ public class Ventas extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(11, 11, 11)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(64, 64, 64)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                            .addComponent(jTextField1))
-                        .addGap(32, 32, 32)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(156, 156, 156)
+                        .addComponent(cbMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
@@ -204,7 +230,7 @@ public class Ventas extends javax.swing.JPanel {
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
             // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("employee"); 
+            main.showView("admin"); 
         }
     }//GEN-LAST:event_btnBackActionPerformed
 
@@ -214,15 +240,13 @@ public class Ventas extends javax.swing.JPanel {
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnPagar;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbMetodoPago;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField txtBuscar;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JTable tablaVenta;
+    private javax.swing.JTextField txtBusqueda;
     // End of variables declaration//GEN-END:variables
 }
