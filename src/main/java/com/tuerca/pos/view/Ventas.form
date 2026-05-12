@@ -36,18 +36,21 @@
                           <Component id="txtBusqueda" max="32767" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="btnPagar" pref="315" max="32767" attributes="0"/>
-                                  <Component id="btnCancelar" pref="315" max="32767" attributes="0"/>
-                                  <Component id="cbMetodoPago" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lblTotal" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                               <Component id="jLabel7" min="-2" pref="315" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel8" min="-2" pref="315" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="btnPagar" pref="315" max="32767" attributes="0"/>
+                                      <Component id="btnCancelar" pref="315" max="32767" attributes="0"/>
+                                      <Component id="cbMetodoPago" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="lblTotal" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
@@ -69,7 +72,9 @@
                       <Component id="jLabel7" min="-2" pref="60" max="-2" attributes="0"/>
                       <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
                       <Component id="lblTotal" min="-2" pref="60" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
+                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="cbMetodoPago" min="-2" pref="61" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnPagar" min="-2" pref="74" max="-2" attributes="0"/>
@@ -240,9 +245,10 @@
     <Component class="javax.swing.JComboBox" name="cbMetodoPago">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="2">
+          <StringArray count="3">
             <StringItem index="0" value="Efectivo"/>
             <StringItem index="1" value="Transferencia"/>
+            <StringItem index="2" value="Mixto"/>
           </StringArray>
         </Property>
       </Properties>
@@ -290,6 +296,15 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnPagar.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel8">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="SF Pro Rounded" size="18" style="1"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Selecciona m&#xe9;todo de pago"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

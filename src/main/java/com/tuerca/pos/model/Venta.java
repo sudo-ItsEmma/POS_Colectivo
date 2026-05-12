@@ -16,6 +16,7 @@ public class Venta {
     private double total;      // Monto total final
     private String metodoPago; // Efectivo o Transferencia
     private Date fecha;        // Momento de la venta
+    private String paymentDetails; 
 
     public Venta() {}
 
@@ -41,4 +42,7 @@ public class Venta {
 
     public Date getFecha() { return fecha; }
     public void setFecha(Date fecha) { this.fecha = fecha; }
+    
+    public String getPaymentDetails() { return paymentDetails; }
+    public void setPaymentDetails(String paymentDetails) { this.paymentDetails = paymentDetails; }
 }

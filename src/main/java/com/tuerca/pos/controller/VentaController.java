@@ -139,7 +139,25 @@ public class VentaController {
 
         // --- Botones de Acción ---
         vista.getBtnCancelar().addActionListener(e -> cancelarVenta());
-        vista.getBtnCobrar().addActionListener(e -> procesarCobro());
+        vista.getBtnCobrar().addActionListener(e -> 
+        {
+            String metodo = vista.getCbMetodoPago().getSelectedItem().toString();
+
+            // 1. Validamos si hay productos (importante)
+            if (vista.getTablaVenta().getRowCount() == 0) {
+                JOptionPane.showMessageDialog(vista, "El carrito está vacío.");
+                return;
+            }
+
+            // 2. Aquí está el cambio clave:
+            if (metodo.equalsIgnoreCase("Mixto")) {
+                // Ejecuta la función que abre los cuadros de diálogo (Efectivo/Transferencia)
+                procesarCobroMixto(); 
+            } else {
+                // Ejecuta tu cobro normal de un solo paso
+                procesarCobro(); 
+            }
+        });
     }
 
     // --- Métodos de Configuración ---
@@ -456,6 +474,97 @@ public class VentaController {
             // 6. LIMPIEZA TOTAL (Tarea 6)
             limpiarModulo();
         }
+    }
+    
+    private void procesarCobroMixto() {
+        DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+
+        // 1. Obtener el total acumulado
+        double totalVenta = 0;
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            totalVenta += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+        }
+
+        try {
+            // 2. Pedir monto en Transferencia
+            String tInput = JOptionPane.showInputDialog(vista, 
+                "TOTAL VENTA: $" + String.format("%.2f", totalVenta) + "\n\nIngrese monto por TRANSFERENCIA:");
+            if (tInput == null) return; // Usuario canceló
+
+            double montoTransferencia = Double.parseDouble(tInput);
+
+            if (montoTransferencia > totalVenta) {
+                JOptionPane.showMessageDialog(vista, "El monto de transferencia no puede exceder el total de la venta.");
+                return;
+            }
+
+            // 3. Calcular restante para Efectivo
+            double restanteEfectivo = totalVenta - montoTransferencia;
+
+            // 4. Pedir efectivo y calcular cambio (Solo si queda saldo pendiente)
+            double efectivoRecibido = 0;
+            double cambio = 0;
+
+            if (restanteEfectivo > 0) {
+                String eInput = JOptionPane.showInputDialog(vista, 
+                    "RESTANTE EN EFECTIVO: $" + String.format("%.2f", restanteEfectivo) + "\n\n¿Con cuánto paga el cliente?");
+                if (eInput == null) return;
+
+                efectivoRecibido = Double.parseDouble(eInput);
+
+                if (efectivoRecibido < restanteEfectivo) {
+                    JOptionPane.showMessageDialog(vista, "El monto en efectivo es insuficiente.");
+                    return;
+                }
+                cambio = efectivoRecibido - restanteEfectivo;
+            }
+
+            // 5. Preparar el objeto Venta con el detalle mixto
+            // Formato de detalle: "E:valor|T:valor"
+            String detallesPago = String.format("E:%.2f|T:%.2f", restanteEfectivo, montoTransferencia);
+
+            // Llamada a tu función de registro (la que crea la lista de detalles y llama al DAO)
+            if (registrarVentaEnBD_Mixto(totalVenta, detallesPago)) {
+                JOptionPane.showMessageDialog(vista, 
+                    "VENTA MIXTA REGISTRADA\n\n" +
+                    "Transferencia: $" + String.format("%.2f", montoTransferencia) + "\n" +
+                    "Efectivo: $" + String.format("%.2f", restanteEfectivo) + "\n" +
+                    "---------------------------\n" +
+                    "CAMBIO: $" + String.format("%.2f", cambio));
+
+                limpiarModulo();
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(vista, "Por favor, ingrese solo montos numéricos válidos.");
+        }
+    }
+    
+    private boolean registrarVentaEnBD_Mixto(double total, String detalles) {
+        VentaDAO ventaDao = new VentaDAO();
+        
+        Venta v = new Venta();
+        v.setIdUsuario(this.ID_USUARIO_PRUEBA); // El ID del cajero en turno
+        v.setTotal(total);
+        v.setMetodoPago("Mixto");
+        v.setPaymentDetails(detalles); // Aquí enviamos el "E:100|T:150"
+
+        // Creamos la lista de detalles recorriendo la tabla
+        List<DetalleVenta> listaDetalles = new ArrayList<>();
+        DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            DetalleVenta dv = new DetalleVenta();
+            String codigo = modelo.getValueAt(i, 1).toString();
+            dv.setIdProducto(productoDao.obtenerIdPorCodigo(codigo));
+            dv.setCantidad(Integer.parseInt(modelo.getValueAt(i, 0).toString()));
+            dv.setPrecioUnitario(Double.parseDouble(modelo.getValueAt(i, 3).toString()));
+            dv.setDescuento(Double.parseDouble(modelo.getValueAt(i, 4).toString()));
+            dv.setSubtotal(Double.parseDouble(modelo.getValueAt(i, 5).toString()));
+            listaDetalles.add(dv);
+        }
+
+        return ventaDao.registrarVenta(v, listaDetalles);
     }
     
     private boolean validarStockAntesDeCobrar() {

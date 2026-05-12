@@ -20,38 +20,45 @@ import java.util.List;
 public class VentaDAO {
     
     public boolean registrarVenta(Venta venta, List<DetalleVenta> detalles) {
-        // SQL ajustados a tus tablas reales
-        String sqlVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount) VALUES (?, ?, ?)";
+        String sqlVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount, paymentDetails) VALUES (?, ?, ?, ?)";
         String sqlDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail) VALUES (?, ?, ?, ?, ?, ?)";
         String sqlStock = "UPDATE Product SET currentStock = currentStock - ? WHERE idProduct = ?";
-        
+
         Connection con = null;
 
         try {
             con = DatabaseConnection.getConnection();
-            con.setAutoCommit(false); // Iniciamos transacción
+            con.setAutoCommit(false); 
 
-            // 1. Obtener el ID del método de pago (Efectivo=1, Transferencia=2 según tu script)
-            int idMetodo = venta.getMetodoPago().equalsIgnoreCase("Efectivo") ? 1 : 2;
+            // 1. Mapeo de IDs de Pago (Asegúrate de que 'Mixto' sea ID 3 en tu DB)
+            int idMetodo;
+            if (venta.getMetodoPago().equalsIgnoreCase("Efectivo")) {
+                idMetodo = 1;
+            } else if (venta.getMetodoPago().equalsIgnoreCase("Transferencia")) {
+                idMetodo = 2;
+            } else {
+                idMetodo = 3; // ID para el nuevo método 'Mixto'
+            }
 
-            // 2. Insertar Cabecera de la Venta
+            // 2. Insertar Cabecera de la Venta (Se hace una sola vez)
             try (PreparedStatement psVenta = con.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
                 psVenta.setInt(1, venta.getIdUsuario());
                 psVenta.setInt(2, idMetodo);
                 psVenta.setDouble(3, venta.getTotal());
+                // Guardamos el detalle (E:100|T:150) o null si es pago simple
+                psVenta.setString(4, venta.getPaymentDetails()); 
                 psVenta.executeUpdate();
 
-                // Obtener el ID generado por la base de datos (idSale)
                 try (ResultSet rs = psVenta.getGeneratedKeys()) {
                     if (rs.next()) {
                         int idGenerado = rs.getInt(1);
 
-                        // 3. Insertar Detalles y Actualizar Stock en Product
+                        // 3. Insertar Detalles y Actualizar Stock (Bucle)
                         try (PreparedStatement psDetalle = con.prepareStatement(sqlDetalle);
                              PreparedStatement psStock = con.prepareStatement(sqlStock)) {
-                            
+
                             for (DetalleVenta item : detalles) {
-                                // Parámetros de SaleDetail
+                                // SaleDetail
                                 psDetalle.setInt(1, idGenerado);
                                 psDetalle.setInt(2, item.getIdProducto());
                                 psDetalle.setInt(3, item.getCantidad());
@@ -60,7 +67,7 @@ public class VentaDAO {
                                 psDetalle.setDouble(6, item.getSubtotal());
                                 psDetalle.executeUpdate();
 
-                                // Parámetros de Update Stock en Product
+                                // Update Stock
                                 psStock.setInt(1, item.getCantidad());
                                 psStock.setInt(2, item.getIdProducto());
                                 psStock.executeUpdate();
@@ -70,7 +77,7 @@ public class VentaDAO {
                 }
             }
 
-            con.commit(); // Todo bien, guardamos cambios
+            con.commit(); 
             return true;
 
         } catch (SQLException e) {
