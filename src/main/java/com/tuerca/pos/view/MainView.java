@@ -4,6 +4,7 @@
  */
 package com.tuerca.pos.view;
 
+import com.tuerca.pos.controller.ApartadoController;
 import com.tuerca.pos.controller.EmpleadoController;
 import com.tuerca.pos.controller.EmprendedorController;
 import com.tuerca.pos.controller.ProductoController;
@@ -19,6 +20,7 @@ public class MainView extends javax.swing.JFrame {
     private EmprendedorController empreController;
     private ProductoController prodController;
     private VentaController ventaController;
+    private ApartadoController apartadoController;
 
     /**
      * Creates new form MainView
@@ -67,6 +69,12 @@ public class MainView extends javax.swing.JFrame {
         
         ventaController =
                 new com.tuerca.pos.controller.VentaController(
+                        ventas1,
+                        this
+                );
+        
+        apartadoController =
+                new com.tuerca.pos.controller.ApartadoController(
                         ventas1,
                         this
                 );

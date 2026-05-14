@@ -50,6 +50,10 @@ public class Ventas extends javax.swing.JPanel {
     public javax.swing.JButton getBtnCobrar() {
         return btnPagar;
     }
+    
+    public javax.swing.JButton getBtnApartarProductos(){
+        return btnApartarProductos;
+    }
 
     public javax.swing.JButton getBtnCancelar() {
         return btnCancelar;
