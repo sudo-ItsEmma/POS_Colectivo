@@ -76,6 +76,7 @@ public class MainView extends javax.swing.JFrame {
         apartadoController =
                 new com.tuerca.pos.controller.ApartadoController(
                         ventas1,
+                        gestionApartados1,
                         this
                 );
         

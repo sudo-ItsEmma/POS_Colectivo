@@ -35,7 +35,7 @@
                           <Group type="102" attributes="0">
                               <Component id="txtBuscar" max="32767" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Component id="jComboBox1" min="-2" pref="240" max="-2" attributes="0"/>
+                              <Component id="cbEstado" min="-2" pref="240" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btnNuevoApartado" min="-2" pref="240" max="-2" attributes="0"/>
                           </Group>
@@ -57,7 +57,7 @@
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Component id="txtBuscar" max="32767" attributes="0"/>
                   <Component id="btnNuevoApartado" min="-2" pref="40" max="-2" attributes="0"/>
-                  <Component id="jComboBox1" alignment="1" min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="cbEstado" alignment="1" min="-2" pref="34" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="511" max="32767" attributes="0"/>
@@ -90,7 +90,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTable" name="jTable1">
+        <Component class="javax.swing.JTable" name="tablaApartados">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SF Compact Rounded" size="13" style="0"/>
@@ -103,7 +103,7 @@
                 <Column editable="false" title="Anticipo" type="java.lang.Object"/>
                 <Column editable="false" title=" Saldo Pendiente" type="java.lang.Object"/>
                 <Column editable="false" title="Vencimiento" type="java.lang.Object"/>
-                <Column editable="false" title="Acciones" type="java.lang.Object"/>
+                <Column editable="true" title="Acciones" type="java.lang.Object"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
@@ -192,22 +192,25 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Nuevo Apartado"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnNuevoApartadoActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="btnNuevoApartado.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20; iconTextGap: 10; focusWidth: 0&quot;);"/>
       </AuxValues>
     </Component>
-    <Component class="javax.swing.JComboBox" name="jComboBox1">
+    <Component class="javax.swing.JComboBox" name="cbEstado">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
             <StringItem index="0" value="Pendientes"/>
-            <StringItem index="1" value="Vencidos"/>
-            <StringItem index="2" value="Liquidados"/>
+            <StringItem index="1" value="Liquidados"/>
+            <StringItem index="2" value="Vencidos"/>
           </StringArray>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jComboBox1.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="cbEstado.putClientProperty(&quot;FlatLaf.style&quot;, &quot;arc: 20&quot;);"/>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
     </Component>

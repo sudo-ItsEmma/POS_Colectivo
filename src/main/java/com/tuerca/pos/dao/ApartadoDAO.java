@@ -7,6 +7,7 @@ package com.tuerca.pos.dao;
 import com.tuerca.pos.model.Apartado;
 import com.tuerca.pos.model.ApartadoDetail;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Calendar;
 
@@ -75,5 +76,35 @@ public class ApartadoDAO {
         } finally {
             if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
+    }
+    
+    public List<Apartado> listarApartados(String filtroNombre, String estado) {
+        List<Apartado> lista = new ArrayList<>();
+        // SQL dinámico: filtra por nombre y por el estado del ComboBox
+        String sql = "SELECT * FROM Booking WHERE customerName LIKE ? AND bookingStatus = ? ORDER BY bookingDate DESC";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + filtroNombre + "%");
+            ps.setString(2, estado);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Apartado a = new Apartado();
+                    a.setIdBooking(rs.getInt("idBooking"));
+                    a.setCustomerName(rs.getString("customerName"));
+                    a.setTotalAmount(rs.getDouble("totalAmount"));
+                    a.setAdvanceAmount(rs.getDouble("advanceAmount"));
+                    a.setPendingBalance(rs.getDouble("pendingBalance"));
+                    a.setExpirationDate(rs.getDate("expirationDate"));
+                    a.setBookingStatus(rs.getString("bookingStatus"));
+                    lista.add(a);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 }

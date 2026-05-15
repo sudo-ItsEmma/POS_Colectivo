@@ -8,8 +8,13 @@ import com.tuerca.pos.dao.ApartadoDAO;
 import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.model.Apartado;
 import com.tuerca.pos.model.ApartadoDetail;
+import com.tuerca.pos.view.GestionApartados;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.Ventas;
+import com.tuerca.pos.view.components.AccionTableEvent;
+import com.tuerca.pos.view.components.AccionesEditar;
+import com.tuerca.pos.view.components.AccionesRender;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -23,7 +28,8 @@ public class ApartadoController {
     private MainView mainView;
     private ApartadoDAO apartadoDao;
     private ProductoDAO productoDao;
-    private Ventas vista; // Reutilizamos la vista de venta
+    private Ventas vista;
+     private GestionApartados vistaGestion;
     private int idUsuarioActivo;
     
     private final int COL_CANTIDAD = 0;
@@ -32,8 +38,9 @@ public class ApartadoController {
     private final int COL_PRECIO = 3;
     private final int COL_SUBTOTAL = 5;
 
-    public ApartadoController(Ventas vista, MainView mainView) {
+    public ApartadoController(Ventas vista, GestionApartados vistaGestion, MainView mainView) {
         this.vista = vista;
+        this.vistaGestion = vistaGestion;
         this.mainView = mainView;
         
         // Inicializamos los DAOs
@@ -43,10 +50,14 @@ public class ApartadoController {
         // Obtenemos el ID del usuario desde la sesión en MainView
         this.idUsuarioActivo = 2;
         
-        configurarEventos();
+        configurarEventosVenta();
+        configurarEventosGestion();
+        
+        // Carga inicial de la tabla de gestión
+        llenarTablaGestion("", "Activo");
     }
 
-    private void configurarEventos() {
+    private void configurarEventosVenta() {
         vista.getBtnApartarProductos().addActionListener(e -> procesarApartado());
     }
 
@@ -140,5 +151,85 @@ public class ApartadoController {
         modelo.setRowCount(0);
         vista.getLblTotal().setText("$0.00");
         vista.getTxtBusqueda().requestFocus();
+    }
+    
+    // --- LÓGICA DE GESTIÓN (VISTA GESTIÓN APARTADOS) ---
+    private void configurarEventosGestion() {
+        // Búsqueda por texto
+        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                filtrarGestion();
+            }
+        });
+
+        // Cambio de estado en ComboBox
+        vistaGestion.getCbEstado().addActionListener(e -> filtrarGestion());
+
+        // Configuración de Acciones en la tabla (Icono Editar)
+        AccionTableEvent event = new AccionTableEvent() {
+            @Override
+            public void onEditar(int row) {
+                int folio = Integer.parseInt(vistaGestion.getTablaApartados().getValueAt(row, 0).toString());
+                abrirOpcionesApartado(folio);
+            }
+
+            @Override
+            public void onEliminar(int row) {
+                // No hace nada
+            }
+        };
+
+        // 1. Configuramos el RENDERER (el que se ve en la fila 2 de tu foto)
+        AccionesRender miRender = new AccionesRender();
+        miRender.getBtnEliminar().setVisible(false); // Ocultamos el bote de basura
+        vistaGestion.getTablaApartados().getColumnModel().getColumn(6).setCellRenderer(miRender);
+
+        // 2. Configuramos el EDITOR (el que se activa en la fila 1 de tu foto)
+        // 1. Configuramos el RENDERER (Como ya lo tienes)
+        AccionesRender renderApt = new AccionesRender();
+        renderApt.getBtnEliminar().setVisible(false);
+        vistaGestion.getTablaApartados().getColumnModel().getColumn(6).setCellRenderer(renderApt);
+
+        // 2. Configuramos el EDITOR
+        AccionesEditar editorApt = new AccionesEditar(event);
+
+        // Aquí el truco: Vamos a buscar el botón dentro del panel que usa el editor
+        // Esto funciona si AccionesEditar usa internamente un panel que contiene los botones
+        Component c = editorApt.getTableCellEditorComponent(vistaGestion.getTablaApartados(), null, true, 0, 6);
+        if (c instanceof AccionesRender) {
+            ((AccionesRender) c).getBtnEliminar().setVisible(false);
+        }
+
+        vistaGestion.getTablaApartados().getColumnModel().getColumn(6).setCellEditor(editorApt);
+        vistaGestion.getTablaApartados().setRowHeight(40);
+    }
+
+    private void filtrarGestion() {
+        String texto = vistaGestion.getTxtBuscar().getText();
+        String estado = vistaGestion.getCbEstado().getSelectedItem().toString();
+        llenarTablaGestion(texto, estado);
+    }
+
+    public void llenarTablaGestion(String filtro, String estado) {
+        DefaultTableModel modelo = (DefaultTableModel) vistaGestion.getTablaApartados().getModel();
+        modelo.setRowCount(0);
+        
+        List<Apartado> lista = apartadoDao.listarApartados(filtro, estado);
+        for (Apartado a : lista) {
+            modelo.addRow(new Object[]{
+                a.getIdBooking(),
+                a.getCustomerName(),
+                a.getTotalAmount(),
+                a.getAdvanceAmount(),
+                a.getPendingBalance(),
+                a.getExpirationDate(),
+                null // Celda de acciones
+            });
+        }
+    }
+
+    private void abrirOpcionesApartado(int folio) {
+        // Aquí programaremos el siguiente paso: Abonar o Liquidar
+        JOptionPane.showMessageDialog(vistaGestion, "Gestionando Folio: " + folio);
     }
 }

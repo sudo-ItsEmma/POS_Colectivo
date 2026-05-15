@@ -19,6 +19,7 @@ public class Apartado {
     private double advanceAmount;
     private double pendingBalance;
     private String bookingStatus;
+    private Date expirationDate;
     
     // Getters y Setters
     public int getIdBooking() {
@@ -83,6 +84,14 @@ public class Apartado {
 
     public void setBookingStatus(String bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
     
 }

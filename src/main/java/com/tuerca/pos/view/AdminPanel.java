@@ -118,6 +118,11 @@ public class AdminPanel extends javax.swing.JPanel {
         btnApartados.setForeground(new java.awt.Color(255, 255, 255));
         btnApartados.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 48, 48));
         btnApartados.setText("Gestión Apartados");
+        btnApartados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApartadosActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnApartados);
 
         btnArqueoCaja.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
@@ -234,6 +239,17 @@ public class AdminPanel extends javax.swing.JPanel {
             main.showView("ventas");
         }
     }//GEN-LAST:event_btnVentasActionPerformed
+
+    private void btnApartadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApartadosActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana principal
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Regresamos al panel del empleado (el dashboard de los 9 botones)
+            main.showView("apartados"); 
+        }
+    }//GEN-LAST:event_btnApartadosActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

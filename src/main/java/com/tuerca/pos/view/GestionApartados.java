@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.view;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author mannycalderon
@@ -21,6 +23,30 @@ public class GestionApartados extends javax.swing.JPanel {
         // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
     }
+    
+    public javax.swing.JTextField getTxtBuscar() {
+        return txtBuscar;
+    }
+
+    public javax.swing.JTable getTablaApartados() {
+        return tablaApartados;
+    }
+
+    public javax.swing.JComboBox<String> getCbEstado() {
+        return cbEstado;
+    }
+
+    public javax.swing.JButton getBtnBack() {
+        return btnBack;
+    }
+
+    public javax.swing.JButton getBtnNuevoApartado() {
+        return btnNuevoApartado;
+    }
+    
+    public DefaultTableModel getTableModel() {
+        return (DefaultTableModel) tablaApartados.getModel();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -36,21 +62,21 @@ public class GestionApartados extends javax.swing.JPanel {
         txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
         jScrollPane1 = new javax.swing.JScrollPane();
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        jTable1 = new javax.swing.JTable();
+        tablaApartados = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
         btnBack = new javax.swing.JButton();
         btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
         btnNuevoApartado = new javax.swing.JButton();
         btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox1.putClientProperty("FlatLaf.style", "arc: 20");
+        cbEstado = new javax.swing.JComboBox<>();
+        cbEstado.putClientProperty("FlatLaf.style", "arc: 20");
 
         jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Gestión de Apartados");
 
-        jTable1.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaApartados.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
+        tablaApartados.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -62,14 +88,14 @@ public class GestionApartados extends javax.swing.JPanel {
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tablaApartados);
 
         jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -90,8 +116,13 @@ public class GestionApartados extends javax.swing.JPanel {
         btnNuevoApartado.setForeground(new java.awt.Color(255, 255, 255));
         btnNuevoApartado.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 36, 36));
         btnNuevoApartado.setText("Nuevo Apartado");
+        btnNuevoApartado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoApartadoActionPerformed(evt);
+            }
+        });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendientes", "Vencidos", "Liquidados" }));
+        cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendientes", "Liquidados", "Vencidos" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -114,7 +145,7 @@ public class GestionApartados extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(txtBuscar)
                                 .addGap(18, 18, 18)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(28, 28, 28))))
@@ -129,7 +160,7 @@ public class GestionApartados extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtBuscar)
                     .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbEstado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(31, 31, 31)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -145,19 +176,30 @@ public class GestionApartados extends javax.swing.JPanel {
 
         if (window instanceof com.tuerca.pos.view.MainView main) {
             // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("employee"); 
+            main.showView("admin"); 
         }
     }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNuevoApartadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoApartadoActionPerformed
+        // TODO add your handling code here:
+        // Buscamos la ventana principal
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+
+        if (window instanceof com.tuerca.pos.view.MainView main) {
+            // Regresamos al panel del empleado (el dashboard de los 9 botones)
+            main.showView("ventas"); 
+        }
+    }//GEN-LAST:event_btnNuevoApartadoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnNuevoApartado;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cbEstado;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablaApartados;
     private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }
