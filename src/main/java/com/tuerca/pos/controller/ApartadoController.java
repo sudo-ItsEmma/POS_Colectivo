@@ -18,7 +18,10 @@ import java.awt.Component;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -74,11 +77,40 @@ public class ApartadoController {
         double totalCarrito = calcularTotal();
         double sugerido = totalCarrito * 0.10;
 
-        // 2. Recopilación de datos del cliente
-        String nombre = JOptionPane.showInputDialog(vista, "Nombre del Cliente (Obligatorio):");
-        if (nombre == null || nombre.trim().isEmpty()) return;
-        
-        String telefono = JOptionPane.showInputDialog(vista, "Teléfono de contacto:");
+        // 2. Recopilación unificada de datos del cliente
+        JTextField txtNombre = new JTextField(20);
+        JTextField txtTelefono = new JTextField(15);
+
+        // Agregamos una propiedad de FlatLaf si quieres que muestre un texto de ayuda de fondo (Placeholder)
+        txtNombre.putClientProperty("JTextField.placeholderText", "Nombre y Apellido");
+        txtTelefono.putClientProperty("JTextField.placeholderText", "Ej. 7771234567");
+
+        // Creamos un panel con un diseño básico (puedes usar GridLayout o GridBagLayout si quieres más orden)
+        JPanel panelCliente = new JPanel(new java.awt.GridLayout(4, 1, 5, 5));
+        panelCliente.add(new JLabel("Nombre del Cliente:"));
+        panelCliente.add(txtNombre);
+        panelCliente.add(new JLabel("Teléfono de contacto:"));
+        panelCliente.add(txtTelefono);
+
+        int resultado = JOptionPane.showConfirmDialog(
+            vista, 
+            panelCliente, 
+            "Datos del Cliente - Aura POS", 
+            JOptionPane.OK_CANCEL_OPTION, 
+            JOptionPane.PLAIN_MESSAGE
+        );
+
+        // Si el usuario da clic en Cancelar o cierra la ventana, detenemos el proceso
+        if (resultado != JOptionPane.OK_OPTION) return;
+
+        String nombre = txtNombre.getText();
+        String telefono = txtTelefono.getText();
+
+        // Validación del campo obligatorio
+        if (nombre == null || nombre.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(vista, "El nombre del cliente es obligatorio para registrar el apartado.", "Datos Incompletos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
 
         // 3. Gestión del abono inicial
         String montoStr = JOptionPane.showInputDialog(vista, 
