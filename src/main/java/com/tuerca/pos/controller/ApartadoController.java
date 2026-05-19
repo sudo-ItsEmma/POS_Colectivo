@@ -136,6 +136,7 @@ public class ApartadoController {
             apt.setTotalAmount(totalCarrito);
             apt.setAdvanceAmount(abonoInput);
             apt.setPendingBalance(totalCarrito - abonoInput);
+            apt.setBookingStatus("Activo");
 
             // 5. Creación del Detalle (List<ApartadoDetail>)
             List<ApartadoDetail> listaDetalles = new ArrayList<>();
@@ -159,8 +160,8 @@ public class ApartadoController {
                     "Cliente: " + nombre.toUpperCase() + "\n" +
                     "Saldo Pendiente: $" + String.format("%.2f", apt.getPendingBalance()) + "\n" +
                     "Fecha Límite: 14 días naturales.");
-                
                 limpiarCarrito();
+                filtrarGestion();
             } else {
                 JOptionPane.showMessageDialog(vista, "Error al registrar el apartado en la base de datos.");
             }
@@ -239,8 +240,18 @@ public class ApartadoController {
 
     private void filtrarGestion() {
         String texto = vistaGestion.getTxtBuscar().getText();
-        String estado = vistaGestion.getCbEstado().getSelectedItem().toString();
-        llenarTablaGestion(texto, estado);
+        String estadoSeleccionado = vistaGestion.getCbEstado().getSelectedItem().toString();
+
+        // Homologamos lo que ve el usuario con lo que entiende MariaDB
+        if (estadoSeleccionado.equalsIgnoreCase("Pendientes") || estadoSeleccionado.equalsIgnoreCase("Activos")) {
+            estadoSeleccionado = "Activo";
+        } else if (estadoSeleccionado.equalsIgnoreCase("Liquidados")) {
+            estadoSeleccionado = "Liquidado";
+        } else if (estadoSeleccionado.equalsIgnoreCase("Vencidos")) {
+            estadoSeleccionado = "Vencido";
+        }
+
+        llenarTablaGestion(texto, estadoSeleccionado);
     }
 
     public void llenarTablaGestion(String filtro, String estado) {
