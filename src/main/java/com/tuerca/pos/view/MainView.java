@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package com.tuerca.pos.view;
 
 import com.tuerca.pos.controller.ApartadoController;
@@ -10,123 +6,51 @@ import com.tuerca.pos.controller.EmprendedorController;
 import com.tuerca.pos.controller.ProductoController;
 import com.tuerca.pos.controller.VentaController;
 
+import java.awt.CardLayout;
+import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 /**
- *
- * @author mannycalderon
+ * Ventana principal de la aplicación. Contiene todas las pantallas del
+ * sistema como cartas de un {@link CardLayout} y expone {@link #showView}
+ * para navegar entre ellas.
  */
-public class MainView extends javax.swing.JFrame {
+public class MainView extends JFrame {
+
+    private final LoginPanel loginPanel1 = new LoginPanel();
+    private final EmployeePanel employeePanel2 = new EmployeePanel();
+    private final AdminPanel adminPanel2 = new AdminPanel();
+    private final GestionEmprendedores gestionEmprendedores1 = new GestionEmprendedores();
+    private final GestionProductos gestionProductos1 = new GestionProductos();
+    private final Ventas ventas1 = new Ventas();
+    private final GestionDevoluciones gestionDevoluciones1 = new GestionDevoluciones();
+    private final GestionApartados gestionApartados1 = new GestionApartados();
+    private final ArqueoDeCaja arqueoDeCaja1 = new ArqueoDeCaja();
+    private final CorteDeCaja corteDeCaja1 = new CorteDeCaja();
+    private final PagoEmprendedores pagoEmprendedores1 = new PagoEmprendedores();
+    private final GenerarReportes generarReportes1 = new GenerarReportes();
+    private final GestionEmpleados gestionEmpleados1 = new GestionEmpleados();
+    private final NuevoEmpleado nuevoEmpleado1 = new NuevoEmpleado();
+    private final EditarEmpleado editarEmpleado1 = new EditarEmpleado();
+    private final NuevoEmprendedor nuevoEmprendedor1 = new NuevoEmprendedor();
+    private final EditarEmprendimiento editarEmprendimiento1 = new EditarEmprendimiento();
+    private final NuevoProducto nuevoProducto1 = new NuevoProducto();
+    private final EditarProducto editarProducto1 = new EditarProducto();
+    private final CargaMasivaProductos cargaMasivaProductos1 = new CargaMasivaProductos();
+
     private EmpleadoController empController;
     private EmprendedorController empreController;
     private ProductoController prodController;
     private VentaController ventaController;
     private ApartadoController apartadoController;
 
-    /**
-     * Creates new form MainView
-     */
     public MainView() {
-        initComponents();
-        
-        // Configuramos el tamaño de la ventana principal
-        this.setSize(1280, 720);
-        this.setLocationRelativeTo(null);
-        
-        // Forzamos el nombre de las cartas por código
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new CardLayout());
+
         getContentPane().add(loginPanel1, "login");
-        getContentPane().add(adminPanel2, "admin");
         getContentPane().add(employeePanel2, "employee");
-        
-        // conectamos el controlador 
-        // En el constructor de MainView.java
-        empController = 
-            new com.tuerca.pos.controller.EmpleadoController(
-                nuevoEmpleado1,   // Vista de Registro
-                editarEmpleado1,  // Vista de Edición (Asegúrate de que este sea el nombre de la variable)
-                gestionEmpleados1,// Vista de Gestión
-                this              // MainView
-            );
-        empController.cargarTabla();
-        
-        empreController = 
-                new com.tuerca.pos.controller.EmprendedorController(
-                        nuevoEmprendedor1,
-                        editarEmprendimiento1,
-                        gestionEmprendedores1, 
-                        this
-                );
-        empreController.cargarTabla();
-        
-        // Dentro del constructor de MainView.java
-        prodController = 
-                new com.tuerca.pos.controller.ProductoController(
-                        gestionProductos1,
-                        nuevoProducto1,
-                        editarProducto1,
-                        cargaMasivaProductos1,
-                        this
-                );
-        
-        ventaController =
-                new com.tuerca.pos.controller.VentaController(
-                        ventas1,
-                        this
-                );
-        
-        apartadoController =
-                new com.tuerca.pos.controller.ApartadoController(
-                        ventas1,
-                        gestionApartados1,
-                        this
-                );
-        
-        showView("login");
-    }
-    
-    public ProductoController getProdController() {
-        return prodController;
-    }
-    
-    public void showView(String viewName) {
-        java.awt.CardLayout cl = (java.awt.CardLayout) getContentPane().getLayout();
-        cl.show(getContentPane(), viewName);
-    }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        loginPanel1 = new com.tuerca.pos.view.LoginPanel();
-        employeePanel2 = new com.tuerca.pos.view.EmployeePanel();
-        adminPanel2 = new com.tuerca.pos.view.AdminPanel();
-        gestionEmprendedores1 = new com.tuerca.pos.view.GestionEmprendedores();
-        gestionProductos1 = new com.tuerca.pos.view.GestionProductos();
-        ventas1 = new com.tuerca.pos.view.Ventas();
-        gestionDevoluciones1 = new com.tuerca.pos.view.GestionDevoluciones();
-        gestionApartados1 = new com.tuerca.pos.view.GestionApartados();
-        arqueoDeCaja1 = new com.tuerca.pos.view.ArqueoDeCaja();
-        corteDeCaja1 = new com.tuerca.pos.view.CorteDeCaja();
-        pagoEmprendedores1 = new com.tuerca.pos.view.PagoEmprendedores();
-        generarReportes1 = new com.tuerca.pos.view.GenerarReportes();
-        gestionEmpleados1 = new com.tuerca.pos.view.GestionEmpleados();
-        nuevoEmpleado1 = new com.tuerca.pos.view.NuevoEmpleado();
-        editarEmpleado1 = new com.tuerca.pos.view.EditarEmpleado();
-        nuevoEmprendedor1 = new com.tuerca.pos.view.NuevoEmprendedor();
-        editarEmprendimiento1 = new com.tuerca.pos.view.EditarEmprendimiento();
-        nuevoProducto1 = new com.tuerca.pos.view.NuevoProducto();
-        editarProducto1 = new com.tuerca.pos.view.EditarProducto();
-        cargaMasivaProductos1 = new com.tuerca.pos.view.CargaMasivaProductos();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.CardLayout());
-        getContentPane().add(loginPanel1, "card2");
-        getContentPane().add(employeePanel2, "card3");
-        getContentPane().add(adminPanel2, "card4");
+        getContentPane().add(adminPanel2, "admin");
         getContentPane().add(gestionEmprendedores1, "entrepreneur");
         getContentPane().add(gestionProductos1, "products");
         getContentPane().add(ventas1, "ventas");
@@ -146,63 +70,53 @@ public class MainView extends javax.swing.JFrame {
         getContentPane().add(cargaMasivaProductos1, "cargaMasiva");
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+        this.setSize(1280, 720);
+        this.setLocationRelativeTo(null);
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+        empController = new EmpleadoController(
+                nuevoEmpleado1,
+                editarEmpleado1,
+                gestionEmpleados1,
+                this
+        );
+        empController.cargarTabla();
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainView().setVisible(true);
-            }
-        });
+        empreController = new EmprendedorController(
+                nuevoEmprendedor1,
+                editarEmprendimiento1,
+                gestionEmprendedores1,
+                this
+        );
+        empreController.cargarTabla();
+
+        prodController = new ProductoController(
+                gestionProductos1,
+                nuevoProducto1,
+                editarProducto1,
+                cargaMasivaProductos1,
+                this
+        );
+
+        ventaController = new VentaController(
+                ventas1,
+                this
+        );
+
+        apartadoController = new ApartadoController(
+                ventas1,
+                gestionApartados1,
+                this
+        );
+
+        showView("login");
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.tuerca.pos.view.AdminPanel adminPanel2;
-    private com.tuerca.pos.view.ArqueoDeCaja arqueoDeCaja1;
-    private com.tuerca.pos.view.CargaMasivaProductos cargaMasivaProductos1;
-    private com.tuerca.pos.view.CorteDeCaja corteDeCaja1;
-    private com.tuerca.pos.view.EditarEmpleado editarEmpleado1;
-    private com.tuerca.pos.view.EditarEmprendimiento editarEmprendimiento1;
-    private com.tuerca.pos.view.EditarProducto editarProducto1;
-    private com.tuerca.pos.view.EmployeePanel employeePanel2;
-    private com.tuerca.pos.view.GenerarReportes generarReportes1;
-    private com.tuerca.pos.view.GestionApartados gestionApartados1;
-    private com.tuerca.pos.view.GestionDevoluciones gestionDevoluciones1;
-    private com.tuerca.pos.view.GestionEmpleados gestionEmpleados1;
-    private com.tuerca.pos.view.GestionEmprendedores gestionEmprendedores1;
-    private com.tuerca.pos.view.GestionProductos gestionProductos1;
-    private com.tuerca.pos.view.LoginPanel loginPanel1;
-    private com.tuerca.pos.view.NuevoEmpleado nuevoEmpleado1;
-    private com.tuerca.pos.view.NuevoEmprendedor nuevoEmprendedor1;
-    private com.tuerca.pos.view.NuevoProducto nuevoProducto1;
-    private com.tuerca.pos.view.PagoEmprendedores pagoEmprendedores1;
-    private com.tuerca.pos.view.Ventas ventas1;
-    // End of variables declaration//GEN-END:variables
+    public ProductoController getProdController() {
+        return prodController;
+    }
+
+    public void showView(String viewName) {
+        CardLayout cl = (CardLayout) getContentPane().getLayout();
+        cl.show(getContentPane(), viewName);
+    }
 }
