@@ -102,6 +102,65 @@ public class EmpleadoDAO {
         
     }
     
+    // función para autenticar un login: valida usuario+contraseña contra UserAccount
+    // y no revela si falló el usuario o la contraseña (mismo resultado: null)
+    public Empleado autenticar(String username, String password) {
+        String sql = "SELECT e.idEmployee, e.firstNameEmployee, e.lastNameEmployee, e.secondLastNameEmployee, "
+                + "u.idUserAccount, u.passwordAccount, u.idRole, u.isAccountActive, r.roleName "
+                + "FROM UserAccount u "
+                + "JOIN Employee e ON u.idEmployee = e.idEmployee "
+                + "JOIN Role r ON u.idRole = r.idRole "
+                + "WHERE u.usernameAccount = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return null;
+                }
+
+                if (rs.getInt("isAccountActive") == 0) {
+                    return null;
+                }
+
+                if (!BCrypt.checkpw(password, rs.getString("passwordAccount"))) {
+                    return null;
+                }
+
+                Empleado emp = new Empleado();
+                emp.setId(rs.getInt("idEmployee"));
+                emp.setIdUserAccount(rs.getInt("idUserAccount"));
+                emp.setNombre(rs.getString("firstNameEmployee"));
+                emp.setPaterno(rs.getString("lastNameEmployee"));
+                emp.setMaterno(rs.getString("secondLastNameEmployee"));
+                emp.setUsername(username);
+                emp.setIdRole(rs.getInt("idRole"));
+                emp.setRoleName(rs.getString("roleName"));
+
+                actualizarUltimoLogin(rs.getInt("idUserAccount"));
+
+                return emp;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error en autenticación: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private void actualizarUltimoLogin(int idUserAccount) {
+        String sql = "UPDATE UserAccount SET lastLoginDate = NOW() WHERE idUserAccount = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUserAccount);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al actualizar último login: " + e.getMessage());
+        }
+    }
+
     // función que muestra los empleados registrados en el sistema
     public List<Empleado> listar() {
         List<Empleado> lista = new ArrayList<>();

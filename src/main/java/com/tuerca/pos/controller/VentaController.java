@@ -8,6 +8,7 @@ import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.dao.VentaDAO;
 import com.tuerca.pos.model.DetalleVenta;
 import com.tuerca.pos.model.Producto;
+import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.model.Venta;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.Ventas; // Ajusta al nombre real de tu clase de vista
@@ -44,7 +45,6 @@ public class VentaController {
     private final int COL_DSCTO_PER = 4; // Nueva columna
     private final int COL_SUBTOTAL = 5;  // Se recorrió
     private final int COL_ACCION = 6;    // Se recorrió
-    private final int ID_USUARIO_PRUEBA=2;
 
     public VentaController(Ventas vista, MainView mainView) {
         this.vista = vista;
@@ -544,7 +544,7 @@ public class VentaController {
         VentaDAO ventaDao = new VentaDAO();
         
         Venta v = new Venta();
-        v.setIdUsuario(this.ID_USUARIO_PRUEBA); // El ID del cajero en turno
+        v.setIdUsuario(Sesion.getInstancia().getIdUserAccount()); // El ID del cajero en turno
         v.setTotal(total);
         v.setMetodoPago("Mixto");
         v.setPaymentDetails(detalles); // Aquí enviamos el "E:100|T:150"
@@ -596,7 +596,7 @@ public class VentaController {
 
         // Objeto cabecera
         Venta v = new Venta();
-        v.setIdUsuario(this.ID_USUARIO_PRUEBA);
+        v.setIdUsuario(Sesion.getInstancia().getIdUserAccount());
         v.setTotal(total);
         v.setMetodoPago(metodo);
 

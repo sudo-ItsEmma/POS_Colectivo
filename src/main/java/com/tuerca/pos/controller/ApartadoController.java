@@ -8,6 +8,7 @@ import com.tuerca.pos.dao.ApartadoDAO;
 import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.model.Apartado;
 import com.tuerca.pos.model.ApartadoDetail;
+import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.view.GestionApartados;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.Ventas;
@@ -34,8 +35,7 @@ public class ApartadoController {
     private ProductoDAO productoDao;
     private Ventas vista;
      private GestionApartados vistaGestion;
-    private int idUsuarioActivo;
-    
+
     private final int COL_CANTIDAD = 0;
     private final int COL_CODIGO = 1;
     private final int COL_DESCRIPCION = 2;
@@ -50,10 +50,7 @@ public class ApartadoController {
         // Inicializamos los DAOs
         this.apartadoDao = new ApartadoDAO();
         this.productoDao = new ProductoDAO();
-        
-        // Obtenemos el ID del usuario desde la sesión en MainView
-        this.idUsuarioActivo = 2;
-        
+
         configurarEventosVenta();
         configurarEventosGestion();
         
@@ -130,7 +127,7 @@ public class ApartadoController {
 
             // 4. Creación de la Cabecera (Apartado)
             Apartado apt = new Apartado();
-            apt.setIdUserAccount(idUsuarioActivo);
+            apt.setIdUserAccount(Sesion.getInstancia().getIdUserAccount());
             apt.setCustomerName(nombre.toUpperCase());
             apt.setCustomerPhone(telefono);
             apt.setTotalAmount(totalCarrito);
@@ -428,7 +425,7 @@ public class ApartadoController {
 
         try {
             // Ejecución en el DAO (puede lanzar SQLException si falla el stock)
-            if (apartadoDao.liquidarApartadoCompleto(apt.getIdBooking(), idUsuarioActivo, metodoSeleccionado, detalles)) {
+            if (apartadoDao.liquidarApartadoCompleto(apt.getIdBooking(), Sesion.getInstancia().getIdUserAccount(), metodoSeleccionado, detalles)) {
                 JOptionPane.showMessageDialog(vistaGestion, 
                     "¡APARTADO LIQUIDADO Y VENTA GENERADA CON ÉXITO!\n\n" +
                     "Los productos han sido descontados del inventario.\n" +

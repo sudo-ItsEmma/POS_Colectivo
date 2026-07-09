@@ -3,6 +3,7 @@ package com.tuerca.pos.view;
 import com.tuerca.pos.controller.ApartadoController;
 import com.tuerca.pos.controller.EmpleadoController;
 import com.tuerca.pos.controller.EmprendedorController;
+import com.tuerca.pos.controller.LoginController;
 import com.tuerca.pos.controller.ProductoController;
 import com.tuerca.pos.controller.VentaController;
 
@@ -38,6 +39,7 @@ public class MainView extends JFrame {
     private final EditarProducto editarProducto1 = new EditarProducto();
     private final CargaMasivaProductos cargaMasivaProductos1 = new CargaMasivaProductos();
 
+    private LoginController loginController;
     private EmpleadoController empController;
     private EmprendedorController empreController;
     private ProductoController prodController;
@@ -72,6 +74,8 @@ public class MainView extends JFrame {
         pack();
         this.setSize(1280, 720);
         this.setLocationRelativeTo(null);
+
+        loginController = new LoginController(loginPanel1, this);
 
         empController = new EmpleadoController(
                 nuevoEmpleado1,
