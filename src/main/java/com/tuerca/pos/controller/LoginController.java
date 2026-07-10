@@ -1,8 +1,10 @@
 package com.tuerca.pos.controller;
 
+import com.tuerca.pos.dao.CashSessionDAO;
 import com.tuerca.pos.dao.EmpleadoDAO;
 import com.tuerca.pos.model.Empleado;
 import com.tuerca.pos.model.Sesion;
+import com.tuerca.pos.view.AperturaCajaPanel;
 import com.tuerca.pos.view.LoginPanel;
 import com.tuerca.pos.view.MainView;
 import java.util.Arrays;
@@ -15,13 +17,17 @@ import javax.swing.JOptionPane;
 public class LoginController {
 
     private final LoginPanel vista;
+    private final AperturaCajaPanel aperturaCajaPanel;
     private final MainView mainView;
     private final EmpleadoDAO dao;
+    private final CashSessionDAO cashSessionDAO;
 
-    public LoginController(LoginPanel vista, MainView mainView) {
+    public LoginController(LoginPanel vista, AperturaCajaPanel aperturaCajaPanel, MainView mainView) {
         this.vista = vista;
+        this.aperturaCajaPanel = aperturaCajaPanel;
         this.mainView = mainView;
         this.dao = new EmpleadoDAO();
+        this.cashSessionDAO = new CashSessionDAO();
 
         vista.getBtnIniciarSesion().addActionListener(e -> iniciarSesion());
         vista.getUserField().addActionListener(e -> iniciarSesion());
@@ -52,6 +58,11 @@ public class LoginController {
         Sesion.getInstancia().iniciarSesion(usuario);
         vista.limpiarFormulario();
 
-        mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        if (cashSessionDAO.obtenerSesionAbierta() != null) {
+            mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        } else {
+            aperturaCajaPanel.setNombreUsuario(Sesion.getInstancia().getNombreCompleto());
+            mainView.showView("aperturaCaja");
+        }
     }
 }
