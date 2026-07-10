@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
@@ -38,7 +39,12 @@ public class CashSessionDAO {
         return null;
     }
 
-    // función para abrir la caja con el fondo fijo del día; falla si ya hay una abierta
+    // función para abrir la caja con el fondo fijo del día.
+    // El chequeo de abajo es solo una optimización para el caso común (evita un
+    // viaje redondo innecesario); la garantía real de que nunca haya dos sesiones
+    // abiertas la da el constraint UNIQUE sobre openSessionGuard en la BD (ver
+    // db_setup.sql) — si dos aperturas caen en la misma carrera, el INSERT de la
+    // segunda choca contra ese constraint y se captura abajo.
     public CashSession abrirCaja(int idUserAccount, BigDecimal initialCashAmount) {
         if (obtenerSesionAbierta() != null) {
             System.err.println("Ya existe una sesión de caja abierta.");
@@ -60,6 +66,9 @@ public class CashSessionDAO {
                 }
                 return obtenerPorId(rs.getInt(1));
             }
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.err.println("Ya existe una sesión de caja abierta (detectado por la BD).");
+            return null;
         } catch (SQLException e) {
             System.err.println("Error al abrir caja: " + e.getMessage());
             return null;

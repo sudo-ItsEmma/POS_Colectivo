@@ -35,12 +35,17 @@ public class LoginController {
     }
 
     private void iniciarSesion() {
+        // Se deshabilita para evitar doble-submit (doble clic / Enter repetido)
+        // mientras se espera la respuesta de la BD (BCrypt.checkpw es lento a propósito).
+        vista.getBtnIniciarSesion().setEnabled(false);
+
         String username = vista.getUsuario();
         char[] contrasena = vista.getContrasena();
 
         if (username.isEmpty() || contrasena.length == 0) {
             JOptionPane.showMessageDialog(mainView, "Ingresa tu usuario y contraseña.");
             Arrays.fill(contrasena, ' ');
+            vista.getBtnIniciarSesion().setEnabled(true);
             return;
         }
 
@@ -52,15 +57,18 @@ public class LoginController {
             JOptionPane.showMessageDialog(mainView, "Usuario o contraseña incorrectos.",
                     "Error de acceso", JOptionPane.ERROR_MESSAGE);
             vista.limpiarContrasena();
+            vista.getBtnIniciarSesion().setEnabled(true);
             return;
         }
 
         Sesion.getInstancia().iniciarSesion(usuario);
         vista.limpiarFormulario();
+        vista.getBtnIniciarSesion().setEnabled(true);
 
         if (cashSessionDAO.obtenerSesionAbierta() != null) {
             mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
         } else {
+            aperturaCajaPanel.resetear();
             aperturaCajaPanel.setNombreUsuario(Sesion.getInstancia().getNombreCompleto());
             mainView.showView("aperturaCaja");
         }
