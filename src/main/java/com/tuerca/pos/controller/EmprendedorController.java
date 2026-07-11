@@ -13,6 +13,7 @@ import com.tuerca.pos.view.NuevoEmprendedor;
 import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.BusquedaConDebounce;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -78,22 +79,8 @@ public class EmprendedorController {
             }
         });
         
-        // listener para buscar por la barra de busqueda
-        vistaGestion.getTxtBuscar().getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            @Override
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
-            @Override
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
-            @Override
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabla(); }
-        });
-        
-        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                filtrarTabla();
-            }
-        });
+        // listener para buscar por la barra de busqueda (con retraso, para no consultar la BD en cada tecla)
+        BusquedaConDebounce.aplicar(vistaGestion.getTxtBuscar(), 300, this::filtrarTabla);
     }
     
     private void initTablaAcciones() {
@@ -248,27 +235,26 @@ public class EmprendedorController {
 
         if (emp != null) {
             this.idEdicion = id;
-            vistaEdicion.getBrandName().setText(emp.getMarca());
-            vistaEdicion.getContactName().setText(emp.getNombreContacto());
-            vistaEdicion.getContactPhone().setText(emp.getTelefono());
-            vistaEdicion.getEmail().setText(emp.getEmail());
+            vistaEdicion.setBrandName(emp.getMarca());
+            vistaEdicion.setContactName(emp.getNombreContacto());
+            vistaEdicion.setContactPhone(emp.getTelefono());
+            vistaEdicion.setEmail(emp.getEmail());
             // convierte el dato numerico en cadena de caracteres
-            vistaEdicion.getRent().setText(String.valueOf(emp.getRentaMensual()));
-            vistaEdicion.getDatePicker().setDate(emp.getFechaContrato());
-            
-            mainView.showView("editarEmprendimiento"); 
+            vistaEdicion.setRent(String.valueOf(emp.getRentaMensual()));
+            vistaEdicion.setFechaSeleccionada(emp.getFechaContrato());
+
+            mainView.showView("editarEmprendimiento");
         }
     }
-    
+
     private void actualizarEmpleado() {
-        // 1. Capturamops los datos de la vista de edición usando los getters
-        // Extraemos el texto directamente de los componentes Field
-        String marca = vistaEdicion.getBrandName().getText().trim();
-        String contacto = vistaEdicion.getContactName().getText().trim();
-        String tel = vistaEdicion.getContactPhone().getText().trim();
-        String correo = vistaEdicion.getEmail().getText().trim();
-        String rentaStr = vistaEdicion.getRent().getText().trim();
-        java.util.Date fechaUtil = vistaEdicion.getDatePicker().getDate();
+        // 1. Capturamos los datos de la vista de edición usando los getters
+        String marca = vistaEdicion.getBrandName();
+        String contacto = vistaEdicion.getContactName();
+        String tel = vistaEdicion.getContactPhone();
+        String correo = vistaEdicion.getEmail();
+        String rentaStr = vistaEdicion.getRent();
+        java.util.Date fechaUtil = vistaEdicion.getFechaSeleccionada();
         
         // Validación de seguridad para evitar el NullPointerException
         if (fechaUtil == null) {

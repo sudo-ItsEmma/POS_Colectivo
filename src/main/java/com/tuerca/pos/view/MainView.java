@@ -142,6 +142,10 @@ public class MainView extends JFrame {
             employeePanel2.setNombreUsuarioActivo(textoUsuarioActivo());
         } else if ("admin".equals(viewName)) {
             adminPanel2.setNombreUsuarioActivo(textoUsuarioActivo());
+        } else if ("entrepreneur".equals(viewName)) {
+            gestionEmprendedores1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+        } else if ("products".equals(viewName)) {
+            gestionProductos1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("ventas".equals(viewName)) {
             ventas1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("arqueo".equals(viewName)) {

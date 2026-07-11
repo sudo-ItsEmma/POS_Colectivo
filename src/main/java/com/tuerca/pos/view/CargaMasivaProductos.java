@@ -1,277 +1,157 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import net.miginfocom.swing.MigLayout;
 
 /**
- *
- * @author mannycalderon
+ * Pantalla de "Carga masiva de productos" (FN.3, importación desde Excel).
+ * Sin `.form`: layout a mano con MigLayout, mismo estilo visual que
+ * {@link NuevoProducto}. Toda la lógica vive en
+ * {@link com.tuerca.pos.controller.ProductoController}.
  */
-public class CargaMasivaProductos extends javax.swing.JPanel {
-    /**
-     * Creates new form GestionEmprendedores
-     */
+public class CargaMasivaProductos extends JPanel {
+
+    private final JLabel lblTitulo = new JLabel("Carga masiva de productos");
+    private final JButton btnBack = new JButton("Volver");
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+
+    private final JComboBox<Object> cbEmprendedor = new JComboBox<>();
+    private final JButton btnSeleccionarArchivo = new JButton("Seleccionar archivo");
+    private final JLabel lblNombreArchivo = new JLabel("Ningún archivo seleccionado");
+    private final JButton btnVisualizar = new JButton("Visualizar productos");
+    private final JTable vistaProductos = new JTable();
+
+    private final JButton btnRegistrar = new JButton("Cargar productos");
+    private final JButton btnCancelar = new JButton("Cancelar");
+
     public CargaMasivaProductos() {
         initComponents();
         limpiarFormulario();
-        
     }
-    
-    // Exponemos los datos
-    public javax.swing.JComboBox<Object> getCbEmprendedor() { return cbEmprendedor; }
 
-    // Exponemos el boton de registro
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> volver());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        JPanel formulario = new JPanel(new MigLayout("insets 20, fill, wrap 1", "[grow]"));
+        formulario.putClientProperty("FlatLaf.style", "arc: 20");
+        formulario.setBorder(BorderFactory.createTitledBorder(
+                null, "Datos del producto", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION,
+                new Font("SF Pro Rounded", Font.BOLD, 18)));
+
+        JLabel lbl2 = new JLabel("Selecciona el emprendimiento:");
+        lbl2.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+
+        cbEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
+        cbEmprendedor.setFont(new Font("SF Pro Rounded", Font.PLAIN, 18));
+
+        btnSeleccionarArchivo.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnSeleccionarArchivo.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnSeleccionarArchivo.setForeground(Color.WHITE);
+        btnSeleccionarArchivo.setFont(new Font("SF Compact Rounded", Font.PLAIN, 18));
+        btnSeleccionarArchivo.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
+
+        lblNombreArchivo.setFont(new Font("SF Pro Rounded", Font.PLAIN, 24));
+
+        btnVisualizar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnVisualizar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnVisualizar.setForeground(Color.WHITE);
+        btnVisualizar.setFont(new Font("SF Compact Rounded", Font.PLAIN, 18));
+        btnVisualizar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/create.svg", 24, 24));
+
+        JPanel panelArchivo = new JPanel(new MigLayout("insets 0, fillx", "[240!][grow][240!]"));
+        panelArchivo.add(btnSeleccionarArchivo, "h 40!");
+        panelArchivo.add(lblNombreArchivo);
+        panelArchivo.add(btnVisualizar, "h 40!");
+
+        vistaProductos.setFont(new Font("SF Pro Rounded", Font.PLAIN, 18));
+        vistaProductos.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Código", "Descripción", "Precio", "Stock", "Departamento"}
+        ));
+        JScrollPane jScrollPane1 = new JScrollPane(vistaProductos);
+
+        btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnRegistrar.setForeground(Color.WHITE);
+        btnRegistrar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnRegistrar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
+
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnCancelar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
+        btnCancelar.addActionListener(e -> volver());
+
+        formulario.add(lbl2, "growx");
+        formulario.add(cbEmprendedor, "growx, h 30!");
+        formulario.add(panelArchivo, "growx, gaptop 10");
+        formulario.add(jScrollPane1, "grow, push, gaptop 10");
+        JPanel panelBotones = new JPanel(new MigLayout("insets 0, fillx", "[240!][grow][240!]"));
+        panelBotones.add(btnCancelar, "h 40!");
+        panelBotones.add(new JLabel());
+        panelBotones.add(btnRegistrar, "h 40!");
+        formulario.add(panelBotones, "growx, gaptop 10");
+
+        add(formulario, "grow");
+
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        add(lblUsuario, "growx");
+    }
+
+    private void volver() {
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("products");
+        }
+    }
+
+    // Exponemos los datos
+    public JComboBox<Object> getCbEmprendedor() { return cbEmprendedor; }
+
     public JButton getBtnRegistrar() { return btnRegistrar; }
     public JButton getBtnSeleccionarArchivo() { return btnSeleccionarArchivo; }
     public JButton getBtnVisualizar() { return btnVisualizar; }
-    public JLabel getLblNombreArchivo() { return lblNombreArchivo;}
-    public JButton getBtnCancelar() { return btnCancelar;}
-    public JButton getBtnBack() { return btnBack;}
-    
-    // limpiar el formulario
-    public void limpiarFormulario(){
-        // Restablecer el combo al primer elemento (índice 0)
+    public JLabel getLblNombreArchivo() { return lblNombreArchivo; }
+    public JButton getBtnCancelar() { return btnCancelar; }
+    public JButton getBtnBack() { return btnBack; }
+
+    public void limpiarFormulario() {
         if (cbEmprendedor.getItemCount() > 0) {
             cbEmprendedor.setSelectedIndex(0);
         }
         cbEmprendedor.requestFocus();
     }
-    
+
     public DefaultTableModel getTableModel() {
         return (DefaultTableModel) vistaProductos.getModel();
     }
-    
-    public javax.swing.JTable getVistaTablaProductos() {
-        return vistaProductos; 
+
+    public JTable getVistaTablaProductos() {
+        return vistaProductos;
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        formularioRegistro = new javax.swing.JPanel();
-        formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
-        cbEmprendedor = new javax.swing.JComboBox<>();
-        btnRegistrar = new javax.swing.JButton();
-        btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jScrollPane1 = new javax.swing.JScrollPane();
-        vistaProductos = new javax.swing.JTable();
-        jLabel2 = new javax.swing.JLabel();
-        btnSeleccionarArchivo = new javax.swing.JButton();
-        btnSeleccionarArchivo.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        lblNombreArchivo = new javax.swing.JLabel();
-        btnVisualizar = new javax.swing.JButton();
-        btnSeleccionarArchivo.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Carga masiva de productos");
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        formularioRegistro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del producto", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SF Pro Rounded", 1, 18))); // NOI18N
-
-        cbEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-        cbEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnRegistrar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnRegistrar.setForeground(new java.awt.Color(255, 255, 255));
-        btnRegistrar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
-        btnRegistrar.setText("Cargar productos");
-        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarActionPerformed(evt);
-            }
-        });
-
-        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
-        vistaProductos.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-        vistaProductos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Código", "Descripción", "Precio", "Stock", "Departamento"
-            }
-        ));
-        jScrollPane1.setViewportView(vistaProductos);
-
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel2.setText("Selecciona el emprendimiento:");
-
-        btnSeleccionarArchivo.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnSeleccionarArchivo.setFont(new java.awt.Font("SF Compact Rounded", 0, 18)); // NOI18N
-        btnSeleccionarArchivo.setForeground(new java.awt.Color(255, 255, 255));
-        btnSeleccionarArchivo.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
-        btnSeleccionarArchivo.setText("Seleccionar archivo");
-
-        lblNombreArchivo.setFont(new java.awt.Font("SF Pro Rounded", 0, 24)); // NOI18N
-        lblNombreArchivo.setText("Archivo seleccionado");
-
-        btnVisualizar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        btnVisualizar.setFont(new java.awt.Font("SF Compact Rounded", 0, 18)); // NOI18N
-        btnVisualizar.setForeground(new java.awt.Color(255, 255, 255));
-        btnVisualizar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/create.svg", 24, 24));
-        btnVisualizar.setText("Visualizar productos");
-
-        javax.swing.GroupLayout formularioRegistroLayout = new javax.swing.GroupLayout(formularioRegistro);
-        formularioRegistro.setLayout(formularioRegistroLayout);
-        formularioRegistroLayout.setHorizontalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1)
-                    .addComponent(cbEmprendedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(btnSeleccionarArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblNombreArchivo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVisualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        formularioRegistroLayout.setVerticalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(cbEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnSeleccionarArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNombreArchivo)))
-                    .addComponent(btnVisualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(29, 29, 29))
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(25, 25, 25))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("products"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("products"); 
-        }
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRegistrarActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnRegistrar;
-    private javax.swing.JButton btnSeleccionarArchivo;
-    private javax.swing.JButton btnVisualizar;
-    private javax.swing.JComboBox<Object> cbEmprendedor;
-    private javax.swing.JPanel formularioRegistro;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblNombreArchivo;
-    private javax.swing.JTable vistaProductos;
-    // End of variables declaration//GEN-END:variables
 }

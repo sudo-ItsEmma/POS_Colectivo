@@ -1,213 +1,133 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.model.Sesion;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import net.miginfocom.swing.MigLayout;
 
 /**
- *
- * @author mannycalderon
+ * Pantalla de Gestión de Emprendedores (FN.2). Sin `.form`: layout a mano
+ * con MigLayout, mismo estilo visual que {@link ArqueoDeCaja}/{@link CorteDeCaja}.
+ * Toda la lógica de datos vive en {@link com.tuerca.pos.controller.EmprendedorController}.
  */
-public class GestionEmprendedores extends javax.swing.JPanel {
+public class GestionEmprendedores extends JPanel {
 
-    /**
-     * Creates new form GestionEmprendedores
-     */
+    private final JLabel lblTitulo = new JLabel("Gestión de Emprendedores");
+    private final JButton btnBack = new JButton("Volver");
+    private final JTextField txtBuscar = new JTextField();
+    private final JButton btnNuevoEmprendedor = new JButton("Nuevo Emprendedor");
+    private final JTable tablaEmprendedores = new JTable();
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JRadioButton rbVerInactivos = new JRadioButton("Ver emprendimientos desactivados");
+
     public GestionEmprendedores() {
         initComponents();
-        // 1. Esto pone el texto gris que desaparece solo al escribir
         txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar Emprendedor...");
-
-        // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
         limpiarFiltro();
     }
-    
-    public javax.swing.JRadioButton getRbVerInactivos() { return rbVerInactivos; }
-    
-    public void limpiarFiltro(){
-        // 1. Limpiar el buscador
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> btnBackActionPerformed());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
+        txtBuscar.setFont(new Font("SF Pro Rounded", Font.PLAIN, 13));
+
+        btnNuevoEmprendedor.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnNuevoEmprendedor.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoEmprendedor.setForeground(Color.WHITE);
+        btnNuevoEmprendedor.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        btnNuevoEmprendedor.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
+        btnNuevoEmprendedor.addActionListener(e -> btnNuevoEmprendedorActionPerformed());
+
+        JPanel panelFiltros = new JPanel(new MigLayout("insets 0, fillx", "[grow][220!]"));
+        panelFiltros.add(txtBuscar, "h 40!, growx");
+        panelFiltros.add(btnNuevoEmprendedor, "h 40!");
+        add(panelFiltros, "growx");
+
+        tablaEmprendedores.setFont(new Font("SF Compact Rounded", Font.PLAIN, 13));
+        tablaEmprendedores.setRowHeight(35);
+        tablaEmprendedores.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Emprendimiento", "Dueño", "Número de telefono", "Correo", "Fecha de contrato", "Costo de renta", "Acciones"}
+        ) {
+            final boolean[] canEdit = {false, false, false, false, false, false, false, true};
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        JScrollPane jScrollPane1 = new JScrollPane(tablaEmprendedores);
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
+        add(jScrollPane1, "grow");
+
+        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][]"));
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        panelPie.add(lblUsuario, "growx");
+        panelPie.add(rbVerInactivos);
+        add(panelPie, "growx");
+    }
+
+    private void btnBackActionPerformed() {
+        limpiarFiltro();
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        }
+    }
+
+    private void btnNuevoEmprendedorActionPerformed() {
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("nuevoEmprendedor");
+        }
+    }
+
+    public JRadioButton getRbVerInactivos() {
+        return rbVerInactivos;
+    }
+
+    public void limpiarFiltro() {
         txtBuscar.setText("");
     }
-    
+
     public JTextField getTxtBuscar() {
         return txtBuscar;
     }
 
-    public void setTxtBuscar(JTextField txtBuscar) {
-        this.txtBuscar = txtBuscar;
-    }
-    
-    // En la Vista de Gestión
-    public void configurarTabla() {
-        tablaEmprendedores.setRowHeight(35); // Más espacio para los botones
-        // Ocultar la columna del ID si no quieres que el usuario la vea, 
-        // pero que el sistema la use para editar/eliminar.
-    }
-    
     public DefaultTableModel getTableModel() {
         return (DefaultTableModel) tablaEmprendedores.getModel();
     }
-    
-    public javax.swing.JTable getTablaEmprendedores() {
-        return tablaEmprendedores; 
+
+    public JTable getTablaEmprendedores() {
+        return tablaEmprendedores;
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
-        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
-        btnNuevoEmprendedor = new javax.swing.JButton();
-        btnNuevoEmprendedor.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        tablaEmprendedores = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        rbVerInactivos = new javax.swing.JRadioButton();
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Gestión de Emprendedores");
-
-        btnNuevoEmprendedor.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnNuevoEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        btnNuevoEmprendedor.setForeground(new java.awt.Color(255, 255, 255));
-        btnNuevoEmprendedor.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
-        btnNuevoEmprendedor.setText("Nuevo Emprendedor");
-        btnNuevoEmprendedor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoEmprendedorActionPerformed(evt);
-            }
-        });
-
-        tablaEmprendedores.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        tablaEmprendedores.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Emprendiemiento", "Dueño", "Número de telefono", "Correo", "Fecha de contrato", "Costo de renta", "Acciones"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaEmprendedores);
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        rbVerInactivos.setText("Ver emprendimientos desactivados");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rbVerInactivos))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtBuscar)
-                                .addGap(35, 35, 35)
-                                .addComponent(btnNuevoEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(48, 48, 48))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNuevoEmprendedor, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(rbVerInactivos))
-                .addGap(23, 23, 23))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        limpiarFiltro();
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("admin"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnNuevoEmprendedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmprendedorActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("nuevoEmprendedor"); 
-        }
-    }//GEN-LAST:event_btnNuevoEmprendedorActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnNuevoEmprendedor;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JRadioButton rbVerInactivos;
-    private javax.swing.JTable tablaEmprendedores;
-    private javax.swing.JTextField txtBuscar;
-    // End of variables declaration//GEN-END:variables
+    public void setNombreUsuarioActivo(String texto) {
+        lblUsuario.setText(texto);
+    }
 }

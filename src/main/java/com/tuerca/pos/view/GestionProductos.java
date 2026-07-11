@@ -1,241 +1,149 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
-/**
- *
- * @author mannycalderon
- */
-public class GestionProductos extends javax.swing.JPanel {
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.model.Sesion;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
+import net.miginfocom.swing.MigLayout;
 
-    /**
-     * Creates new form GestionEmprendedores
-     */
+/**
+ * Pantalla de Gestión de Productos (FN.3). Sin `.form`: layout a mano con
+ * MigLayout, mismo estilo visual que {@link GestionEmprendedores}. Toda la
+ * lógica de datos vive en {@link com.tuerca.pos.controller.ProductoController}.
+ */
+public class GestionProductos extends JPanel {
+
+    private final JLabel lblTitulo = new JLabel("Gestión de Productos");
+    private final JButton btnBack = new JButton("Volver");
+    private final JTextField txtBuscar = new JTextField();
+    private final JComboBox<Object> cbFiltroEmprendedor = new JComboBox<>();
+    private final JButton btnNuevoProducto = new JButton("Nuevo Producto");
+    private final JButton btnCargaMasiva = new JButton("Carga Masiva");
+    private final JTable tablaProductos = new JTable();
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JRadioButton rbVerInactivos = new JRadioButton("Ver Inactivos");
+
     public GestionProductos() {
         initComponents();
-        // 1. Esto pone el texto gris que desaparece solo al escribir
         txtBuscar.putClientProperty("JTextField.placeholderText", "Buscar producto...");
-
-        // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
-        
         limpiarFiltro();
     }
-    
-    
-    // Getters para el controlador
-    public javax.swing.JTable getTablaProductos() { return tablaProductos; }
-    public javax.swing.JComboBox<Object> getCbFiltroEmprendedor() { return cbFiltroEmprendedor; }
-    public javax.swing.JTextField getTxtBuscar() { return txtBuscar; }
-    public javax.swing.JButton getBtnNuevoProducto() { return btnNuevoProducto; }
-    public javax.swing.JButton getBtnCargaMasiva() { return btnCargaMasiva; }
-    public javax.swing.JRadioButton getRbVerInactivos() { return rbVerInactivos; }
-    
-    // limpiar el filtro de emprendedor
-    public void limpiarFiltro(){
-        // 1. Limpiar el buscador
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> btnBackActionPerformed());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
+        txtBuscar.setFont(new Font("SF Pro Rounded", Font.PLAIN, 13));
+
+        cbFiltroEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
+        cbFiltroEmprendedor.setFont(new Font("SF Pro Rounded", Font.PLAIN, 16));
+
+        btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnNuevoProducto.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoProducto.setForeground(Color.WHITE);
+        btnNuevoProducto.setFont(new Font("SF Pro Rounded", Font.BOLD, 16));
+        btnNuevoProducto.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
+        btnNuevoProducto.addActionListener(e -> btnNuevoProductoActionPerformed());
+
+        btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnCargaMasiva.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnCargaMasiva.setForeground(Color.WHITE);
+        btnCargaMasiva.setFont(new Font("SF Pro Rounded", Font.BOLD, 16));
+        btnCargaMasiva.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
+        btnCargaMasiva.addActionListener(e -> btnCargaMasivaActionPerformed());
+
+        JPanel panelFiltros = new JPanel(new MigLayout("insets 0, fillx", "[grow][220!][220!][220!]"));
+        panelFiltros.add(txtBuscar, "h 40!, growx");
+        panelFiltros.add(cbFiltroEmprendedor, "h 40!");
+        panelFiltros.add(btnNuevoProducto, "h 40!");
+        panelFiltros.add(btnCargaMasiva, "h 40!");
+        add(panelFiltros, "growx");
+
+        tablaProductos.setFont(new Font("SF Compact Rounded", Font.PLAIN, 13));
+        tablaProductos.setRowHeight(35);
+        tablaProductos.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"ID", "Código", "Descripción", "Emprendimiento", "Precio", "Stock", "Acciones"}
+        ) {
+            final boolean[] canEdit = {false, false, false, false, false, false, true};
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        JScrollPane jScrollPane1 = new JScrollPane(tablaProductos);
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
+        add(jScrollPane1, "grow");
+
+        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][]"));
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        panelPie.add(lblUsuario, "growx");
+        panelPie.add(rbVerInactivos);
+        add(panelPie, "growx");
+    }
+
+    private void btnBackActionPerformed() {
+        limpiarFiltro();
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        }
+    }
+
+    private void btnNuevoProductoActionPerformed() {
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("nuevoProducto");
+        }
+    }
+
+    private void btnCargaMasivaActionPerformed() {
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("cargaMasiva");
+        }
+    }
+
+    public JTable getTablaProductos() { return tablaProductos; }
+    public JComboBox<Object> getCbFiltroEmprendedor() { return cbFiltroEmprendedor; }
+    public JTextField getTxtBuscar() { return txtBuscar; }
+    public JButton getBtnNuevoProducto() { return btnNuevoProducto; }
+    public JButton getBtnCargaMasiva() { return btnCargaMasiva; }
+    public JRadioButton getRbVerInactivos() { return rbVerInactivos; }
+
+    public void limpiarFiltro() {
         txtBuscar.setText("");
-        // Restablecer el combo al primer elemento (índice 0)
         if (cbFiltroEmprendedor.getItemCount() > 0) {
             cbFiltroEmprendedor.setSelectedIndex(0);
         }
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
-        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
-        btnCargaMasiva = new javax.swing.JButton();
-        btnCargaMasiva.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        tablaProductos = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        btnNuevoProducto = new javax.swing.JButton();
-        btnNuevoProducto.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        cbFiltroEmprendedor = new javax.swing.JComboBox<>();
-        cbFiltroEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
-        rbVerInactivos = new javax.swing.JRadioButton();
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Gestión de Productos");
-
-        txtBuscar.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        txtBuscar.setToolTipText("");
-
-        btnCargaMasiva.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
-        btnCargaMasiva.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnCargaMasiva.setForeground(new java.awt.Color(255, 255, 255));
-        btnCargaMasiva.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/upload.svg", 24, 24));
-        btnCargaMasiva.setText("Carga Masiva");
-        btnCargaMasiva.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCargaMasivaActionPerformed(evt);
-            }
-        });
-
-        tablaProductos.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        tablaProductos.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "ID", "Código", "Descripción", "Emprendimiento", "Precio", "Stock", "Acciones"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaProductos);
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        btnNuevoProducto.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnNuevoProducto.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnNuevoProducto.setForeground(new java.awt.Color(255, 255, 255));
-        btnNuevoProducto.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 24, 24));
-        btnNuevoProducto.setText("Nuevo Producto");
-        btnNuevoProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoProductoActionPerformed(evt);
-            }
-        });
-
-        cbFiltroEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-        cbFiltroEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        rbVerInactivos.setText("Ver Inactivos");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(rbVerInactivos))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(txtBuscar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbFiltroEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnNuevoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCargaMasiva, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(28, 28, 28))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnCargaMasiva, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
-                        .addComponent(btnNuevoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
-                    .addComponent(cbFiltroEmprendedor)
-                    .addComponent(txtBuscar))
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(rbVerInactivos))
-                .addGap(22, 22, 22))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        limpiarFiltro();
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("admin");
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnNuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProductoActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("nuevoProducto"); 
-        }
-    }//GEN-LAST:event_btnNuevoProductoActionPerformed
-
-    private void btnCargaMasivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargaMasivaActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("cargaMasiva"); 
-        }
-    }//GEN-LAST:event_btnCargaMasivaActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnCargaMasiva;
-    private javax.swing.JButton btnNuevoProducto;
-    private javax.swing.JComboBox<Object> cbFiltroEmprendedor;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JRadioButton rbVerInactivos;
-    private javax.swing.JTable tablaProductos;
-    private javax.swing.JTextField txtBuscar;
-    // End of variables declaration//GEN-END:variables
+    public void setNombreUsuarioActivo(String texto) {
+        lblUsuario.setText(texto);
+    }
 }

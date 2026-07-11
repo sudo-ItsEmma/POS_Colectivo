@@ -15,6 +15,7 @@ import com.tuerca.pos.view.NuevoProducto;
 import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.BusquedaConDebounce;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -22,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import com.tuerca.pos.view.CargaMasivaProductos;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.regex.Pattern;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import javax.swing.JFileChooser;
@@ -32,6 +34,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author mannycalderon
  */
 public class ProductoController {
+    // Formato de código de producto exigido por CONTEXTO_PROYECTO.md: 2 letras + 2 números (Ej. AA00)
+    private static final Pattern CODIGO_PRODUCTO_PATTERN = Pattern.compile("^[A-Za-z]{2}\\d{2}$");
+
     private int idEdicion = -1; // Variable para saber qué ID estamos editando
     private EditarProducto vistaEdicion;
     private GestionProductos vistaGestion;
@@ -142,13 +147,8 @@ public class ProductoController {
         // En initListeners
         vistaGestion.getRbVerInactivos().addActionListener(e -> filtrarTabla());
         
-        // Cuando el usuario escribe en el buscador
-        vistaGestion.getTxtBuscar().addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                filtrarTabla(); // Llama a la lógica unificada
-            }
-        });
+        // Cuando el usuario escribe en el buscador (con retraso, para no consultar la BD en cada tecla)
+        BusquedaConDebounce.aplicar(vistaGestion.getTxtBuscar(), 300, this::filtrarTabla);
 
         // Cuando el usuario selecciona un emprendedor en el combo
         vistaGestion.getCbFiltroEmprendedor().addActionListener(e -> filtrarTabla());
@@ -159,25 +159,23 @@ public class ProductoController {
         // Accion para el boton de actualizar
         vistaEdicion.getBtnActualizar().addActionListener(e -> actualizarProducto());
 
-        // Acción para el botón cancelar o volver 
+        // Nota: Volver/Cancelar de NuevoProducto, EditarProducto y CargaMasivaProductos
+        // navegan por sí mismos (mismo patrón que NuevoEmprendedor/EditarEmprendimiento);
+        // el controlador solo limpia el formulario aquí para no duplicar el wiring de navegación.
         vistaRegistro.getBtnBack().addActionListener(e -> {
             vistaGestion.limpiarFiltro();
             vistaRegistro.limpiarFormulario();
-            mainView.showView("gestionProductos");
         });
-        
+
         vistaRegistro.getBtnCancelar().addActionListener(e -> {
             vistaGestion.limpiarFiltro();
             vistaRegistro.limpiarFormulario();
-            mainView.showView("gestionProductos");
         });
-        
+
         // BOTONES DE CARGA MASIVA
         vistaCarga.getBtnSeleccionarArchivo().addActionListener(e -> seleccionarArchivo());
         vistaCarga.getBtnVisualizar().addActionListener(e -> visualizarExcel());
         vistaCarga.getBtnRegistrar().addActionListener(e -> ejecutarCargaMasiva());
-        vistaCarga.getBtnCancelar().addActionListener(e -> mainView.showView("gestionProductos"));
-        vistaCarga.getBtnBack().addActionListener(e -> mainView.showView("gestionProductos"));
         
         // AGREGAMOS EL LISTENER DEL MOUSE
         vistaGestion.getTablaProductos().addMouseMotionListener(new java.awt.event.MouseAdapter() {
@@ -305,6 +303,13 @@ public class ProductoController {
             return;
         }
 
+        // 3.1 Validar formato del código (2 letras + 2 números, Ej. AA00)
+        if (!CODIGO_PRODUCTO_PATTERN.matcher(codigo).matches()) {
+            JOptionPane.showMessageDialog(vistaRegistro,
+                    "El código debe tener el formato AA00 (2 letras seguidas de 2 números).");
+            return;
+        }
+
         try {
             // 4. Empaquetar datos y conversión numérica
             Producto p = new Producto();
@@ -365,11 +370,11 @@ public class ProductoController {
             this.idEdicion = id;
 
             // Seteamos los textos (Estandarizados en mayúsculas por seguridad)
-            vistaEdicion.getCodigoField().setText(pro.getFullProductCode());
-            vistaEdicion.getDescripcionField().setText(pro.getProductDescription());
-            vistaEdicion.getDepartamentoField().setText(pro.getDepartment());
-            vistaEdicion.getPrecioField().setText(String.valueOf(pro.getCurrentPrice()));
-            vistaEdicion.getStockField().setText(String.valueOf(pro.getCurrentStock()));
+            vistaEdicion.setCodigoField(pro.getFullProductCode());
+            vistaEdicion.setDescripcionField(pro.getProductDescription());
+            vistaEdicion.setDepartamentoField(pro.getDepartment());
+            vistaEdicion.setPrecioField(String.valueOf(pro.getCurrentPrice()));
+            vistaEdicion.setStockField(String.valueOf(pro.getCurrentStock()));
 
             // Seleccionar el emprendedor correcto en el Combo
             for (int i = 0; i < vistaEdicion.getCbEmprendedor().getItemCount(); i++) {
@@ -394,16 +399,23 @@ public class ProductoController {
             return;
         }
 
+        String codigo = vistaEdicion.getCodigoField().toUpperCase();
+        if (!CODIGO_PRODUCTO_PATTERN.matcher(codigo).matches()) {
+            JOptionPane.showMessageDialog(vistaEdicion,
+                    "El código debe tener el formato AA00 (2 letras seguidas de 2 números).");
+            return;
+        }
+
         try {
             // 2. Empaquetar y Estandarizar
             Producto p = new Producto();
             p.setIdProduct(this.idEdicion);
             p.setIdEntrepreneur(emp.getId());
-            p.setFullProductCode(vistaEdicion.getCodigoField().getText().toUpperCase());
-            p.setProductDescription(vistaEdicion.getDescripcionField().getText().toUpperCase());
-            p.setDepartment(vistaEdicion.getDepartamentoField().getText().toUpperCase());
-            p.setCurrentPrice(Double.parseDouble(vistaEdicion.getPrecioField().getText()));
-            p.setCurrentStock(Integer.parseInt(vistaEdicion.getStockField().getText()));
+            p.setFullProductCode(codigo);
+            p.setProductDescription(vistaEdicion.getDescripcionField().toUpperCase());
+            p.setDepartment(vistaEdicion.getDepartamentoField().toUpperCase());
+            p.setCurrentPrice(Double.parseDouble(vistaEdicion.getPrecioField()));
+            p.setCurrentStock(Integer.parseInt(vistaEdicion.getStockField()));
 
             // 3. Guardar en DB
             if (productoDao.actualizar(p)) {
@@ -538,7 +550,7 @@ public class ProductoController {
         }
 
         DefaultTableModel modelo = (DefaultTableModel) vistaCarga.getVistaTablaProductos().getModel();
-        int exitos = 0, errores = 0;
+        int nuevos = 0, sumados = 0, errores = 0;
 
         for (int i = 0; i < modelo.getRowCount(); i++) {
             try {
@@ -548,17 +560,29 @@ public class ProductoController {
                     continue; // Si el usuario dejó la fila vacía en la tabla, la ignoramos
                 }
 
+                String codigo = valCodigo.toString().toUpperCase().trim();
+                if (!CODIGO_PRODUCTO_PATTERN.matcher(codigo).matches()) {
+                    errores++;
+                    System.err.println("Fila " + i + ": código '" + codigo + "' no cumple el formato AA00, se omite.");
+                    continue;
+                }
+
                 Producto p = new Producto();
                 p.setIdEntrepreneur(emp.getId());
-                p.setFullProductCode(valCodigo.toString().toUpperCase().trim());
+                p.setFullProductCode(codigo);
                 p.setProductDescription(modelo.getValueAt(i, 1).toString().toUpperCase().trim());
                 p.setCurrentPrice(Double.parseDouble(modelo.getValueAt(i, 2).toString()));
                 p.setCurrentStock(Integer.parseInt(modelo.getValueAt(i, 3).toString()));
                 p.setDepartment(modelo.getValueAt(i, 4).toString().toUpperCase().trim());
                 p.setMinStockAlert(1);
 
-                if (productoDao.registrar(p)) {
-                    exitos++;
+                // Si el código ya existe se suma el stock al producto existente (reabastecimiento);
+                // si no existe, se inserta como producto nuevo.
+                int resultado = productoDao.registrarOSumarStock(p);
+                if (resultado == 1) {
+                    nuevos++;
+                } else if (resultado == 2) {
+                    sumados++;
                 } else {
                     errores++;
                 }
@@ -568,9 +592,10 @@ public class ProductoController {
             }
         }
 
-        JOptionPane.showMessageDialog(vistaCarga, "Carga terminada.\nÉxitos: " + exitos + "\nErrores: " + errores);
+        JOptionPane.showMessageDialog(vistaCarga, "Carga terminada.\nNuevos: " + nuevos
+                + "\nStock sumado (ya existían): " + sumados + "\nErrores: " + errores);
 
-        if (exitos > 0) {
+        if (nuevos > 0 || sumados > 0) {
             limpiarVistaCargaMasiva(); // <--- Limpiar después de cargar con éxito
             filtrarTabla();
             mainView.showView("products");
