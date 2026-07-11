@@ -15,15 +15,24 @@ public class Empleado {
     private String paterno;
     private String materno;
     private String telefono;
-    
+
     // datos de cuenta
+    private int idUserAccount;
     private int idRole;
     private String username;
     private String password;
     private String roleName;
-    
+
     // constructor
     public Empleado(){}
+
+    public int getIdUserAccount() {
+        return idUserAccount;
+    }
+
+    public void setIdUserAccount(int idUserAccount) {
+        this.idUserAccount = idUserAccount;
+    }
 
     public String getNombre() {
         return nombre;

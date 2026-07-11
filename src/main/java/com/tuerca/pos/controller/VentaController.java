@@ -4,10 +4,12 @@
  */
 package com.tuerca.pos.controller;
 
+import com.tuerca.pos.dao.CashSessionDAO;
 import com.tuerca.pos.dao.ProductoDAO;
 import com.tuerca.pos.dao.VentaDAO;
 import com.tuerca.pos.model.DetalleVenta;
 import com.tuerca.pos.model.Producto;
+import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.model.Venta;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.Ventas; // Ajusta al nombre real de tu clase de vista
@@ -34,6 +36,7 @@ public class VentaController {
     private final Ventas vista;
     private final MainView mainView;
     private final ProductoDAO productoDao;
+    private final CashSessionDAO cashSessionDao;
     private JPopupMenu menuSugerencias;
     private JList<Producto> listaSugerencias;
 
@@ -44,13 +47,13 @@ public class VentaController {
     private final int COL_DSCTO_PER = 4; // Nueva columna
     private final int COL_SUBTOTAL = 5;  // Se recorrió
     private final int COL_ACCION = 6;    // Se recorrió
-    private final int ID_USUARIO_PRUEBA=2;
 
     public VentaController(Ventas vista, MainView mainView) {
         this.vista = vista;
         this.mainView = mainView;
         this.productoDao = new ProductoDAO();
-        
+        this.cashSessionDao = new CashSessionDAO();
+
         prepararModeloTabla();
         configurarAccionesTabla();
         configurarMenuFlotante();
@@ -136,6 +139,10 @@ public class VentaController {
                 }
             }
         });
+
+        // --- Navegación ---
+        vista.getBtnBack().addActionListener(e ->
+                mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee"));
 
         // --- Botones de Acción ---
         vista.getBtnCancelar().addActionListener(e -> cancelarVenta());
@@ -412,8 +419,13 @@ public class VentaController {
             JOptionPane.showMessageDialog(vista, "No hay productos para cobrar.");
             return;
         }
-        
-        // 2. ¿La cantidad solicitada cabe en el stock real?
+
+        // 2. ¿Hay una caja abierta el día de hoy?
+        if (!hayCajaAbierta()) {
+            return; // Si no hay caja abierta, salimos y no abrimos el cobro
+        }
+
+        // 3. ¿La cantidad solicitada cabe en el stock real?
         if (!validarStockAntesDeCobrar()) {
             return; // Si el stock no alcanza, salimos y no abrimos el cobro
         }
@@ -479,7 +491,17 @@ public class VentaController {
     private void procesarCobroMixto() {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
 
-        // 1. Obtener el total acumulado
+        // 1. ¿Hay una caja abierta el día de hoy?
+        if (!hayCajaAbierta()) {
+            return;
+        }
+
+        // 2. ¿La cantidad solicitada cabe en el stock real? (misma validación que el cobro simple)
+        if (!validarStockAntesDeCobrar()) {
+            return;
+        }
+
+        // 3. Obtener el total acumulado
         double totalVenta = 0;
         for (int i = 0; i < modelo.getRowCount(); i++) {
             totalVenta += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
@@ -544,7 +566,7 @@ public class VentaController {
         VentaDAO ventaDao = new VentaDAO();
         
         Venta v = new Venta();
-        v.setIdUsuario(this.ID_USUARIO_PRUEBA); // El ID del cajero en turno
+        v.setIdUsuario(Sesion.getInstancia().getIdUserAccount()); // El ID del cajero en turno
         v.setTotal(total);
         v.setMetodoPago("Mixto");
         v.setPaymentDetails(detalles); // Aquí enviamos el "E:100|T:150"
@@ -567,6 +589,16 @@ public class VentaController {
         return ventaDao.registrarVenta(v, listaDetalles);
     }
     
+    private boolean hayCajaAbierta() {
+        if (cashSessionDao.obtenerSesionAbierta() == null) {
+            JOptionPane.showMessageDialog(vista,
+                    "No hay una caja abierta. Es necesario abrir caja antes de registrar ventas.",
+                    "Caja cerrada", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
     private boolean validarStockAntesDeCobrar() {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
 
@@ -596,7 +628,7 @@ public class VentaController {
 
         // Objeto cabecera
         Venta v = new Venta();
-        v.setIdUsuario(this.ID_USUARIO_PRUEBA);
+        v.setIdUsuario(Sesion.getInstancia().getIdUserAccount());
         v.setTotal(total);
         v.setMetodoPago(metodo);
 

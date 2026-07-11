@@ -1,189 +1,171 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
-/**
- *
- * @author mannycalderon
- */
-public class LoginPanel extends javax.swing.JPanel {
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.LinearGradientPaint;
+import java.awt.RenderingHints;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import net.miginfocom.swing.MigLayout;
 
-    /**
-     * Creates new form LoginPanel
-     */
+/**
+ * Pantalla de inicio de sesión. Layout dividido estilo login moderno:
+ * 2/5 formulario (izquierda) + 3/5 panel decorativo con degradado
+ * (derecha). Sin `.form`: layout a mano con MigLayout. La autenticación
+ * real vive en {@link com.tuerca.pos.controller.LoginController}.
+ */
+public class LoginPanel extends JPanel {
+
+    private final JPanel panelFormulario = new JPanel();
+    private final GradientPanel panelDecorativo = new GradientPanel(
+            new Color(0x2A, 0x18, 0x52), new Color(0x8A, 0x2F, 0x9E), new Color(0xE0, 0x66, 0x9A));
+
+    private final JLabel lblBienvenida = new JLabel("Bienvenido de vuelta");
+    private final JLabel lblSubtitulo = new JLabel("Inicia sesión para continuar");
+    private final JLabel lblUsuario = new JLabel("Usuario");
+    private final JTextField userField = new JTextField();
+    private final JLabel lblContrasena = new JLabel("Contraseña");
+    private final JPasswordField contraField = new JPasswordField();
+    private final JButton btnIniciarSesion = new JButton("Iniciar sesión");
+
+    private final JLabel lblMarca = new JLabel("Aura");
+    private final JLabel lblSubtituloMarca = new JLabel("Tienda Colectiva");
+
     public LoginPanel() {
         initComponents();
-        
+    }
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 0, fill, gap 0", "[grow 40, fill][grow 60, fill]", "[fill]"));
+
+        construirFormulario();
+        construirPanelDecorativo();
+
+        add(panelFormulario, "grow");
+        add(panelDecorativo, "grow");
+    }
+
+    private void construirFormulario() {
+        panelFormulario.setLayout(new MigLayout("insets 60, fillx, wrap 1", "[grow, center]"));
+
+        lblBienvenida.setFont(new Font("SF Pro Rounded", Font.BOLD, 30));
+
+        lblSubtitulo.setFont(new Font("SF Pro Rounded", Font.PLAIN, 15));
+        lblSubtitulo.setForeground(UIManager.getColor("Label.disabledForeground"));
+
+        panelFormulario.add(lblBienvenida, "growx, gapbottom 4");
+        panelFormulario.add(lblSubtitulo, "growx, gapbottom 40");
+
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 13));
+        userField.putClientProperty("FlatLaf.style", "arc: 13");
+
+        lblContrasena.setFont(new Font("SF Pro Rounded", Font.BOLD, 13));
+        // "showRevealButton" es una propiedad "styleable" de FlatPasswordFieldUI: solo
+        // funciona dentro del string de "FlatLaf.style", no como client property suelta.
         contraField.putClientProperty("FlatLaf.style", "arc: 13; showRevealButton: true");
-        contraField.putClientProperty("JPasswordField.showRevealButton", true);
-        
+
+        btnIniciarSesion.putClientProperty("FlatLaf.style", "arc: 13");
+        btnIniciarSesion.setBackground(UIManager.getDefaults().getColor("Actions.Green"));
+        btnIniciarSesion.setForeground(Color.WHITE);
+        btnIniciarSesion.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+
+        panelFormulario.add(lblUsuario, "growx");
+        panelFormulario.add(userField, "growx, h 42!, gapbottom 20");
+        panelFormulario.add(lblContrasena, "growx");
+        panelFormulario.add(contraField, "growx, h 42!, gapbottom 30");
+        panelFormulario.add(btnIniciarSesion, "growx, h 42!");
+    }
+
+    private void construirPanelDecorativo() {
+        panelDecorativo.setLayout(new BorderLayout());
+
+        JPanel panelTexto = new JPanel(new MigLayout("insets 50, wrap 1", "[grow]"));
+        panelTexto.setOpaque(false);
+
+        lblMarca.setFont(new Font("SF Pro Rounded", Font.BOLD, 44));
+        lblMarca.setForeground(Color.WHITE);
+
+        lblSubtituloMarca.setFont(new Font("SF Pro Rounded", Font.PLAIN, 17));
+        lblSubtituloMarca.setForeground(new Color(255, 255, 255, 210));
+
+        panelTexto.add(lblMarca, "growx");
+        panelTexto.add(lblSubtituloMarca, "growx, gaptop 4");
+
+        panelDecorativo.add(panelTexto, BorderLayout.SOUTH);
+    }
+
+    public String getUsuario() {
+        return userField.getText().trim();
+    }
+
+    public char[] getContrasena() {
+        return contraField.getPassword();
+    }
+
+    public void limpiarContrasena() {
+        contraField.setText("");
+    }
+
+    public void limpiarFormulario() {
+        userField.setText("");
+        contraField.setText("");
+    }
+
+    public JTextField getUserField() {
+        return userField;
+    }
+
+    public JPasswordField getContraField() {
+        return contraField;
+    }
+
+    public JButton getBtnIniciarSesion() {
+        return btnIniciarSesion;
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * Panel con fondo en degradado diagonal de 3 tonos (índigo → morado → rosa,
+     * evocando un "aura") más un par de resplandores de color translúcidos.
      */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private static class GradientPanel extends JPanel {
+        private final Color colorInicio;
+        private final Color colorMedio;
+        private final Color colorFin;
 
-        jLabel5 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        cardInicio = new javax.swing.JPanel();
-        cardInicio.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel1 = new javax.swing.JLabel();
-        userField = new javax.swing.JTextField();
-        userField.putClientProperty("FlatLaf.style", "arc: 13");
-        jLabel3 = new javax.swing.JLabel();
-        btnIniciarSesion = new javax.swing.JButton();
-        btnIniciarSesion.putClientProperty("FlatLaf.style", "arc: 20");
-        contraField = new javax.swing.JPasswordField();
-        contraField.putClientProperty("FlatLaf.style", "arc: 13");
-        btnEmployee = new javax.swing.JButton();
-        btnAdmin = new javax.swing.JButton();
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("POS de Venta");
-
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Aura Tienda Colectiva");
-
-        cardInicio.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Inicio de sesión", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("SF Pro Rounded", 1, 18))); // NOI18N
-
-        jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel1.setText("Usuario:");
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setText("Contraseña:");
-
-        btnIniciarSesion.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnIniciarSesion.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        btnIniciarSesion.setForeground(new java.awt.Color(255, 255, 255));
-        btnIniciarSesion.setText("Iniciar sesión");
-
-        javax.swing.GroupLayout cardInicioLayout = new javax.swing.GroupLayout(cardInicio);
-        cardInicio.setLayout(cardInicioLayout);
-        cardInicioLayout.setHorizontalGroup(
-            cardInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardInicioLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(cardInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(userField)
-                    .addGroup(cardInicioLayout.createSequentialGroup()
-                        .addGroup(cardInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardInicioLayout.createSequentialGroup()
-                        .addGap(0, 315, Short.MAX_VALUE)
-                        .addComponent(btnIniciarSesion))
-                    .addComponent(contraField, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-        );
-        cardInicioLayout.setVerticalGroup(
-            cardInicioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardInicioLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(userField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(contraField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(btnIniciarSesion)
-                .addGap(21, 21, 21))
-        );
-
-        btnEmployee.setText("Empleado");
-        btnEmployee.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEmployeeActionPerformed(evt);
-            }
-        });
-
-        btnAdmin.setText("Administrador");
-        btnAdmin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdminActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1280, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(423, 423, 423)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnEmployee)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAdmin))
-                    .addComponent(cardInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(407, 407, 407))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54)
-                .addComponent(cardInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(82, 82, 82)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEmployee)
-                    .addComponent(btnAdmin))
-                .addContainerGap(153, Short.MAX_VALUE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdminActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal (MainView)
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Le pedimos al MainView que cambie a la "carta" de admin
-            main.showView("admin");
-        } else {
-            System.out.println("Error: No se pudo encontrar MainView");
+        GradientPanel(Color colorInicio, Color colorMedio, Color colorFin) {
+            this.colorInicio = colorInicio;
+            this.colorMedio = colorMedio;
+            this.colorFin = colorFin;
         }
-    }//GEN-LAST:event_btnAdminActionPerformed
 
-    private void btnEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmployeeActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal (MainView)
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        @Override
+        protected void paintComponent(Graphics g) {
+            int w = getWidth();
+            int h = getHeight();
 
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Le pedimos al MainView que cambie a la "carta" de employee
-            main.showView("employee");
-        } else {
-            System.out.println("Error: No se pudo encontrar MainView");
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            g2.setPaint(new LinearGradientPaint(
+                    0, 0, w, h,
+                    new float[]{0f, 0.55f, 1f},
+                    new Color[]{colorInicio, colorMedio, colorFin}));
+            g2.fillRect(0, 0, w, h);
+
+            // Resplandores translúcidos en tonos cálido/frío, como un aura difuminada.
+            g2.setColor(new Color(255, 200, 230, 40));
+            g2.fillOval(w - w / 3, -h / 6, w / 2, w / 2);
+            g2.setColor(new Color(160, 200, 255, 28));
+            g2.fillOval(-w / 6, h - h / 3, w * 2 / 5, w * 2 / 5);
+
+            g2.dispose();
         }
-    }//GEN-LAST:event_btnEmployeeActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAdmin;
-    private javax.swing.JButton btnEmployee;
-    private javax.swing.JButton btnIniciarSesion;
-    private javax.swing.JPanel cardInicio;
-    private javax.swing.JPasswordField contraField;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField userField;
-    // End of variables declaration//GEN-END:variables
+    }
 }

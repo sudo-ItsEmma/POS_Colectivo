@@ -1,10 +1,15 @@
 package com.tuerca.pos.view;
 
+import com.tuerca.pos.controller.AdminDashboardController;
 import com.tuerca.pos.controller.ApartadoController;
+import com.tuerca.pos.controller.AperturaCajaController;
 import com.tuerca.pos.controller.EmpleadoController;
+import com.tuerca.pos.controller.EmployeeDashboardController;
 import com.tuerca.pos.controller.EmprendedorController;
+import com.tuerca.pos.controller.LoginController;
 import com.tuerca.pos.controller.ProductoController;
 import com.tuerca.pos.controller.VentaController;
+import com.tuerca.pos.model.Sesion;
 
 import java.awt.CardLayout;
 import javax.swing.JFrame;
@@ -18,6 +23,7 @@ import javax.swing.WindowConstants;
 public class MainView extends JFrame {
 
     private final LoginPanel loginPanel1 = new LoginPanel();
+    private final AperturaCajaPanel aperturaCajaPanel1 = new AperturaCajaPanel();
     private final EmployeePanel employeePanel2 = new EmployeePanel();
     private final AdminPanel adminPanel2 = new AdminPanel();
     private final GestionEmprendedores gestionEmprendedores1 = new GestionEmprendedores();
@@ -38,6 +44,10 @@ public class MainView extends JFrame {
     private final EditarProducto editarProducto1 = new EditarProducto();
     private final CargaMasivaProductos cargaMasivaProductos1 = new CargaMasivaProductos();
 
+    private LoginController loginController;
+    private AperturaCajaController aperturaCajaController;
+    private EmployeeDashboardController employeeDashboardController;
+    private AdminDashboardController adminDashboardController;
     private EmpleadoController empController;
     private EmprendedorController empreController;
     private ProductoController prodController;
@@ -49,6 +59,7 @@ public class MainView extends JFrame {
         getContentPane().setLayout(new CardLayout());
 
         getContentPane().add(loginPanel1, "login");
+        getContentPane().add(aperturaCajaPanel1, "aperturaCaja");
         getContentPane().add(employeePanel2, "employee");
         getContentPane().add(adminPanel2, "admin");
         getContentPane().add(gestionEmprendedores1, "entrepreneur");
@@ -72,6 +83,11 @@ public class MainView extends JFrame {
         pack();
         this.setSize(1280, 720);
         this.setLocationRelativeTo(null);
+
+        loginController = new LoginController(loginPanel1, aperturaCajaPanel1, this);
+        aperturaCajaController = new AperturaCajaController(aperturaCajaPanel1, this);
+        employeeDashboardController = new EmployeeDashboardController(employeePanel2, this);
+        adminDashboardController = new AdminDashboardController(adminPanel2, this);
 
         empController = new EmpleadoController(
                 nuevoEmpleado1,
@@ -116,7 +132,27 @@ public class MainView extends JFrame {
     }
 
     public void showView(String viewName) {
+        if ("employee".equals(viewName)) {
+            employeePanel2.setNombreUsuarioActivo(textoUsuarioActivo());
+        } else if ("admin".equals(viewName)) {
+            adminPanel2.setNombreUsuarioActivo(textoUsuarioActivo());
+        } else if ("ventas".equals(viewName)) {
+            ventas1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+        }
+
         CardLayout cl = (CardLayout) getContentPane().getLayout();
         cl.show(getContentPane(), viewName);
+    }
+
+    private String textoUsuarioActivo() {
+        Sesion sesion = Sesion.getInstancia();
+        return "Usuario activo: " + sesion.getNombreCompleto() + " (" + sesion.getRoleName() + ")";
+    }
+
+    /** Cierra la sesión activa y regresa al login. La caja (CashSession) sigue abierta. */
+    public void cerrarSesion() {
+        Sesion.getInstancia().cerrarSesion();
+        loginPanel1.limpiarFormulario();
+        showView("login");
     }
 }
