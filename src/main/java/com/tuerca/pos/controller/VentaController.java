@@ -445,23 +445,24 @@ public class VentaController {
         }
 
         double cambio = 0;
+        double montoRecibido = totalVenta; // Para Transferencia, se asume el monto exacto
 
         // 4. Lógica de Efectivo
         if (metodoPago.equalsIgnoreCase("Efectivo")) {
-            String input = JOptionPane.showInputDialog(vista, 
-                "TOTAL A COBRAR: $" + String.format("%.2f", totalVenta) + "\n\nIngrese monto recibido:", 
-                "Cobro en Efectivo", 
+            String input = JOptionPane.showInputDialog(vista,
+                "TOTAL A COBRAR: $" + String.format("%.2f", totalVenta) + "\n\nIngrese monto recibido:",
+                "Cobro en Efectivo",
                 JOptionPane.QUESTION_MESSAGE);
 
             if (input == null) return; // El usuario canceló el cobro
 
             try {
-                double recibido = Double.parseDouble(input);
-                if (recibido < totalVenta) {
-                    JOptionPane.showMessageDialog(vista, "Monto insuficiente. Faltan: $" + (totalVenta - recibido));
+                montoRecibido = Double.parseDouble(input);
+                if (montoRecibido < totalVenta) {
+                    JOptionPane.showMessageDialog(vista, "Monto insuficiente. Faltan: $" + (totalVenta - montoRecibido));
                     return;
                 }
-                cambio = recibido - totalVenta;
+                cambio = montoRecibido - totalVenta;
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(vista, "Ingrese un monto numérico válido.");
                 return;
@@ -473,19 +474,43 @@ public class VentaController {
         boolean exito = registrarVentaEnBD(metodoPago, totalVenta);
 
         if (exito) {
-            // Notificación de Cambio
+            // Ticket virtual con el resumen de la venta, método de pago y cambio
+            StringBuilder ticket = construirTicketBase(modelo, totalVenta);
+            ticket.append(String.format("Método de pago: %s\n", metodoPago));
             if (metodoPago.equalsIgnoreCase("Efectivo")) {
-                JOptionPane.showMessageDialog(vista, 
-                    "VENTA EXITOSA\n\nCambio a entregar: $" + String.format("%.2f", cambio), 
-                    "Cierre de Caja", 
-                    JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(vista, "Venta registrada con éxito.");
+                ticket.append(String.format("Monto recibido: $%.2f\n", montoRecibido));
+                ticket.append(String.format("Cambio: $%.2f\n", cambio));
             }
+            ticket.append("========================================");
+            JOptionPane.showMessageDialog(vista, ticket.toString(), "Ticket de Venta", JOptionPane.PLAIN_MESSAGE);
 
             // 6. LIMPIEZA TOTAL (Tarea 6)
             limpiarModulo();
         }
+    }
+
+    // Arma el encabezado del ticket (productos + total); cada flujo de cobro le
+    // agrega después sus propias líneas de método de pago/cambio.
+    private StringBuilder construirTicketBase(DefaultTableModel modelo, double total) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("========================================\n");
+        sb.append("            TICKET DE VENTA\n");
+        sb.append("========================================\n");
+        sb.append(String.format("%-4s %-8s %-20s %10s\n", "Cant", "Código", "Descripción", "Subtotal"));
+        sb.append("----------------------------------------\n");
+
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            int cant = Integer.parseInt(modelo.getValueAt(i, COL_CANTIDAD).toString());
+            String codigo = modelo.getValueAt(i, COL_CODIGO).toString();
+            String desc = modelo.getValueAt(i, 2).toString();
+            if (desc.length() > 20) desc = desc.substring(0, 17) + "...";
+            double subtotal = Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+            sb.append(String.format("%-4d %-8s %-20s %10s\n", cant, codigo, desc, String.format("$%.2f", subtotal)));
+        }
+
+        sb.append("----------------------------------------\n");
+        sb.append(String.format("TOTAL: $%.2f\n", total));
+        return sb;
     }
     
     private void procesarCobroMixto() {
@@ -547,12 +572,14 @@ public class VentaController {
 
             // Llamada a tu función de registro (la que crea la lista de detalles y llama al DAO)
             if (registrarVentaEnBD_Mixto(totalVenta, detallesPago)) {
-                JOptionPane.showMessageDialog(vista, 
-                    "VENTA MIXTA REGISTRADA\n\n" +
-                    "Transferencia: $" + String.format("%.2f", montoTransferencia) + "\n" +
-                    "Efectivo: $" + String.format("%.2f", restanteEfectivo) + "\n" +
-                    "---------------------------\n" +
-                    "CAMBIO: $" + String.format("%.2f", cambio));
+                // Ticket virtual con el resumen de la venta, método de pago mixto y cambio
+                StringBuilder ticket = construirTicketBase(modelo, totalVenta);
+                ticket.append("Método de pago: Mixto\n");
+                ticket.append(String.format("Transferencia: $%.2f\n", montoTransferencia));
+                ticket.append(String.format("Efectivo: $%.2f\n", restanteEfectivo));
+                ticket.append(String.format("Cambio: $%.2f\n", cambio));
+                ticket.append("========================================");
+                JOptionPane.showMessageDialog(vista, ticket.toString(), "Ticket de Venta", JOptionPane.PLAIN_MESSAGE);
 
                 limpiarModulo();
             }

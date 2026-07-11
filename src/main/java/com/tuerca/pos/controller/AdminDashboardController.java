@@ -9,9 +9,9 @@ import com.tuerca.pos.view.MainView;
  * {@code MainView} en tiempo de ejecución vía {@code getWindowAncestor}.
  *
  * Nota: igual que en el {@code .form} original, no todos los botones tienen
- * listener todavía — Arqueo de Caja, Pago Emprendedores, Devolución, Corte
- * de Caja y Reportes son módulos "sin iniciar" (ver ESTADO_PROYECTO.md),
- * se conectan cuando les toque su propio paso del roadmap.
+ * listener todavía — Pago Emprendedores, Devolución, Corte de Caja y Reportes
+ * son módulos "sin iniciar" (ver ESTADO_PROYECTO.md), se conectan cuando les
+ * toque su propio paso del roadmap. Arqueo de Caja ya se conectó (Paso 4).
  */
 public class AdminDashboardController {
 
@@ -21,6 +21,7 @@ public class AdminDashboardController {
         vista.getBtnProductos().addActionListener(e -> mainView.showView("products"));
         vista.getBtnVentas().addActionListener(e -> mainView.showView("ventas"));
         vista.getBtnApartados().addActionListener(e -> mainView.showView("apartados"));
+        vista.getBtnArqueoCaja().addActionListener(e -> mainView.showView("arqueo"));
         vista.getBtnCerrarSesion().addActionListener(e -> mainView.cerrarSesion());
     }
 }
