@@ -16,14 +16,13 @@ import com.tuerca.pos.view.Ventas; // Ajusta al nombre real de tu clase de vista
 import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.BusquedaConDebounce;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 
@@ -124,12 +123,8 @@ public class VentaController {
             }
         });
 
-        // --- Lógica de Búsqueda ---
-        vista.getTxtBusqueda().getDocument().addDocumentListener(new DocumentListener() {
-            @Override public void insertUpdate(DocumentEvent e) { filtrarSugerencias(); }
-            @Override public void removeUpdate(DocumentEvent e) { filtrarSugerencias(); }
-            @Override public void changedUpdate(DocumentEvent e) { filtrarSugerencias(); }
-        });
+        // --- Lógica de Búsqueda --- (con retraso, para no consultar la BD en cada tecla)
+        BusquedaConDebounce.aplicar(vista.getTxtBusqueda(), 300, this::filtrarSugerencias);
 
         listaSugerencias.addMouseListener(new MouseAdapter() {
             @Override

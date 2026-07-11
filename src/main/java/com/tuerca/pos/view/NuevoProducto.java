@@ -1,317 +1,172 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import net.miginfocom.swing.MigLayout;
 
 /**
- *
- * @author mannycalderon
+ * Formulario "Nuevo Producto" (FN.3). Sin `.form`: layout a mano con
+ * MigLayout, mismo estilo visual que {@link NuevoEmprendedor}. Toda la
+ * lógica vive en {@link com.tuerca.pos.controller.ProductoController}.
  */
-public class NuevoProducto extends javax.swing.JPanel {
-    /**
-     * Creates new form GestionEmprendedores
-     */
+public class NuevoProducto extends JPanel {
+
+    private final JLabel lblTitulo = new JLabel("Crear un nuevo producto");
+    private final JButton btnBack = new JButton("Volver");
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+
+    private final JComboBox<Object> cbEmprendedor = new JComboBox<>();
+    private final JTextField codigoField = new JTextField();
+    private final JTextField descripcionField = new JTextField();
+    private final JTextField departamentoField = new JTextField();
+    private final JTextField precioField = new JTextField();
+    private final JTextField stockField = new JTextField();
+
+    private final JButton btnRegistrar = new JButton("Registrar");
+    private final JButton btnCancelar = new JButton("Cancelar");
+
     public NuevoProducto() {
         initComponents();
+
         codigoField.putClientProperty("JTextField.placeholderText", "Introduce el código de producto (EJ. AA00)");
         codigoField.putClientProperty("JTextField.showClearButton", true);
-        
+
         descripcionField.putClientProperty("JTextField.placeholderText", "Introduce la descripción del producto");
         descripcionField.putClientProperty("JTextField.showClearButton", true);
-        
+
         departamentoField.putClientProperty("JTextField.placeholderText", "Introduce el departamento al que pertenece el producto");
         departamentoField.putClientProperty("JTextField.showClearButton", true);
-        
+
         precioField.putClientProperty("JTextField.placeholderText", "Introduce el precio del producto (EJ. 35)");
         precioField.putClientProperty("JTextField.showClearButton", true);
-        
+
         stockField.putClientProperty("JTextField.placeholderText", "Introduce el stock del producto (EJ. 10)");
         stockField.putClientProperty("JTextField.showClearButton", true);
-        
+
         limpiarFormulario();
-        
     }
-    
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> volver());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        JPanel formulario = new JPanel(new MigLayout("insets 20 60 20 60, fill, wrap 2", "[grow][grow]"));
+        formulario.putClientProperty("FlatLaf.style", "arc: 20");
+        formulario.setBorder(BorderFactory.createTitledBorder(
+                null, "Datos del producto", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION,
+                new Font("SF Pro Rounded", Font.BOLD, 18)));
+
+        Font lblFont = new Font("SF Pro Rounded", Font.BOLD, 14);
+        Font fieldFont = new Font("SF Pro Rounded", Font.PLAIN, 18);
+
+        cbEmprendedor.putClientProperty("FlatLaf.style", "arc: 20");
+        cbEmprendedor.setFont(new Font("SF Pro Rounded", Font.PLAIN, 18));
+        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
+        descripcionField.putClientProperty("FlatLaf.style", "arc: 20");
+        departamentoField.putClientProperty("FlatLaf.style", "arc: 20");
+        precioField.putClientProperty("FlatLaf.style", "arc: 20");
+        stockField.putClientProperty("FlatLaf.style", "arc: 20");
+
+        for (JTextField f : new JTextField[]{codigoField, descripcionField, departamentoField, precioField, stockField}) {
+            f.setFont(fieldFont);
+        }
+
+        JLabel lbl1 = new JLabel("Selecciona el emprendimiento:");
+        lbl1.setFont(lblFont);
+        JLabel lbl2 = new JLabel("Código del producto:");
+        lbl2.setFont(lblFont);
+        JLabel lbl4 = new JLabel("Descripción del producto:");
+        lbl4.setFont(lblFont);
+        JLabel lbl6 = new JLabel("Departamento del producto:");
+        lbl6.setFont(lblFont);
+        JLabel lbl7 = new JLabel("Precio del producto:");
+        lbl7.setFont(lblFont);
+        JLabel lbl8 = new JLabel("Stock del producto");
+        lbl8.setFont(lblFont);
+
+        formulario.add(lbl1, "span 2");
+        formulario.add(cbEmprendedor, "span 2, growx, h 30!");
+        formulario.add(lbl2, "span 2");
+        formulario.add(codigoField, "span 2, growx, h 30!");
+        formulario.add(lbl4, "span 2");
+        formulario.add(descripcionField, "span 2, growx, h 30!");
+        formulario.add(lbl6, "span 2");
+        formulario.add(departamentoField, "span 2, growx, h 30!");
+        formulario.add(lbl7, "span 2");
+        formulario.add(precioField, "span 2, growx, h 30!");
+        formulario.add(lbl8, "span 2");
+        formulario.add(stockField, "span 2, growx, h 30!");
+
+        btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
+        btnRegistrar.setForeground(Color.WHITE);
+        btnRegistrar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnRegistrar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
+
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnCancelar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
+        btnCancelar.addActionListener(e -> volver());
+
+        formulario.add(btnCancelar, "split 2, span 2, growx, h 40!");
+        formulario.add(btnRegistrar, "growx, h 40!");
+
+        add(formulario, "grow");
+
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        add(lblUsuario, "growx");
+    }
+
+    private void volver() {
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("products");
+        }
+    }
+
     // Exponemos los datos
-    public javax.swing.JComboBox<Object> getCbEmprendedor() { return cbEmprendedor; }
+    public JComboBox<Object> getCbEmprendedor() { return cbEmprendedor; }
     public String getCodigoField() { return codigoField.getText().trim(); }
     public String getDescripcionField() { return descripcionField.getText().trim(); }
     public String getDepartamentoField() { return departamentoField.getText().trim(); }
     public String getPrecioField() { return precioField.getText().trim(); }
     public String getStockField() { return stockField.getText().trim(); }
 
-    // Exponemos el boton de registro
     public JButton getBtnRegistrar() { return btnRegistrar; }
-    public JButton getBtnCancelar() { return btnCancelar;}
-    public JButton getBtnBack() { return btnBack;}
-    
-    // limpiar el formulario
-    public void limpiarFormulario(){
+    public JButton getBtnCancelar() { return btnCancelar; }
+    public JButton getBtnBack() { return btnBack; }
+
+    public void limpiarFormulario() {
         codigoField.setText("");
         descripcionField.setText("");
         departamentoField.setText("");
         precioField.setText("");
         stockField.setText("");
-        // Restablecer el combo al primer elemento (índice 0)
         if (cbEmprendedor.getItemCount() > 0) {
             cbEmprendedor.setSelectedIndex(0);
         }
-
         codigoField.requestFocus();
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        formularioRegistro = new javax.swing.JPanel();
-        formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel1 = new javax.swing.JLabel();
-        cbEmprendedor = new javax.swing.JComboBox<>();
-        codigoField = new javax.swing.JTextField();
-        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
-        btnRegistrar = new javax.swing.JButton();
-        btnRegistrar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        descripcionField = new javax.swing.JTextField();
-        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
-        departamentoField = new javax.swing.JTextField();
-        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        precioField = new javax.swing.JTextField();
-        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
-        stockField = new javax.swing.JTextField();
-        codigoField.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel8 = new javax.swing.JLabel();
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Crear un nuevo producto");
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        formularioRegistro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del producto", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SF Pro Rounded", 1, 18))); // NOI18N
-
-        jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel1.setText("Selecciona el emprendimiento:");
-
-        cbEmprendedor.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-        cbEmprendedor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        codigoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        btnRegistrar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnRegistrar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnRegistrar.setForeground(new java.awt.Color(255, 255, 255));
-        btnRegistrar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
-        btnRegistrar.setText("Registrar");
-        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarActionPerformed(evt);
-            }
-        });
-
-        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel2.setText("Código del producto:");
-
-        jLabel4.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel4.setText("Descripción del producto:");
-
-        descripcionField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        departamentoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel6.setText("Departamento del producto:");
-
-        jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel7.setText("Precio del producto:");
-
-        precioField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        stockField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel8.setText("Stock del producto");
-
-        javax.swing.GroupLayout formularioRegistroLayout = new javax.swing.GroupLayout(formularioRegistro);
-        formularioRegistro.setLayout(formularioRegistroLayout);
-        formularioRegistroLayout.setHorizontalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(codigoField)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbEmprendedor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(descripcionField)
-                    .addComponent(departamentoField)
-                    .addComponent(precioField)
-                    .addComponent(stockField)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel8))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        formularioRegistroLayout.setVerticalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbEmprendedor, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(codigoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(descripcionField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(departamentoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(precioField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(stockField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(307, 307, 307)
-                .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(263, 263, 263))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(25, 25, 25))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("products"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("products"); 
-        }
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRegistrarActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnRegistrar;
-    private javax.swing.JComboBox<Object> cbEmprendedor;
-    private javax.swing.JTextField codigoField;
-    private javax.swing.JTextField departamentoField;
-    private javax.swing.JTextField descripcionField;
-    private javax.swing.JPanel formularioRegistro;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JTextField precioField;
-    private javax.swing.JTextField stockField;
-    // End of variables declaration//GEN-END:variables
 }

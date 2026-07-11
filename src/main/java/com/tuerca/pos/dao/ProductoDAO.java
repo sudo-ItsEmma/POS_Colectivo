@@ -115,6 +115,33 @@ public class ProductoDAO {
         }
     }
     
+    // registrar producto en carga masiva: si el código ya existe, suma el stock al producto
+    // existente en vez de fallar por el UNIQUE constraint (reabastecimiento vía Excel)
+    public int registrarOSumarStock(Producto p) {
+        String sql = "INSERT INTO Product (idEntrepreneur, fullProductCode, productDescription, " +
+                     "department, currentPrice, currentStock, minStockAlert) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE currentStock = currentStock + VALUES(currentStock)";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getIdEntrepreneur());
+            ps.setString(2, p.getFullProductCode());
+            ps.setString(3, p.getProductDescription());
+            ps.setString(4, p.getDepartment());
+            ps.setDouble(5, p.getCurrentPrice());
+            ps.setInt(6, p.getCurrentStock());
+            ps.setInt(7, p.getMinStockAlert());
+
+            // MariaDB/MySQL: 1 fila afectada = INSERT nuevo, 2 filas afectadas = UPDATE (stock sumado)
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error en carga masiva de producto: " + e.getMessage());
+            return -1;
+        }
+    }
+
      // función para eliminar a los empleados de manera lógica
     public boolean eliminarLogico(int id) {
         String sql = "UPDATE Product SET isProductActive = 0 WHERE idProduct = ?";
@@ -317,7 +344,7 @@ public class ProductoDAO {
         String sql = "SELECT p.*, e.brandName " +
                      "FROM Product p " +
                      "INNER JOIN Entrepreneur e ON p.idEntrepreneur = e.idEntrepreneur " +
-                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ?) " +
+                     "WHERE (p.fullProductCode LIKE ? OR p.productDescription LIKE ? OR e.brandName LIKE ?) " +
                      "AND p.isProductActive = 1 " +
                      "AND p.currentStock > 0";
 
@@ -326,6 +353,7 @@ public class ProductoDAO {
 
             ps.setString(1, "%" + texto + "%");
             ps.setString(2, "%" + texto + "%");
+            ps.setString(3, "%" + texto + "%");
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
