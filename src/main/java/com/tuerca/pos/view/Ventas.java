@@ -1,266 +1,178 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import net.miginfocom.swing.MigLayout;
 
 /**
- *
- * @author mannycalderon
+ * Pantalla de Ventas (POS). Sin `.form`: layout a mano con MigLayout,
+ * siguiendo el boceto de `POS.excalidraw` (buscador + carrito a la
+ * izquierda, total/método de pago/botones a la derecha). Toda la lógica
+ * de negocio vive en {@link com.tuerca.pos.controller.VentaController}
+ * (y, para "Apartar productos", en {@link com.tuerca.pos.controller.ApartadoController},
+ * que reutiliza esta misma vista).
  */
-public class Ventas extends javax.swing.JPanel {
+public class Ventas extends JPanel {
 
-    /**
-     * Creates new form GestionEmprendedores
-     */
+    private final JLabel lblTitulo = new JLabel("POS de Venta");
+    private final JButton btnBack = new JButton("Volver");
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JButton btnApartarProductos = new JButton("Apartar Productos");
+
+    private final JTextField txtBusqueda = new JTextField();
+    private final JTable tablaVenta = new JTable();
+    private final JScrollPane scrollTabla = new JScrollPane(tablaVenta);
+
+    private final JLabel lblTituloTotal = new JLabel("Total");
+    private final JLabel lblTotal = new JLabel("$0.00");
+    private final JLabel lblTituloMetodoPago = new JLabel("Selecciona método de pago");
+    private final JComboBox<String> cbMetodoPago = new JComboBox<>(new String[]{"Efectivo", "Transferencia", "Mixto"});
+    private final JButton btnPagar = new JButton("Pagar");
+    private final JButton btnCancelar = new JButton("Cancelar");
+
     public Ventas() {
         initComponents();
-        // 1. Esto pone el texto gris que desaparece solo al escribir
-        txtBusqueda.putClientProperty("JTextField.placeholderText", "Buscar Producto...");
 
-        // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
+        txtBusqueda.putClientProperty("JTextField.placeholderText", "Buscar Producto...");
         txtBusqueda.putClientProperty("JTextField.showClearButton", true);
     }
-    
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][grow]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        JPanel panelCuerpo = new JPanel(new MigLayout("insets 0, fill", "[grow][350!, fill]"));
+        panelCuerpo.add(construirPanelIzquierdo(), "grow");
+        panelCuerpo.add(construirPanelDerecho(), "grow");
+        add(panelCuerpo, "grow");
+    }
+
+    private JPanel construirPanelIzquierdo() {
+        JPanel panel = new JPanel(new MigLayout("insets 0 10 0 0, fill, wrap 1", "[grow]", "[][grow][]"));
+
+        txtBusqueda.putClientProperty("FlatLaf.style", "arc: 20");
+        panel.add(txtBusqueda, "growx, h 40!");
+
+        scrollTabla.putClientProperty("FlatLaf.style", "arc: 20");
+        prepararTablaInicial();
+        panel.add(scrollTabla, "grow");
+
+        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][]"));
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        panelPie.add(lblUsuario, "growx");
+
+        btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnApartarProductos.setBackground(UIManager.getDefaults().getColor("Button.default.focusColor"));
+        btnApartarProductos.setForeground(Color.WHITE);
+        btnApartarProductos.setFont(new Font("SF Pro Rounded", Font.BOLD, 12));
+        btnApartarProductos.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 24, 24));
+        panelPie.add(btnApartarProductos);
+
+        panel.add(panelPie, "growx");
+        return panel;
+    }
+
+    private JPanel construirPanelDerecho() {
+        JPanel panel = new JPanel(new MigLayout("insets 0 0 0 10, fill, wrap 1", "[grow]"));
+
+        lblTituloTotal.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTituloTotal.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(lblTituloTotal, "growx");
+
+        lblTotal.setFont(new Font("SF Pro Rounded", Font.BOLD, 48));
+        lblTotal.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(lblTotal, "growx, gapbottom 30");
+
+        lblTituloMetodoPago.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        lblTituloMetodoPago.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(lblTituloMetodoPago, "growx, push");
+
+        cbMetodoPago.putClientProperty("FlatLaf.style", "arc: 20");
+        panel.add(cbMetodoPago, "growx, h 40!, gaptop 10");
+
+        btnPagar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnPagar.setBackground(UIManager.getDefaults().getColor("Actions.Green"));
+        btnPagar.setForeground(Color.WHITE);
+        btnPagar.setFont(new Font("SF Pro Rounded", Font.BOLD, 24));
+        btnPagar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/money.svg", 36, 36));
+        panel.add(btnPagar, "growx, h 74!, gaptop 20");
+
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnCancelar.setBackground(UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFont(new Font("SF Pro Rounded", Font.BOLD, 24));
+        btnCancelar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 36, 36));
+        panel.add(btnCancelar, "growx, h 74!, gaptop 18");
+
+        return panel;
+    }
+
+    // El modelo real (columnas, editabilidad, tipos) lo define VentaController.prepararModeloTabla();
+    // este modelo inicial solo evita que la tabla arranque sin columnas antes de que exista el controller.
+    private void prepararTablaInicial() {
+        tablaVenta.setFont(new Font("SF Compact Rounded", Font.PLAIN, 18));
+        tablaVenta.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Cantidad", "Código", "Descripción", "Precio Unitario", "Descuento", "Subtotal", "Acción"}
+        ));
+    }
+
     // --- GETTERS PARA ELEMENTOS DE VENTA ---
 
-    // 1. Barra de búsqueda superior
-    public javax.swing.JTextField getTxtBusqueda() {
+    public JTextField getTxtBusqueda() {
         return txtBusqueda;
     }
 
-    // 2. Tabla del carrito de compras
-    public javax.swing.JTable getTablaVenta() {
+    public JTable getTablaVenta() {
         return tablaVenta;
     }
 
-    // 3. Etiqueta donde se muestra el Total ($0.00)
-    public javax.swing.JLabel getLblTotal() {
+    public JLabel getLblTotal() {
         return lblTotal;
     }
 
-    // 4. ComboBox para seleccionar el método de pago
-    public javax.swing.JComboBox<String> getCbMetodoPago() {
+    public JComboBox<String> getCbMetodoPago() {
         return cbMetodoPago;
     }
 
-    // 5. Botones de acción principal
-    public javax.swing.JButton getBtnCobrar() {
+    public JButton getBtnCobrar() {
         return btnPagar;
     }
-    
-    public javax.swing.JButton getBtnApartarProductos(){
+
+    public JButton getBtnApartarProductos() {
         return btnApartarProductos;
     }
 
-    public javax.swing.JButton getBtnCancelar() {
+    public JButton getBtnCancelar() {
         return btnCancelar;
     }
-    
-    public DefaultTableModel getTableModel() {
-        return (DefaultTableModel) tablaVenta.getModel();
+
+    public JButton getBtnBack() {
+        return btnBack;
     }
-    
-    public javax.swing.JTable getTablaVentas() {
-        return tablaVenta; 
+
+    public void setNombreUsuarioActivo(String texto) {
+        lblUsuario.setText(texto);
     }
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        txtBusqueda = new javax.swing.JTextField();
-        txtBusqueda.putClientProperty("FlatLaf.style", "arc: 20");
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        tablaVenta = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        btnApartarProductos = new javax.swing.JButton();
-        btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        lblTotal = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        cbMetodoPago = new javax.swing.JComboBox<>();
-        cbMetodoPago.putClientProperty("FlatLaf.style", "arc: 20");
-        btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        btnPagar = new javax.swing.JButton();
-        btnPagar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        jLabel8 = new javax.swing.JLabel();
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("POS");
-
-        tablaVenta.setFont(new java.awt.Font("SF Compact Rounded", 0, 18)); // NOI18N
-        tablaVenta.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
-            },
-            new String [] {
-                "Cantidad", "Código", "Descripción", "Precio Unitario", "Subtotal", "Eliminar"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                true, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaVenta);
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        btnApartarProductos.setBackground(javax.swing.UIManager.getDefaults().getColor("Button.default.focusColor"));
-        btnApartarProductos.setFont(new java.awt.Font("SF Pro Rounded", 1, 12)); // NOI18N
-        btnApartarProductos.setForeground(new java.awt.Color(255, 255, 255));
-        btnApartarProductos.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 24, 24));
-        btnApartarProductos.setText("Apartar Productos");
-
-        lblTotal.setFont(new java.awt.Font("SF Pro Rounded", 1, 48)); // NOI18N
-        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblTotal.setText("$");
-
-        jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Total");
-
-        cbMetodoPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Transferencia", "Mixto" }));
-
-        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 36, 36));
-        btnCancelar.setText("Cancelar");
-
-        btnPagar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Green"));
-        btnPagar.setFont(new java.awt.Font("SF Pro Rounded", 1, 24)); // NOI18N
-        btnPagar.setForeground(new java.awt.Color(255, 255, 255));
-        btnPagar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/money.svg", 36, 36));
-        btnPagar.setText("Pagar");
-
-        jLabel8.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("Selecciona método de pago");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnApartarProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1)
-                            .addComponent(txtBusqueda))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 315, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnPagar, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                                        .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
-                                        .addComponent(cbMetodoPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                        .addGap(36, 36, 36))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(127, 127, 127)
-                        .addComponent(jLabel8)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbMetodoPago, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnPagar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnApartarProductos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(26, 26, 26))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("admin"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnApartarProductos;
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnPagar;
-    private javax.swing.JComboBox<String> cbMetodoPago;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblTotal;
-    private javax.swing.JTable tablaVenta;
-    private javax.swing.JTextField txtBusqueda;
-    // End of variables declaration//GEN-END:variables
 }

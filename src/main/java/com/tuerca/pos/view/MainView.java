@@ -136,6 +136,8 @@ public class MainView extends JFrame {
             employeePanel2.setNombreUsuarioActivo(textoUsuarioActivo());
         } else if ("admin".equals(viewName)) {
             adminPanel2.setNombreUsuarioActivo(textoUsuarioActivo());
+        } else if ("ventas".equals(viewName)) {
+            ventas1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         }
 
         CardLayout cl = (CardLayout) getContentPane().getLayout();
