@@ -25,11 +25,17 @@ public class ArqueoDAO {
     // (incluida la parte efectivo de las ventas Mixto) + abonos de apartados en
     // efectivo, todo desde que se abrió la caja actual.
     //
-    // NOTA: los abonos de apartados (BookingPayment) hoy siempre quedan guardados
-    // como "Efectivo" sin importar cómo pagó realmente el cliente, porque
-    // ApartadoController todavía no captura el método de pago del abono (deuda
-    // documentada para el Paso 7). Mientras eso no se corrija, este cálculo puede
-    // salir optimista si hubo abonos por transferencia.
+    // Las ventas con idBooking (las que genera liquidarApartadoCompleto()) se
+    // excluyen a propósito: su dinero ya se cuenta a través de BookingPayment
+    // (anticipo + abonos + pago final), así que sumarlas también aquí duplicaría
+    // el anticipo que el cliente ya había dado antes de liquidar.
+    //
+    // NOTA: los abonos parciales de apartados (no el pago final de la liquidación,
+    // que ya sí queda correcto) todavía se guardan siempre como "Efectivo" en
+    // BookingPayment, porque ApartadoController.procesarNuevoAbono() no le pregunta
+    // al cajero el método de pago (deuda documentada para el Paso 7). Mientras eso
+    // no se corrija, este cálculo puede salir optimista si hubo abonos parciales
+    // por transferencia.
     public BigDecimal calcularSaldoTeorico(CashSession sesion) {
         BigDecimal saldo = sesion.getInitialCashAmount();
         saldo = saldo.add(calcularVentasEfectivo(sesion.getOpeningDateTime()));
@@ -37,13 +43,13 @@ public class ArqueoDAO {
         return saldo;
     }
 
-    private BigDecimal calcularVentasEfectivo(LocalDateTime desde) {
+    public BigDecimal calcularVentasEfectivo(LocalDateTime desde) {
         BigDecimal total = BigDecimal.ZERO;
 
         String sql = "SELECT pm.methodName, s.totalSaleAmount, s.paymentDetails "
                 + "FROM Sale s "
                 + "JOIN PaymentMethod pm ON s.idPaymentMethod = pm.idPaymentMethod "
-                + "WHERE s.saleDateTime >= ? AND pm.methodName IN ('Efectivo', 'Mixto')";
+                + "WHERE s.saleDateTime >= ? AND pm.methodName IN ('Efectivo', 'Mixto') AND s.idBooking IS NULL";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -77,7 +83,7 @@ public class ArqueoDAO {
         String sql = "SELECT pm.methodName, s.totalSaleAmount, s.paymentDetails "
                 + "FROM Sale s "
                 + "JOIN PaymentMethod pm ON s.idPaymentMethod = pm.idPaymentMethod "
-                + "WHERE s.saleDateTime >= ? AND pm.methodName IN ('Transferencia', 'Mixto')";
+                + "WHERE s.saleDateTime >= ? AND pm.methodName IN ('Transferencia', 'Mixto') AND s.idBooking IS NULL";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -102,6 +108,36 @@ public class ArqueoDAO {
         return total;
     }
 
+    // función informativa para el Corte de Caja: cuántas ventas del día incluyeron
+    // una parte de transferencia (puras o Mixto), para el resumen de transferencias.
+    public int contarVentasConTransferencia(LocalDateTime desde) {
+        int cantidad = 0;
+
+        String sql = "SELECT pm.methodName, s.paymentDetails "
+                + "FROM Sale s "
+                + "JOIN PaymentMethod pm ON s.idPaymentMethod = pm.idPaymentMethod "
+                + "WHERE s.saleDateTime >= ? AND pm.methodName IN ('Transferencia', 'Mixto') AND s.idBooking IS NULL";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(desde));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String metodo = rs.getString("methodName");
+                    if (metodo.equalsIgnoreCase("Transferencia")
+                            || extraerMontoDeMixto(rs.getString("paymentDetails"), "T:").compareTo(BigDecimal.ZERO) > 0) {
+                        cantidad++;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al contar ventas con transferencia: " + e.getMessage());
+        }
+        return cantidad;
+    }
+
     private BigDecimal extraerMontoDeMixto(String paymentDetails, String prefijo) {
         if (paymentDetails == null) {
             return BigDecimal.ZERO;
@@ -114,7 +150,7 @@ public class ArqueoDAO {
         return BigDecimal.ZERO;
     }
 
-    private BigDecimal calcularAbonosEfectivo(LocalDateTime desde) {
+    public BigDecimal calcularAbonosEfectivo(LocalDateTime desde) {
         BigDecimal total = BigDecimal.ZERO;
 
         String sql = "SELECT bp.paymentAmount "
@@ -150,7 +186,7 @@ public class ArqueoDAO {
         String sql = "SELECT s.saleDateTime, pm.methodName, s.totalSaleAmount, s.paymentDetails "
                 + "FROM Sale s "
                 + "JOIN PaymentMethod pm ON s.idPaymentMethod = pm.idPaymentMethod "
-                + "WHERE s.saleDateTime >= ? "
+                + "WHERE s.saleDateTime >= ? AND s.idBooking IS NULL "
                 + "ORDER BY s.saleDateTime";
 
         try (Connection con = DatabaseConnection.getConnection();

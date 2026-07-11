@@ -4,6 +4,7 @@ import com.tuerca.pos.controller.AdminDashboardController;
 import com.tuerca.pos.controller.ApartadoController;
 import com.tuerca.pos.controller.AperturaCajaController;
 import com.tuerca.pos.controller.ArqueoCajaController;
+import com.tuerca.pos.controller.CorteCajaController;
 import com.tuerca.pos.controller.EmpleadoController;
 import com.tuerca.pos.controller.EmployeeDashboardController;
 import com.tuerca.pos.controller.EmprendedorController;
@@ -50,6 +51,7 @@ public class MainView extends JFrame {
     private EmployeeDashboardController employeeDashboardController;
     private AdminDashboardController adminDashboardController;
     private ArqueoCajaController arqueoCajaController;
+    private CorteCajaController corteCajaController;
     private EmpleadoController empController;
     private EmprendedorController empreController;
     private ProductoController prodController;
@@ -91,6 +93,7 @@ public class MainView extends JFrame {
         employeeDashboardController = new EmployeeDashboardController(employeePanel2, this);
         adminDashboardController = new AdminDashboardController(adminPanel2, this);
         arqueoCajaController = new ArqueoCajaController(arqueoDeCaja1, this);
+        corteCajaController = new CorteCajaController(corteDeCaja1, this);
 
         empController = new EmpleadoController(
                 nuevoEmpleado1,
@@ -144,6 +147,9 @@ public class MainView extends JFrame {
         } else if ("arqueo".equals(viewName)) {
             arqueoDeCaja1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
             arqueoCajaController.actualizarDatos();
+        } else if ("corte".equals(viewName)) {
+            corteDeCaja1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+            corteCajaController.actualizarDatos();
         }
 
         CardLayout cl = (CardLayout) getContentPane().getLayout();

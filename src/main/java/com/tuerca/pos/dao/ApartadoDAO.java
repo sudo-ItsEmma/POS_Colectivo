@@ -212,11 +212,15 @@ public class ApartadoDAO {
     }
     
     public boolean liquidarApartadoCompleto(int idBooking, int idUsuario, String metodoPago, List<Object[]> detallesProductos) throws SQLException {
-        String sqlInsertVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount, saleStatus) VALUES (?, ?, ?, 'Activa')";
+        String sqlInsertVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount, saleStatus, idBooking) VALUES (?, ?, ?, 'Activa', ?)";
         String sqlInsertVentaDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail, isSettled) VALUES (?, ?, ?, ?, 0.00, ?, 1)";
         String sqlUpdateStock = "UPDATE Product SET currentStock = currentStock - ? WHERE idProduct = ? AND currentStock >= ?";
         String sqlUpdateBooking = "UPDATE Booking SET advanceAmount = totalAmount, pendingBalance = 0.00, bookingStatus = 'Liquidado' WHERE idBooking = ?";
         String sqlIdPago = "SELECT idPaymentMethod FROM PaymentMethod WHERE methodName = ?";
+        // El pago final (lo que realmente entra en efectivo/transferencia al liquidar, no el
+        // total del apartado) se registra como un abono más, igual que el anticipo inicial y
+        // los abonos posteriores — así BookingPayment queda con el historial completo.
+        String sqlInsertPagoFinal = "INSERT INTO BookingPayment (idBooking, idPaymentMethod, paymentAmount) VALUES (?, ?, ?)";
 
         Connection con = null;
         try {
@@ -224,7 +228,7 @@ public class ApartadoDAO {
             con.setAutoCommit(false); // Iniciamos Transacción
 
             // 1. Obtener ID del método de pago
-            int idMetodoPago = 1; 
+            int idMetodoPago = 1;
             try (PreparedStatement psPago = con.prepareStatement(sqlIdPago)) {
                 psPago.setString(1, metodoPago);
                 try (ResultSet rs = psPago.executeQuery()) {
@@ -232,27 +236,44 @@ public class ApartadoDAO {
                 }
             }
 
-            // 2. Obtener el monto total del apartado
+            // 2. Obtener el monto total del apartado y el saldo pendiente (lo que se cobra ahora)
             double totalVenta = 0;
-            String sqlTotalApt = "SELECT totalAmount FROM Booking WHERE idBooking = ?";
+            double saldoPendiente = 0;
+            String sqlTotalApt = "SELECT totalAmount, pendingBalance FROM Booking WHERE idBooking = ?";
             try (PreparedStatement psTot = con.prepareStatement(sqlTotalApt)) {
                 psTot.setInt(1, idBooking);
                 try (ResultSet rs = psTot.executeQuery()) {
-                    if (rs.next()) totalVenta = rs.getDouble("totalAmount");
+                    if (rs.next()) {
+                        totalVenta = rs.getDouble("totalAmount");
+                        saldoPendiente = rs.getDouble("pendingBalance");
+                    }
                 }
             }
 
-            // 3. Insertar la Cabecera de la Venta
+            // 3. Insertar la Cabecera de la Venta (con idBooking para que Arqueo/Corte de Caja
+            // puedan excluirla del cálculo de efectivo/transferencia — su dinero ya se cuenta
+            // a través de BookingPayment, sumarla también aquí duplicaría el anticipo)
             int idVentaGenerada = 0;
             try (PreparedStatement psVenta = con.prepareStatement(sqlInsertVenta, Statement.RETURN_GENERATED_KEYS)) {
                 psVenta.setInt(1, idUsuario);
                 psVenta.setInt(2, idMetodoPago);
                 psVenta.setDouble(3, totalVenta);
+                psVenta.setInt(4, idBooking);
                 psVenta.executeUpdate();
 
                 try (ResultSet generatedKeys = psVenta.getGeneratedKeys()) {
                     if (generatedKeys.next()) idVentaGenerada = generatedKeys.getInt(1);
                     else throw new SQLException("No se pudo obtener el ID de la venta generada.");
+                }
+            }
+
+            // 3.1 Registrar el pago final como abono, solo si en efecto quedaba saldo por cobrar
+            if (saldoPendiente > 0) {
+                try (PreparedStatement psPagoFinal = con.prepareStatement(sqlInsertPagoFinal)) {
+                    psPagoFinal.setInt(1, idBooking);
+                    psPagoFinal.setInt(2, idMetodoPago);
+                    psPagoFinal.setDouble(3, saldoPendiente);
+                    psPagoFinal.executeUpdate();
                 }
             }
 
