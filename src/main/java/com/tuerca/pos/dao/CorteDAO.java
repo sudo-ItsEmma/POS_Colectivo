@@ -1,5 +1,6 @@
 package com.tuerca.pos.dao;
 
+import com.tuerca.pos.model.CashSession;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,26 +18,30 @@ import java.time.LocalDateTime;
 public class CorteDAO {
 
     // función que suma los anticipos de los apartados creados desde que se abrió
-    // la caja (Booking.bookingDate es solo DATE, así que se compara por día).
+    // la caja actual.
     //
     // OJO: no se puede leer Booking.advanceAmount directo — esa columna es mutable
     // (procesarNuevoAbono() y liquidarApartadoCompleto() la van actualizando con el
-    // acumulado a la fecha, no el anticipo original). Por eso se busca el PRIMER
-    // BookingPayment de cada folio (el de menor idBookingPayment), que es el único
-    // que sí representa el anticipo real del momento en que se creó el apartado.
+    // acumulado a la fecha, no el anticipo original). Tampoco se puede filtrar por
+    // Booking.bookingDate (es solo DATE, sin hora) — eso mezclaría apartados de una
+    // sesión anterior del mismo día calendario con los de la sesión actual. En vez
+    // de eso, se busca el PRIMER BookingPayment de cada folio (el de menor
+    // idBookingPayment, que es el anticipo real) y se filtra por su propio
+    // paymentDate (con precisión de hora), igual que calcularAbonosApartados() —
+    // así ambos cálculos usan el mismo corte de tiempo y la resta entre ellos
+    // siempre cuadra, sin importar cuántas sesiones haya habido en el mismo día.
     public BigDecimal calcularApartadosNuevos(LocalDateTime desde) {
         BigDecimal total = BigDecimal.ZERO;
 
         String sql = "SELECT bp.paymentAmount "
                 + "FROM BookingPayment bp "
-                + "JOIN Booking b ON bp.idBooking = b.idBooking "
-                + "WHERE b.bookingDate >= ? "
+                + "WHERE bp.paymentDate >= ? "
                 + "AND bp.idBookingPayment = (SELECT MIN(bp2.idBookingPayment) FROM BookingPayment bp2 WHERE bp2.idBooking = bp.idBooking)";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setDate(1, java.sql.Date.valueOf(desde.toLocalDate()));
+            ps.setTimestamp(1, Timestamp.valueOf(desde));
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -75,22 +80,32 @@ public class CorteDAO {
         return totalPagos.subtract(apartadosNuevos);
     }
 
-    // función para cerrar formalmente la caja: registra el conteo final y cambia
-    // el estado a 'Cerrada'. En cuanto se cierra, CashSessionDAO.obtenerSesionAbierta()
-    // deja de encontrarla, y eso ya bloquea ventas/arqueos hasta que se abra una
-    // caja nueva — no hace falta ningún bloqueo adicional por fecha.
-    public boolean cerrarCaja(int idCashSession, BigDecimal efectivoContado, BigDecimal saldoTeorico, BigDecimal diferencia) {
+    // función para cerrar formalmente la caja: registra el conteo final, el desglose
+    // completo del día (para reportes/auditorías futuras sin tener que recalcular
+    // desde Sale/BookingPayment) y cambia el estado a 'Cerrada'. En cuanto se cierra,
+    // CashSessionDAO.obtenerSesionAbierta() deja de encontrarla, y eso ya bloquea
+    // ventas/arqueos hasta que se abra una caja nueva — no hace falta ningún bloqueo
+    // adicional por fecha.
+    public boolean cerrarCaja(CashSession cierre) {
         String sql = "UPDATE CashSession SET closingDateTime = NOW(), finalCashAmount = ?, "
-                + "theoricalAmount = ?, cashDifference = ?, sessionStatus = 'Cerrada' "
+                + "theoricalAmount = ?, cashDifference = ?, cashSalesAmount = ?, "
+                + "cashBookingPaymentsAmount = ?, transferSalesAmount = ?, transferSalesCount = ?, "
+                + "bookingsNewAmount = ?, bookingsPaymentsAmount = ?, sessionStatus = 'Cerrada' "
                 + "WHERE idCashSession = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setBigDecimal(1, efectivoContado);
-            ps.setBigDecimal(2, saldoTeorico);
-            ps.setBigDecimal(3, diferencia);
-            ps.setInt(4, idCashSession);
+            ps.setBigDecimal(1, cierre.getFinalCashAmount());
+            ps.setBigDecimal(2, cierre.getTheoricalAmount());
+            ps.setBigDecimal(3, cierre.getCashDifference());
+            ps.setBigDecimal(4, cierre.getCashSalesAmount());
+            ps.setBigDecimal(5, cierre.getCashBookingPaymentsAmount());
+            ps.setBigDecimal(6, cierre.getTransferSalesAmount());
+            ps.setInt(7, cierre.getTransferSalesCount());
+            ps.setBigDecimal(8, cierre.getBookingsNewAmount());
+            ps.setBigDecimal(9, cierre.getBookingsPaymentsAmount());
+            ps.setInt(10, cierre.getIdCashSession());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

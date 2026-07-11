@@ -118,8 +118,20 @@ public class CorteCajaController {
             return;
         }
 
+        java.time.LocalDateTime desde = sesionActual.getOpeningDateTime();
+
+        // Recalculamos todo fresco (por si hubo ventas nuevas mientras se abrían los
+        // diálogos) — es el mismo desglose que ya se mostró en pantalla, pero se
+        // vuelve a calcular aquí para guardarlo junto con el cierre.
         BigDecimal saldoTeorico = arqueoDao.calcularSaldoTeorico(sesionActual);
         BigDecimal diferencia = efectivoContado.subtract(saldoTeorico);
+
+        BigDecimal ventasEfectivo = arqueoDao.calcularVentasEfectivo(desde);
+        BigDecimal abonosEfectivo = arqueoDao.calcularAbonosEfectivo(desde);
+        BigDecimal ventasTransferencia = arqueoDao.calcularVentasTransferencia(desde);
+        int cantidadTransferencias = arqueoDao.contarVentasConTransferencia(desde);
+        BigDecimal apartadosNuevos = corteDao.calcularApartadosNuevos(desde);
+        BigDecimal apartadosAbonos = corteDao.calcularAbonosApartados(desde, apartadosNuevos);
 
         String comentario = null;
         if (diferencia.compareTo(BigDecimal.ZERO) != 0) {
@@ -147,7 +159,22 @@ public class CorteCajaController {
         registro.setJustificationComment(comentario);
         arqueoDao.registrarArqueo(registro);
 
-        boolean cerrada = corteDao.cerrarCaja(sesionActual.getIdCashSession(), efectivoContado, saldoTeorico, diferencia);
+        // Armamos el cierre con el desglose completo, para que quede guardado en
+        // CashSession y sirva para auditorías y reportes diarios/semanales/mensuales
+        // sin tener que recalcular desde Sale/BookingPayment cada vez.
+        CashSession cierre = new CashSession();
+        cierre.setIdCashSession(sesionActual.getIdCashSession());
+        cierre.setFinalCashAmount(efectivoContado);
+        cierre.setTheoricalAmount(saldoTeorico);
+        cierre.setCashDifference(diferencia);
+        cierre.setCashSalesAmount(ventasEfectivo);
+        cierre.setCashBookingPaymentsAmount(abonosEfectivo);
+        cierre.setTransferSalesAmount(ventasTransferencia);
+        cierre.setTransferSalesCount(cantidadTransferencias);
+        cierre.setBookingsNewAmount(apartadosNuevos);
+        cierre.setBookingsPaymentsAmount(apartadosAbonos);
+
+        boolean cerrada = corteDao.cerrarCaja(cierre);
 
         if (!cerrada) {
             JOptionPane.showMessageDialog(vista, "No se pudo cerrar la caja.", "Error", JOptionPane.ERROR_MESSAGE);

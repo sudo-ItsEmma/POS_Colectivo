@@ -17,6 +17,16 @@ public class CashSession {
     private BigDecimal finalCashAmount;
     private BigDecimal theoricalAmount;
     private BigDecimal cashDifference;
+
+    // Desglose del día, guardado al cerrar (ver CorteDAO.cerrarCaja()) para que
+    // reportes/auditorías puedan sumarlo directo sin recalcular desde Sale/BookingPayment.
+    private BigDecimal cashSalesAmount;
+    private BigDecimal cashBookingPaymentsAmount;
+    private BigDecimal transferSalesAmount;
+    private Integer transferSalesCount;
+    private BigDecimal bookingsNewAmount;
+    private BigDecimal bookingsPaymentsAmount;
+
     private String sessionStatus;
 
     // nombre de quien abrió la caja, para mostrar en UI (no es columna propia, viene de un JOIN)
@@ -87,6 +97,54 @@ public class CashSession {
 
     public void setCashDifference(BigDecimal cashDifference) {
         this.cashDifference = cashDifference;
+    }
+
+    public BigDecimal getCashSalesAmount() {
+        return cashSalesAmount;
+    }
+
+    public void setCashSalesAmount(BigDecimal cashSalesAmount) {
+        this.cashSalesAmount = cashSalesAmount;
+    }
+
+    public BigDecimal getCashBookingPaymentsAmount() {
+        return cashBookingPaymentsAmount;
+    }
+
+    public void setCashBookingPaymentsAmount(BigDecimal cashBookingPaymentsAmount) {
+        this.cashBookingPaymentsAmount = cashBookingPaymentsAmount;
+    }
+
+    public BigDecimal getTransferSalesAmount() {
+        return transferSalesAmount;
+    }
+
+    public void setTransferSalesAmount(BigDecimal transferSalesAmount) {
+        this.transferSalesAmount = transferSalesAmount;
+    }
+
+    public Integer getTransferSalesCount() {
+        return transferSalesCount;
+    }
+
+    public void setTransferSalesCount(Integer transferSalesCount) {
+        this.transferSalesCount = transferSalesCount;
+    }
+
+    public BigDecimal getBookingsNewAmount() {
+        return bookingsNewAmount;
+    }
+
+    public void setBookingsNewAmount(BigDecimal bookingsNewAmount) {
+        this.bookingsNewAmount = bookingsNewAmount;
+    }
+
+    public BigDecimal getBookingsPaymentsAmount() {
+        return bookingsPaymentsAmount;
+    }
+
+    public void setBookingsPaymentsAmount(BigDecimal bookingsPaymentsAmount) {
+        this.bookingsPaymentsAmount = bookingsPaymentsAmount;
     }
 
     public String getSessionStatus() {
