@@ -83,7 +83,7 @@ public class Ventas extends JPanel {
         panelPie.add(lblUsuario, "growx");
 
         btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        btnApartarProductos.setBackground(UIManager.getDefaults().getColor("Button.default.focusColor"));
+        btnApartarProductos.setBackground(UIManager.getDefaults().getColor("Actions.Blue"));
         btnApartarProductos.setForeground(Color.WHITE);
         btnApartarProductos.setFont(new Font("SF Pro Rounded", Font.BOLD, 12));
         btnApartarProductos.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/apartados.svg", 24, 24));

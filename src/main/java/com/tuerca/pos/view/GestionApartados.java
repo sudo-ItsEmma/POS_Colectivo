@@ -1,205 +1,139 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.model.Sesion;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import net.miginfocom.swing.MigLayout;
 
 /**
- *
- * @author mannycalderon
+ * Pantalla de Gestión de Apartados (FN.6). Sin `.form`: layout a mano con
+ * MigLayout, mismo estilo visual que {@link GestionEmprendedores}/
+ * {@link GestionProductos}. Toda la lógica vive en
+ * {@link com.tuerca.pos.controller.ApartadoController}.
  */
-public class GestionApartados extends javax.swing.JPanel {
+public class GestionApartados extends JPanel {
 
-    /**
-     * Creates new form GestionEmprendedores
-     */
+    private final JLabel lblTitulo = new JLabel("Gestión de Apartados");
+    private final JButton btnBack = new JButton("Volver");
+    private final JTextField txtBuscar = new JTextField();
+    private final JComboBox<String> cbEstado = new JComboBox<>(new String[]{"Pendientes", "Liquidados", "Cancelados", "Vencidos"});
+    private final JButton btnNuevoApartado = new JButton("Nuevo Apartado");
+    private final JTable tablaApartados = new JTable();
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+
     public GestionApartados() {
         initComponents();
-        // 1. Esto pone el texto gris que desaparece solo al escribir
         txtBuscar.putClientProperty("JTextField.placeholderText", "Nombre del cliente...");
-
-        // 2. Opcional: Esto agrega una "X" para limpiar el texto rápidamente
         txtBuscar.putClientProperty("JTextField.showClearButton", true);
     }
-    
-    public javax.swing.JTextField getTxtBuscar() {
+
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> btnBackActionPerformed());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
+        txtBuscar.setFont(new Font("SF Pro Rounded", Font.PLAIN, 13));
+
+        cbEstado.putClientProperty("FlatLaf.style", "arc: 20");
+        cbEstado.setFont(new Font("SF Pro Rounded", Font.PLAIN, 16));
+
+        btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnNuevoApartado.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnNuevoApartado.setForeground(Color.WHITE);
+        btnNuevoApartado.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnNuevoApartado.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/new.svg", 36, 36));
+        btnNuevoApartado.addActionListener(e -> btnNuevoApartadoActionPerformed());
+
+        JPanel panelFiltros = new JPanel(new MigLayout("insets 0, fillx", "[grow][240!][240!]"));
+        panelFiltros.add(txtBuscar, "h 40!, growx");
+        panelFiltros.add(cbEstado, "h 40!");
+        panelFiltros.add(btnNuevoApartado, "h 40!");
+        add(panelFiltros, "growx");
+
+        tablaApartados.setFont(new Font("SF Compact Rounded", Font.PLAIN, 13));
+        tablaApartados.setRowHeight(40);
+        tablaApartados.setModel(new DefaultTableModel(
+                new Object[][]{},
+                new String[]{"Folio", "Cliente", "Total Venta", "Anticipo", " Saldo Pendiente", "Vencimiento", "Acciones"}
+        ) {
+            final boolean[] canEdit = {false, false, false, false, false, false, true};
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        });
+        JScrollPane jScrollPane1 = new JScrollPane(tablaApartados);
+        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
+        add(jScrollPane1, "grow");
+
+        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow]"));
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        panelPie.add(lblUsuario, "growx");
+        add(panelPie, "growx");
+    }
+
+    private void btnBackActionPerformed() {
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        }
+    }
+
+    private void btnNuevoApartadoActionPerformed() {
+        java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("ventas");
+        }
+    }
+
+    public JTextField getTxtBuscar() {
         return txtBuscar;
     }
 
-    public javax.swing.JTable getTablaApartados() {
+    public JTable getTablaApartados() {
         return tablaApartados;
     }
 
-    public javax.swing.JComboBox<String> getCbEstado() {
+    public JComboBox<String> getCbEstado() {
         return cbEstado;
     }
 
-    public javax.swing.JButton getBtnBack() {
+    public JButton getBtnBack() {
         return btnBack;
     }
 
-    public javax.swing.JButton getBtnNuevoApartado() {
+    public JButton getBtnNuevoApartado() {
         return btnNuevoApartado;
     }
-    
+
     public DefaultTableModel getTableModel() {
         return (DefaultTableModel) tablaApartados.getModel();
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        txtBuscar = new javax.swing.JTextField();
-        txtBuscar.putClientProperty("FlatLaf.style", "arc: 20");
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
-        tablaApartados = new javax.swing.JTable();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        btnNuevoApartado = new javax.swing.JButton();
-        btnNuevoApartado.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        cbEstado = new javax.swing.JComboBox<>();
-        cbEstado.putClientProperty("FlatLaf.style", "arc: 20");
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Gestión de Apartados");
-
-        tablaApartados.setFont(new java.awt.Font("SF Compact Rounded", 0, 13)); // NOI18N
-        tablaApartados.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Folio", "Cliente", "Total Venta", "Anticipo", " Saldo Pendiente", "Vencimiento", "Acciones"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(tablaApartados);
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        btnNuevoApartado.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnNuevoApartado.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnNuevoApartado.setForeground(new java.awt.Color(255, 255, 255));
-        btnNuevoApartado.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/new.svg", 36, 36));
-        btnNuevoApartado.setText("Nuevo Apartado");
-        btnNuevoApartado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNuevoApartadoActionPerformed(evt);
-            }
-        });
-
-        cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendientes", "Liquidados", "Vencidos" }));
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtBuscar)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(28, 28, 28))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtBuscar)
-                    .addComponent(btnNuevoApartado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbEstado, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(24, 24, 24))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("admin"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnNuevoApartadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoApartadoActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("ventas"); 
-        }
-    }//GEN-LAST:event_btnNuevoApartadoActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnNuevoApartado;
-    private javax.swing.JComboBox<String> cbEstado;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaApartados;
-    private javax.swing.JTextField txtBuscar;
-    // End of variables declaration//GEN-END:variables
+    public void setNombreUsuarioActivo(String texto) {
+        lblUsuario.setText(texto);
+    }
 }

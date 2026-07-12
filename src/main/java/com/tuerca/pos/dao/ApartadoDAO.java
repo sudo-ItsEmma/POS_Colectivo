@@ -17,7 +17,7 @@ import java.util.Calendar;
  */
 public class ApartadoDAO {
     
-    public boolean registrarApartadoCompleto(Apartado apt, List<ApartadoDetail> detalles) {
+    public boolean registrarApartadoCompleto(Apartado apt, List<ApartadoDetail> detalles) throws SQLException {
         String sqlBooking = "INSERT INTO Booking (idUserAccount, customerName, customerPhone, " +
                             "expirationDate, totalAmount, advanceAmount, pendingBalance) " +
                             "VALUES (?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 14 DAY), ?, ?, ?)";
@@ -26,6 +26,10 @@ public class ApartadoDAO {
                            "VALUES (?, ?, ?, ?, ?)";
 
         String sqlPayment = "INSERT INTO BookingPayment (idBooking, paymentAmount) VALUES (?, ?)";
+
+        // Mismo patrón atómico que ya usa liquidarApartadoCompleto(): si no alcanza el stock,
+        // 0 filas afectadas y se lanza la excepción para que se revierta toda la transacción.
+        String sqlUpdateStock = "UPDATE Product SET currentStock = currentStock - ? WHERE idProduct = ? AND currentStock >= ?";
 
         Connection con = null;
         try {
@@ -46,8 +50,10 @@ public class ApartadoDAO {
                     if (rs.next()) {
                         int idGenerado = rs.getInt(1);
 
-                        // 2. Insertar Detalles
-                        try (PreparedStatement psD = con.prepareStatement(sqlDetail)) {
+                        // 2. Insertar Detalles y reservar stock (para que el producto ya no
+                        // aparezca disponible mientras el apartado esté Activo)
+                        try (PreparedStatement psD = con.prepareStatement(sqlDetail);
+                             PreparedStatement psStock = con.prepareStatement(sqlUpdateStock)) {
                             for (ApartadoDetail det : detalles) {
                                 psD.setInt(1, idGenerado);
                                 psD.setInt(2, det.getIdProduct());
@@ -55,6 +61,13 @@ public class ApartadoDAO {
                                 psD.setDouble(4, det.getUnitPrice());
                                 psD.setDouble(5, det.getSubtotalDetail());
                                 psD.executeUpdate();
+
+                                psStock.setInt(1, det.getQuantity());
+                                psStock.setInt(2, det.getIdProduct());
+                                psStock.setInt(3, det.getQuantity());
+                                if (psStock.executeUpdate() == 0) {
+                                    throw new SQLException("Stock insuficiente para el producto con ID: " + det.getIdProduct());
+                                }
                             }
                         }
 
@@ -71,8 +84,7 @@ public class ApartadoDAO {
             return true;
         } catch (SQLException e) {
             if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            System.err.println("Error en transacción de apartado: " + e.getMessage());
-            return false;
+            throw e;
         } finally {
             if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
@@ -214,7 +226,6 @@ public class ApartadoDAO {
     public boolean liquidarApartadoCompleto(int idBooking, int idUsuario, String metodoPago, List<Object[]> detallesProductos) throws SQLException {
         String sqlInsertVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount, saleStatus, idBooking) VALUES (?, ?, ?, 'Activa', ?)";
         String sqlInsertVentaDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail, isSettled) VALUES (?, ?, ?, ?, 0.00, ?, 1)";
-        String sqlUpdateStock = "UPDATE Product SET currentStock = currentStock - ? WHERE idProduct = ? AND currentStock >= ?";
         String sqlUpdateBooking = "UPDATE Booking SET advanceAmount = totalAmount, pendingBalance = 0.00, bookingStatus = 'Liquidado' WHERE idBooking = ?";
         String sqlIdPago = "SELECT idPaymentMethod FROM PaymentMethod WHERE methodName = ?";
         // El pago final (lo que realmente entra en efectivo/transferencia al liquidar, no el
@@ -277,9 +288,10 @@ public class ApartadoDAO {
                 }
             }
 
-            // 4. Procesar cada producto: Insertar detalle y Descontar Stock
-            try (PreparedStatement psVentaDet = con.prepareStatement(sqlInsertVentaDetalle);
-                 PreparedStatement psStock = con.prepareStatement(sqlUpdateStock)) {
+            // 4. Procesar cada producto: Insertar detalle en SaleDetail. El stock NO se toca
+            // aquí — ya se reservó/descontó al crear el apartado (registrarApartadoCompleto()),
+            // descontarlo otra vez al liquidar sería un doble descuento.
+            try (PreparedStatement psVentaDet = con.prepareStatement(sqlInsertVentaDetalle)) {
 
                 for (Object[] prod : detallesProductos) {
                     int cantidad = (int) prod[0];
@@ -297,26 +309,15 @@ public class ApartadoDAO {
                         }
                     }
 
-                    // A) Insertar en SaleDetail
+                    // Insertar en SaleDetail
                     psVentaDet.setInt(1, idVentaGenerada);
                     psVentaDet.setInt(2, idProduct);
                     psVentaDet.setInt(3, cantidad);
                     psVentaDet.setDouble(4, precio);
                     psVentaDet.setDouble(5, subtotal);
                     psVentaDet.addBatch();
-
-                    // B) Actualizar Inventario con validación de stock
-                    psStock.setInt(1, cantidad);
-                    psStock.setInt(2, idProduct);
-                    psStock.setInt(3, cantidad); 
-                    int filasAfectadas = psStock.executeUpdate();
-
-                    if (filasAfectadas == 0) {
-                        // Lanzamos la excepción para cortar el flujo y que el controlador la cachee
-                        throw new SQLException("Stock insuficiente para el producto con código: " + codigo);
-                    }
                 }
-                psVentaDet.executeBatch(); 
+                psVentaDet.executeBatch();
             }
 
             // 5. Actualizar la cabecera del Apartado a 'Liquidado'
@@ -338,6 +339,52 @@ public class ApartadoDAO {
             if (con != null) {
                 try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
+        }
+    }
+
+    // Cancela un apartado Activo y devuelve al inventario el stock que se había reservado
+    // al crearlo (registrarApartadoCompleto()). Solo aplica sobre apartados 'Activo' — un
+    // apartado ya Liquidado o Cancelado no puede cancelarse otra vez.
+    public boolean cancelarApartado(int idBooking) {
+        String sqlDetalles = "SELECT idProduct, quantity FROM BookingDetail WHERE idBooking = ?";
+        String sqlDevolverStock = "UPDATE Product SET currentStock = currentStock + ? WHERE idProduct = ?";
+        String sqlCancelarBooking = "UPDATE Booking SET bookingStatus = 'Cancelado' WHERE idBooking = ? AND bookingStatus = 'Activo'";
+
+        Connection con = null;
+        try {
+            con = DatabaseConnection.getConnection();
+            con.setAutoCommit(false);
+
+            try (PreparedStatement psCancel = con.prepareStatement(sqlCancelarBooking)) {
+                psCancel.setInt(1, idBooking);
+                if (psCancel.executeUpdate() == 0) {
+                    // No había ningún Booking 'Activo' con ese id (ya liquidado/cancelado, o no existe)
+                    con.rollback();
+                    return false;
+                }
+            }
+
+            try (PreparedStatement psDet = con.prepareStatement(sqlDetalles);
+                 PreparedStatement psStock = con.prepareStatement(sqlDevolverStock)) {
+                psDet.setInt(1, idBooking);
+                try (ResultSet rs = psDet.executeQuery()) {
+                    while (rs.next()) {
+                        psStock.setInt(1, rs.getInt("quantity"));
+                        psStock.setInt(2, rs.getInt("idProduct"));
+                        psStock.addBatch();
+                    }
+                }
+                psStock.executeBatch();
+            }
+
+            con.commit();
+            return true;
+        } catch (SQLException e) {
+            if (con != null) try { con.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            System.err.println("Error al cancelar apartado: " + e.getMessage());
+            return false;
+        } finally {
+            if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 }
