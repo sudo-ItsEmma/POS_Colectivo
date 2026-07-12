@@ -148,6 +148,8 @@ public class MainView extends JFrame {
             gestionProductos1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("ventas".equals(viewName)) {
             ventas1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+        } else if ("apartados".equals(viewName)) {
+            gestionApartados1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("arqueo".equals(viewName)) {
             arqueoDeCaja1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
             arqueoCajaController.actualizarDatos();

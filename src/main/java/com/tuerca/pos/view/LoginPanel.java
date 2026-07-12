@@ -43,7 +43,7 @@ public class LoginPanel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new MigLayout("insets 0, fill, gap 0", "[grow 40, fill][grow 60, fill]", "[fill]"));
+        setLayout(new MigLayout("insets 0, fill, gap 0", "[grow 30, fill][grow 70, fill]", "[fill]"));
 
         construirFormulario();
         construirPanelDecorativo();
