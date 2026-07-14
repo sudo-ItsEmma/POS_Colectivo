@@ -2,25 +2,20 @@ package com.tuerca.pos.controller;
 
 import com.tuerca.pos.dao.DevolucionDAO;
 import com.tuerca.pos.dao.EmpleadoDAO;
-import com.tuerca.pos.model.Empleado;
 import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.view.GestionDevoluciones;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.AutorizacionAdminDialog;
 import com.tuerca.pos.view.components.BusquedaConDebounce;
 
-import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -214,7 +209,7 @@ public class DevolucionController {
         if (Sesion.getInstancia().isAdmin()) {
             idUserAccountAutoriza = Sesion.getInstancia().getIdUserAccount();
         } else {
-            Integer idAdmin = solicitarAutorizacionAdmin();
+            Integer idAdmin = AutorizacionAdminDialog.solicitar(vista, empleadoDao);
             if (idAdmin == null) return; // Canceló o las credenciales no eran de un Admin
             idUserAccountAutoriza = idAdmin;
         }
@@ -224,41 +219,6 @@ public class DevolucionController {
             alTerminar.run();
         } else {
             JOptionPane.showMessageDialog(vista, "No se pudo procesar la devolución.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // Pide usuario/contraseña de un Administrador (patrón "autorización de gerente", FN.5).
-    // Devuelve el idUserAccount del Administrador que autorizó, o null si canceló / no era Admin.
-    private Integer solicitarAutorizacionAdmin() {
-        JTextField txtUsuario = new JTextField(15);
-        JPasswordField txtContrasena = new JPasswordField(15);
-
-        JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-        panel.add(new JLabel("Se requiere autorización de un Administrador:"));
-        panel.add(txtUsuario);
-        panel.add(new JLabel("Contraseña:"));
-        panel.add(txtContrasena);
-
-        int resultado = JOptionPane.showConfirmDialog(
-            vista, panel, "Autorización requerida",
-            JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-        );
-        if (resultado != JOptionPane.OK_OPTION) return null;
-
-        String usuario = txtUsuario.getText().trim();
-        char[] contrasena = txtContrasena.getPassword();
-
-        try {
-            Empleado admin = empleadoDao.autenticar(usuario, new String(contrasena));
-            if (admin == null || !"Admin".equalsIgnoreCase(admin.getRoleName())) {
-                JOptionPane.showMessageDialog(vista,
-                    "Credenciales inválidas o el usuario no es Administrador.",
-                    "Autorización denegada", JOptionPane.ERROR_MESSAGE);
-                return null;
-            }
-            return admin.getIdUserAccount();
-        } finally {
-            java.util.Arrays.fill(contrasena, ' ');
         }
     }
 }
