@@ -225,7 +225,10 @@ public class ApartadoDAO {
     
     public boolean liquidarApartadoCompleto(int idBooking, int idUsuario, String metodoPago, List<Object[]> detallesProductos) throws SQLException {
         String sqlInsertVenta = "INSERT INTO Sale (idUserAccount, idPaymentMethod, totalSaleAmount, saleStatus, idBooking) VALUES (?, ?, ?, 'Activa', ?)";
-        String sqlInsertVentaDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail, isSettled) VALUES (?, ?, ?, ?, 0.00, ?, 1)";
+        // isSettled queda en su DEFAULT 0 (pendiente de pago al emprendedor), igual que una
+        // venta normal (VentaDAO.registrarVenta()) — antes se hardcodeaba a 1 aquí, lo que
+        // hacía que el emprendedor nunca cobrara por productos vendidos vía apartado.
+        String sqlInsertVentaDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail) VALUES (?, ?, ?, ?, 0.00, ?)";
         String sqlUpdateBooking = "UPDATE Booking SET advanceAmount = totalAmount, pendingBalance = 0.00, bookingStatus = 'Liquidado' WHERE idBooking = ?";
         String sqlIdPago = "SELECT idPaymentMethod FROM PaymentMethod WHERE methodName = ?";
         // El pago final (lo que realmente entra en efectivo/transferencia al liquidar, no el

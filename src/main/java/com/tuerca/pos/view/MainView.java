@@ -10,6 +10,7 @@ import com.tuerca.pos.controller.EmpleadoController;
 import com.tuerca.pos.controller.EmployeeDashboardController;
 import com.tuerca.pos.controller.EmprendedorController;
 import com.tuerca.pos.controller.LoginController;
+import com.tuerca.pos.controller.PagoEmprendedoresController;
 import com.tuerca.pos.controller.ProductoController;
 import com.tuerca.pos.controller.VentaController;
 import com.tuerca.pos.model.Sesion;
@@ -59,6 +60,7 @@ public class MainView extends JFrame {
     private VentaController ventaController;
     private ApartadoController apartadoController;
     private DevolucionController devolucionController;
+    private PagoEmprendedoresController pagoEmprendedoresController;
 
     public MainView() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -137,6 +139,11 @@ public class MainView extends JFrame {
                 this
         );
 
+        pagoEmprendedoresController = new PagoEmprendedoresController(
+                pagoEmprendedores1,
+                this
+        );
+
         showView("login");
     }
 
@@ -159,6 +166,8 @@ public class MainView extends JFrame {
             gestionApartados1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("devoluciones".equals(viewName)) {
             gestionDevoluciones1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+        } else if ("pagoEmprendedores".equals(viewName)) {
+            pagoEmprendedores1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("arqueo".equals(viewName)) {
             arqueoDeCaja1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
             arqueoCajaController.actualizarDatos();
