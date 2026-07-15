@@ -7,7 +7,9 @@ import com.tuerca.pos.dao.SettlementDAO;
 import com.tuerca.pos.model.Emprendedor;
 import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.model.Settlement;
-import com.tuerca.pos.pdf.ReciboPagoPDF;
+import com.tuerca.pos.pdf.ReporteVentasPDF;
+import com.tuerca.pos.pdf.dto.LineaReporteVenta;
+import com.tuerca.pos.pdf.dto.ReporteEstadoVentas;
 import com.tuerca.pos.view.MainView;
 import com.tuerca.pos.view.PagoEmprendedores;
 import com.tuerca.pos.view.components.AutorizacionAdminDialog;
@@ -231,7 +233,7 @@ public class PagoEmprendedoresController {
 
             // Se consulta por idSettlement (no por la selección en pantalla): es la fuente de
             // verdad de qué líneas quedaron marcadas exactamente por este pago.
-            List<Object[]> detallesProductos = settlementDao.obtenerDetallesDelPago(settlement.getIdSettlement());
+            List<LineaReporteVenta> detallesProductos = settlementDao.obtenerDetallesDelPago(settlement.getIdSettlement());
             generarComprobantePDF(emp, settlement, detallesProductos);
 
             calcular(); // refresca: los tickets ya pagados no deberían volver a aparecer
@@ -243,7 +245,7 @@ public class PagoEmprendedoresController {
     // Comprobante de pago en PDF para entregarle al emprendedor (fechas, productos incluidos,
     // desglose y total neto). Es opcional — el pago ya quedó registrado aunque el usuario
     // cancele el diálogo de guardado.
-    private void generarComprobantePDF(Emprendedor emp, Settlement settlement, List<Object[]> detallesProductos) {
+    private void generarComprobantePDF(Emprendedor emp, Settlement settlement, List<LineaReporteVenta> detallesProductos) {
         int confirmar = JOptionPane.showConfirmDialog(
             vista,
             "¿Deseas generar el comprobante en PDF para entregárselo al emprendedor?",
@@ -254,7 +256,7 @@ public class PagoEmprendedoresController {
         JFileChooser selector = new JFileChooser();
         selector.setDialogTitle("Guardar comprobante de pago");
         selector.setFileFilter(new FileNameExtensionFilter("Documento PDF (.pdf)", "pdf"));
-        selector.setSelectedFile(new File(ReciboPagoPDF.nombreSugerido(emp.getMarca())));
+        selector.setSelectedFile(new File(ReporteVentasPDF.nombreSugerido("Liquidacion", emp.getMarca())));
 
         if (selector.showSaveDialog(vista) != JFileChooser.APPROVE_OPTION) return;
 
@@ -263,10 +265,17 @@ public class PagoEmprendedoresController {
             destino = new File(destino.getParentFile(), destino.getName() + ".pdf");
         }
 
+        // Ya se registró el pago justo antes de llegar aquí, así que si esta liquidación
+        // incluyó renta, la consulta ya la encuentra (es la fuente de verdad, no se asume).
+        java.sql.Date fechaUltimaRenta = settlementDao.obtenerFechaUltimaRentaCobradaEsteMes(emp.getId());
+        ReporteEstadoVentas datos = new ReporteEstadoVentas(
+                emp.getMarca(), settlement.getPeriodStartDate(), settlement.getPeriodEndDate(), detallesProductos,
+                settlement.getGrossAmount(), settlement.getTotalDiscounts(), settlement.getRentDiscount(),
+                settlement.getNetAmountPaid(), Sesion.getInstancia().getNombreCompleto(),
+                fechaUltimaRenta != null, fechaUltimaRenta);
+
         try {
-            ReciboPagoPDF.generar(destino, emp.getMarca(), settlement.getPeriodStartDate(), settlement.getPeriodEndDate(),
-                    detallesProductos, settlement.getGrossAmount(), settlement.getTotalDiscounts(),
-                    settlement.getRentDiscount(), settlement.getNetAmountPaid(), Sesion.getInstancia().getNombreCompleto());
+            ReporteVentasPDF.generar(destino, "Comprobante de Pago a Emprendedor", datos);
             JOptionPane.showMessageDialog(vista, "Comprobante guardado en:\n" + destino.getAbsolutePath());
         } catch (DocumentException | IOException e) {
             JOptionPane.showMessageDialog(vista,
