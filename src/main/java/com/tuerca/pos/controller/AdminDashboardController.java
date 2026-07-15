@@ -8,10 +8,9 @@ import com.tuerca.pos.view.MainView;
  * el patrón anterior de {@code .form} donde cada botón buscaba el
  * {@code MainView} en tiempo de ejecución vía {@code getWindowAncestor}.
  *
- * Nota: igual que en el {@code .form} original, no todos los botones tienen
- * listener todavía — Reportes es el único módulo "sin iniciar" que queda
- * (ver ESTADO_PROYECTO.md). Arqueo de Caja (Paso 4), Corte de Caja (Paso 5),
- * Devolución (Paso 8) y Pago Emprendedores (Paso 9) ya se conectaron.
+ * Todos los botones del dashboard ya están conectados a su paso
+ * correspondiente del roadmap (Arqueo de Caja, Corte de Caja, Devolución,
+ * Pago Emprendedores, Reportes).
  */
 public class AdminDashboardController {
 
@@ -25,6 +24,7 @@ public class AdminDashboardController {
         vista.getBtnCorteCaja().addActionListener(e -> mainView.showView("corte"));
         vista.getBtnDevolucion().addActionListener(e -> mainView.showView("devoluciones"));
         vista.getBtnPagoEmprendedores().addActionListener(e -> mainView.showView("pagoEmprendedores"));
+        vista.getBtnReportes().addActionListener(e -> mainView.showView("reportes"));
         vista.getBtnCerrarSesion().addActionListener(e -> mainView.cerrarSesion());
     }
 }

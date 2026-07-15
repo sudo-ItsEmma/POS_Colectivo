@@ -1,6 +1,7 @@
 package com.tuerca.pos.dao;
 
 import com.tuerca.pos.model.Settlement;
+import com.tuerca.pos.pdf.dto.LineaReporteVenta;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -182,37 +183,79 @@ public class SettlementDAO {
     // Detalle producto por producto de un pago ya registrado (para el comprobante en PDF).
     // Se consulta por idSettlement en vez de repetir el filtro de tickets/emprendedor: es la
     // fuente de verdad de qué líneas quedaron marcadas por ESTE pago exactamente.
-    public List<Object[]> obtenerDetallesDelPago(int idSettlement) {
-        List<Object[]> lista = new ArrayList<>();
+    public List<LineaReporteVenta> obtenerDetallesDelPago(int idSettlement) {
         String sql = "SELECT sd.idSale, s.saleDateTime, p.fullProductCode, p.productDescription, " +
-                     "sd.quantitySold, sd.unitPriceAtSale, sd.discountApplied, sd.subtotalDetail " +
+                     "sd.quantitySold, sd.unitPriceAtSale, sd.discountApplied, sd.subtotalDetail, sd.isSettled " +
                      "FROM SaleDetail sd " +
                      "JOIN Sale s ON sd.idSale = s.idSale " +
                      "JOIN Product p ON sd.idProduct = p.idProduct " +
                      "WHERE sd.idSettlement = ? " +
                      "ORDER BY sd.idSale, sd.idSaleDetail";
 
+        return ejecutarConsultaDeLineas(sql, idSettlement);
+    }
+
+    // Estado de ventas de un periodo libre (FN.10): TODAS las ventas del emprendedor en el
+    // rango, pagadas o no (decisión confirmada con el usuario) — sigue excluyendo las líneas
+    // devueltas, igual que el resto de los cálculos de este DAO.
+    public List<LineaReporteVenta> obtenerDetalleVentasDelPeriodo(int idEntrepreneur, Date fechaInicio, Date fechaFin) {
+        String sql = "SELECT sd.idSale, s.saleDateTime, p.fullProductCode, p.productDescription, " +
+                     "sd.quantitySold, sd.unitPriceAtSale, sd.discountApplied, sd.subtotalDetail, sd.isSettled " +
+                     "FROM SaleDetail sd " +
+                     "JOIN Sale s ON sd.idSale = s.idSale " +
+                     "JOIN Product p ON sd.idProduct = p.idProduct " +
+                     "LEFT JOIN ProductReturn pr ON pr.idSaleDetail = sd.idSaleDetail " +
+                     "WHERE p.idEntrepreneur = ? AND pr.idReturn IS NULL " +
+                     "AND DATE(s.saleDateTime) BETWEEN ? AND ? " +
+                     "ORDER BY s.saleDateTime, sd.idSaleDetail";
+
+        List<LineaReporteVenta> lista = new ArrayList<>();
         try (Connection con = DatabaseConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, idSettlement);
+            ps.setInt(1, idEntrepreneur);
+            ps.setDate(2, fechaInicio);
+            ps.setDate(3, fechaFin);
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    lista.add(new Object[]{
-                        rs.getInt("idSale"),
-                        rs.getTimestamp("saleDateTime"),
-                        rs.getString("fullProductCode"),
-                        rs.getString("productDescription"),
-                        rs.getInt("quantitySold"),
-                        rs.getDouble("unitPriceAtSale"),
-                        rs.getDouble("discountApplied"),
-                        rs.getDouble("subtotalDetail")
-                    });
+                    lista.add(mapearLinea(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener el detalle de ventas del periodo: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    private List<LineaReporteVenta> ejecutarConsultaDeLineas(String sql, int parametro) {
+        List<LineaReporteVenta> lista = new ArrayList<>();
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, parametro);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(mapearLinea(rs));
                 }
             }
         } catch (SQLException e) {
             System.err.println("Error al obtener el detalle del pago: " + e.getMessage());
         }
         return lista;
+    }
+
+    private LineaReporteVenta mapearLinea(ResultSet rs) throws SQLException {
+        return new LineaReporteVenta(
+                rs.getInt("idSale"),
+                rs.getTimestamp("saleDateTime"),
+                rs.getString("fullProductCode"),
+                rs.getString("productDescription"),
+                rs.getInt("quantitySold"),
+                rs.getDouble("unitPriceAtSale"),
+                rs.getDouble("discountApplied"),
+                rs.getDouble("subtotalDetail"),
+                rs.getBoolean("isSettled")
+        );
     }
 }
