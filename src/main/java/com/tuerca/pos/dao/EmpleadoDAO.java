@@ -165,7 +165,7 @@ public class EmpleadoDAO {
     public List<Empleado> listar() {
         List<Empleado> lista = new ArrayList<>();
         // JOIN para traer el nombre del rol basado en el idRole de la cuenta
-        String sql = "SELECT e.*, r.roleName FROM Employee e " +
+        String sql = "SELECT e.*, r.roleName, u.usernameAccount FROM Employee e " +
                      "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
                      "JOIN Role r ON u.idRole = r.idRole " +
                      "WHERE e.isEmployeeActive = 1";
@@ -181,8 +181,9 @@ public class EmpleadoDAO {
                 emp.setPaterno(rs.getString("lastNameEmployee"));
                 emp.setMaterno(rs.getString("secondLastNameEmployee"));
                 emp.setTelefono(rs.getString("phoneEmployee"));
+                emp.setUsername(rs.getString("usernameAccount"));
                 // Usamos un campo temporal o el objeto para el nombre del rol
-                emp.setRoleName(rs.getString("roleName")); 
+                emp.setRoleName(rs.getString("roleName"));
                 lista.add(emp);
             }
         } catch (SQLException e) {
@@ -241,7 +242,7 @@ public class EmpleadoDAO {
     
     // función para obtener el empleado que vamos a editar
     public Empleado buscarPorId(int id) {
-        String sql = "SELECT e.*, u.idRole, r.roleName FROM Employee e " +
+        String sql = "SELECT e.*, u.idRole, u.usernameAccount, r.roleName FROM Employee e " +
                      "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
                      "JOIN Role r ON u.idRole = r.idRole " +
                      "WHERE e.idEmployee = ?";
@@ -258,6 +259,7 @@ public class EmpleadoDAO {
                 emp.setPaterno(rs.getString("lastNameEmployee"));
                 emp.setMaterno(rs.getString("secondLastNameEmployee"));
                 emp.setTelefono(rs.getString("phoneEmployee"));
+                emp.setUsername(rs.getString("usernameAccount"));
                 emp.setRoleName(rs.getString("roleName"));
                 return emp;
             }
@@ -330,7 +332,7 @@ public class EmpleadoDAO {
         int estado = verInactivos ? 0 : 1;
 
         StringBuilder sql = new StringBuilder(
-            "SELECT e.*, r.roleName " +
+            "SELECT e.*, r.roleName, ua.usernameAccount " +
             "FROM Employee e " +
             "JOIN UserAccount ua ON e.idEmployee = ua.idEmployee " + // Primer salto
             "JOIN Role r ON ua.idRole = r.idRole " +                // Segundo salto
@@ -359,6 +361,7 @@ public class EmpleadoDAO {
                 emp.setPaterno(rs.getString("lastNameEmployee"));
                 emp.setMaterno(rs.getString("secondLastNameEmployee"));
                 emp.setTelefono(rs.getString("phoneEmployee"));
+                emp.setUsername(rs.getString("usernameAccount"));
                 emp.setRoleName(rs.getString("roleName"));
                 lista.add(emp);
             }

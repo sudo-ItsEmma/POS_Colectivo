@@ -165,6 +165,8 @@ public class MainView extends JFrame {
             adminPanel2.setNombreUsuarioActivo(textoUsuarioActivo());
         } else if ("entrepreneur".equals(viewName)) {
             gestionEmprendedores1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
+        } else if ("empleados".equals(viewName)) {
+            gestionEmpleados1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("products".equals(viewName)) {
             gestionProductos1.setNombreUsuarioActivo("Usuario: " + Sesion.getInstancia().getNombreCompleto());
         } else if ("ventas".equals(viewName)) {
