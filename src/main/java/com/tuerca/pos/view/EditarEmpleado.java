@@ -1,282 +1,175 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.tuerca.pos.view;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.Color;
+import java.awt.Font;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import net.miginfocom.swing.MigLayout;
 
 /**
+ * Formulario "Editar Empleado". Sin `.form`: layout a mano con MigLayout,
+ * mismo estilo visual que {@link EditarProducto}/{@link EditarEmprendimiento}.
+ * Los getters devuelven {@code String} (antes devolvían el {@code JTextField})
+ * para ser consistentes con {@link NuevoEmpleado} y con el resto de pantallas
+ * ya migradas — ver {@code prepararEdicion}/{@code actualizarEmpleado} en
+ * {@link com.tuerca.pos.controller.EmpleadoController}.
  *
- * @author mannycalderon
+ * El username es de solo lectura una vez creado (decisión confirmada del
+ * Paso 14): se muestra como {@link JLabel}, no como campo editable.
  */
-public class EditarEmpleado extends javax.swing.JPanel {
+public class EditarEmpleado extends JPanel {
 
-    /**
-     * Creates new form GestionEmprendedores
-     */
+    private final JLabel lblTitulo = new JLabel("Editar empleado");
+    private final JButton btnBack = new JButton("Volver");
+    private final JLabel lblUsuario = new JLabel("Usuario: ");
+
+    private final JTextField nombreField = new JTextField();
+    private final JTextField paternoField = new JTextField();
+    private final JTextField maternoField = new JTextField();
+    private final JTextField numeroField = new JTextField();
+    private final JComboBox<String> rolComboBox = new JComboBox<>(new String[]{"Administrador", "Vendedor"});
+    private final JLabel lblUsuarioAsignado = new JLabel("Usuario asignado: —");
+
+    private final JButton btnActualizar = new JButton("Actualizar");
+    private final JButton btnCancelar = new JButton("Cancelar");
+
     public EditarEmpleado() {
         initComponents();
+
         nombreField.putClientProperty("JTextField.placeholderText", "Introduce el nombre");
         nombreField.putClientProperty("JTextField.showClearButton", true);
-        
+
         paternoField.putClientProperty("JTextField.placeholderText", "Introduce el apellido paterno");
         paternoField.putClientProperty("JTextField.showClearButton", true);
-        
+
         maternoField.putClientProperty("JTextField.placeholderText", "Introduce el apellido materno");
         maternoField.putClientProperty("JTextField.showClearButton", true);
-        
-        numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 digitos");
+
+        numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 dígitos");
         numeroField.putClientProperty("JTextField.showClearButton", true);
     }
-    
-    // Hacemos publicos los datos
-    public javax.swing.JTextField getNombreField() { return nombreField; }
-    public javax.swing.JTextField getPaternoField() { return paternoField; }
-    public javax.swing.JTextField getMaternoField() { return maternoField; }
-    public javax.swing.JTextField getNumeroField() { return numeroField; }
-    public javax.swing.JComboBox<String> getRolComboBox() { return rolComboBox; }
 
-    // Exponemos el boton de registro
+    private void initComponents() {
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][grow][]"));
+
+        lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
+        btnBack.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
+        btnBack.addActionListener(e -> volver());
+
+        JPanel panelSuperior = new JPanel(new MigLayout("insets 0, fillx", "[][grow][]"));
+        panelSuperior.add(btnBack);
+        panelSuperior.add(lblTitulo, "growx, align center");
+        add(panelSuperior, "growx");
+
+        JPanel formulario = new JPanel(new MigLayout("insets 20 60 20 60, fill, wrap 2", "[grow][grow]"));
+        formulario.putClientProperty("FlatLaf.style", "arc: 20");
+        formulario.setBorder(BorderFactory.createTitledBorder(
+                null, "Datos Personales", TitledBorder.CENTER, TitledBorder.DEFAULT_POSITION,
+                new Font("SF Pro Rounded", Font.BOLD, 18)));
+
+        Font lblFont = new Font("SF Pro Rounded", Font.BOLD, 14);
+        Font fieldFont = new Font("SF Pro Rounded", Font.PLAIN, 18);
+
+        nombreField.putClientProperty("FlatLaf.style", "arc: 20");
+        paternoField.putClientProperty("FlatLaf.style", "arc: 20");
+        maternoField.putClientProperty("FlatLaf.style", "arc: 20");
+        numeroField.putClientProperty("FlatLaf.style", "arc: 20");
+        rolComboBox.putClientProperty("FlatLaf.style", "arc: 20");
+
+        for (JTextField f : new JTextField[]{nombreField, paternoField, maternoField, numeroField}) {
+            f.setFont(fieldFont);
+        }
+        rolComboBox.setFont(fieldFont);
+        lblUsuarioAsignado.setFont(fieldFont);
+
+        JLabel lbl1 = new JLabel("Nombre:");
+        lbl1.setFont(lblFont);
+        JLabel lbl2 = new JLabel("Apellido Paterno:");
+        lbl2.setFont(lblFont);
+        JLabel lbl3 = new JLabel("Apellido Materno:");
+        lbl3.setFont(lblFont);
+        JLabel lbl4 = new JLabel("Número de teléfono:");
+        lbl4.setFont(lblFont);
+        JLabel lbl5 = new JLabel("Rol:");
+        lbl5.setFont(lblFont);
+
+        formulario.add(lbl1, "span 2");
+        formulario.add(nombreField, "span 2, growx, h 30!");
+        formulario.add(lbl2, "span 2");
+        formulario.add(paternoField, "span 2, growx, h 30!");
+        formulario.add(lbl3, "span 2");
+        formulario.add(maternoField, "span 2, growx, h 30!");
+        formulario.add(lbl4, "span 2");
+        formulario.add(numeroField, "span 2, growx, h 30!");
+        formulario.add(lbl5, "span 2");
+        formulario.add(rolComboBox, "span 2, growx, h 30!");
+        // Solo lectura: el username no se puede modificar una vez creado (decisión
+        // confirmada del Paso 14, evita romper sesiones activas con ese username).
+        formulario.add(lblUsuarioAsignado, "span 2, gaptop 10");
+
+        btnActualizar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnActualizar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
+        btnActualizar.setForeground(Color.WHITE);
+        btnActualizar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnActualizar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
+
+        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
+        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
+        btnCancelar.setForeground(Color.WHITE);
+        btnCancelar.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
+        btnCancelar.setIcon(new FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
+        btnCancelar.addActionListener(e -> volver());
+
+        formulario.add(btnCancelar, "split 2, span 2, growx, h 40!");
+        formulario.add(btnActualizar, "growx, h 40!");
+
+        add(formulario, "grow");
+
+        lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        add(lblUsuario, "growx");
+    }
+
+    private void volver() {
+        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
+        if (window instanceof MainView main) {
+            main.showView("empleados");
+        }
+    }
+
+    // Exponemos los datos (String, consistente con NuevoEmpleado)
+    public String getNombreField() { return nombreField.getText().trim(); }
+    public String getPaternoField() { return paternoField.getText().trim(); }
+    public String getMaternoField() { return maternoField.getText().trim(); }
+    public String getNumeroField() { return numeroField.getText().trim(); }
+    public JComboBox<String> getRolComboBox() { return rolComboBox; }
+
+    public void setNombreField(String texto) { nombreField.setText(texto); }
+    public void setPaternoField(String texto) { paternoField.setText(texto); }
+    public void setMaternoField(String texto) { maternoField.setText(texto); }
+    public void setNumeroField(String texto) { numeroField.setText(texto); }
+    public void setUsuarioAsignado(String username) { lblUsuarioAsignado.setText("Usuario asignado: " + username); }
+
     public JButton getBtnActualizar() { return btnActualizar; }
-    public JButton getBtnCancelar() { return btnCancelar;}
-    public JButton getBtnBack() { return btnBack;}
-    
-    // limpiar el formulario
-    public void limpiarFormulario(){
+    public JButton getBtnCancelar() { return btnCancelar; }
+    public JButton getBtnBack() { return btnBack; }
+
+    public void limpiarFormulario() {
         nombreField.setText("");
         paternoField.setText("");
         maternoField.setText("");
         numeroField.setText("");
-        rolComboBox.setSelectedIndex(0); // Regresa al primer rol (Admin)
+        rolComboBox.setSelectedIndex(0);
+        lblUsuarioAsignado.setText("Usuario asignado: —");
         nombreField.requestFocus();
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel5 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        btnBack = new javax.swing.JButton();
-        btnBack.putClientProperty("FlatLaf.style", "arc: 13; iconTextGap: 10; focusWidth: 0");
-        formularioRegistro = new javax.swing.JPanel();
-        formularioRegistro.putClientProperty("FlatLaf.style", "arc: 20");
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        nombreField = new javax.swing.JTextField();
-        nombreField.putClientProperty("FlatLaf.style", "arc: 20");
-        paternoField = new javax.swing.JTextField();
-        paternoField.putClientProperty("FlatLaf.style", "arc: 20");
-        maternoField = new javax.swing.JTextField();
-        maternoField.putClientProperty("FlatLaf.style", "arc: 20");
-        numeroField = new javax.swing.JTextField();
-        numeroField.putClientProperty("FlatLaf.style", "arc: 20");
-        btnActualizar = new javax.swing.JButton();
-        btnActualizar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-        rolComboBox = new javax.swing.JComboBox<>();
-        rolComboBox.putClientProperty("FlatLaf.style", "arc: 20");
-        btnCancelar = new javax.swing.JButton();
-        btnCancelar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
-
-        jLabel5.setFont(new java.awt.Font("SF Pro Rounded", 1, 28)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Editar empleado");
-
-        jLabel3.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel3.setText("Usuario: ");
-
-        btnBack.setBackground(java.awt.Color.pink);
-        btnBack.setFont(new java.awt.Font("SF Pro Rounded", 0, 13)); // NOI18N
-        btnBack.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/back.svg", 24, 24));
-        btnBack.setText("Volver");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBackActionPerformed(evt);
-            }
-        });
-
-        formularioRegistro.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos Personales", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SF Pro Rounded", 1, 18))); // NOI18N
-
-        jLabel1.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel1.setText("Nombre:");
-
-        jLabel2.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel2.setText("Apellido Paterno:");
-
-        jLabel4.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel4.setText("Apellido Materno:");
-
-        jLabel6.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel6.setText("Número de teléfono:");
-
-        jLabel7.setFont(new java.awt.Font("SF Pro Rounded", 1, 14)); // NOI18N
-        jLabel7.setText("Rol:");
-
-        nombreField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        paternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        maternoField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        numeroField.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-
-        btnActualizar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
-        btnActualizar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnActualizar.setForeground(new java.awt.Color(255, 255, 255));
-        btnActualizar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/check.svg", 24, 24));
-        btnActualizar.setText("Actualizar");
-
-        rolComboBox.setFont(new java.awt.Font("SF Pro Rounded", 0, 18)); // NOI18N
-        rolComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Vendedor" }));
-
-        btnCancelar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Red"));
-        btnCancelar.setFont(new java.awt.Font("SF Pro Rounded", 1, 18)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCancelar.setIcon(new com.formdev.flatlaf.extras.FlatSVGIcon("com/tuerca/pos/icons/cancel.svg", 24, 24));
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout formularioRegistroLayout = new javax.swing.GroupLayout(formularioRegistro);
-        formularioRegistro.setLayout(formularioRegistroLayout);
-        formularioRegistroLayout.setHorizontalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(nombreField)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(paternoField)
-                    .addComponent(maternoField)
-                    .addComponent(numeroField)
-                    .addComponent(rolComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(formularioRegistroLayout.createSequentialGroup()
-                        .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        formularioRegistroLayout.setVerticalGroup(
-            formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(formularioRegistroLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(paternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(maternoField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numeroField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rolComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
-                .addGroup(formularioRegistroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnActualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnBack)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 1164, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(307, 307, 307)
-                .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(263, 263, 263))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack))
-                .addGap(18, 18, 18)
-                .addComponent(formularioRegistro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3)
-                .addGap(25, 25, 25))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("empleados"); 
-        }
-    }//GEN-LAST:event_btnBackActionPerformed
-
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        // TODO add your handling code here:
-        // Buscamos la ventana principal
-        java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-        if (window instanceof com.tuerca.pos.view.MainView main) {
-            // Regresamos al panel del empleado (el dashboard de los 9 botones)
-            main.showView("empleados"); 
-        }
-    }//GEN-LAST:event_btnCancelarActionPerformed
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnActualizar;
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JPanel formularioRegistro;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField maternoField;
-    private javax.swing.JTextField nombreField;
-    private javax.swing.JTextField numeroField;
-    private javax.swing.JTextField paternoField;
-    private javax.swing.JComboBox<String> rolComboBox;
-    // End of variables declaration//GEN-END:variables
 }
