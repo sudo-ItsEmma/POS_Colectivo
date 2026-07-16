@@ -26,6 +26,8 @@ public class CashSession {
     private Integer transferSalesCount;
     private BigDecimal bookingsNewAmount;
     private BigDecimal bookingsPaymentsAmount;
+    private BigDecimal bookingsNewAmountTransfer;
+    private BigDecimal bookingsPaymentsAmountTransfer;
 
     private String sessionStatus;
 
@@ -145,6 +147,22 @@ public class CashSession {
 
     public void setBookingsPaymentsAmount(BigDecimal bookingsPaymentsAmount) {
         this.bookingsPaymentsAmount = bookingsPaymentsAmount;
+    }
+
+    public BigDecimal getBookingsNewAmountTransfer() {
+        return bookingsNewAmountTransfer;
+    }
+
+    public void setBookingsNewAmountTransfer(BigDecimal bookingsNewAmountTransfer) {
+        this.bookingsNewAmountTransfer = bookingsNewAmountTransfer;
+    }
+
+    public BigDecimal getBookingsPaymentsAmountTransfer() {
+        return bookingsPaymentsAmountTransfer;
+    }
+
+    public void setBookingsPaymentsAmountTransfer(BigDecimal bookingsPaymentsAmountTransfer) {
+        this.bookingsPaymentsAmountTransfer = bookingsPaymentsAmountTransfer;
     }
 
     public String getSessionStatus() {

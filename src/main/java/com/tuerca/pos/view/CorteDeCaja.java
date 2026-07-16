@@ -27,15 +27,17 @@ public class CorteDeCaja extends JPanel {
     private final JButton btnFinalizarJornada = new JButton("Finalizar Jornada");
 
     private final JLabel lblVentasEfectivo = new JLabel("Ventas en efectivo: $0.00");
-    private final JLabel lblAbonosEfectivo = new JLabel("Abonos en efectivo: $0.00");
+    private final JLabel lblAbonosEfectivo = new JLabel("Abonos de apartados en efectivo: $0.00");
     private final JLabel lblFondoInicial = new JLabel("Fondo inicial: $0.00");
     private final JLabel lblTotalEfectivo = new JLabel("Total efectivo: $0.00");
 
     private final JLabel lblVentasTransferencia = new JLabel("Ventas por transferencia: $0.00");
     private final JLabel lblCantidadTransferencias = new JLabel("Cantidad de transacciones: 0");
 
-    private final JLabel lblApartadosNuevos = new JLabel("Nuevos: $0.00");
-    private final JLabel lblApartadosAbonos = new JLabel("Abonos: $0.00");
+    private final JLabel lblApartadosNuevosEfectivo = new JLabel("Nuevos (Efectivo): $0.00");
+    private final JLabel lblApartadosNuevosTransferencia = new JLabel("Nuevos (Transferencia): $0.00");
+    private final JLabel lblApartadosAbonosEfectivo = new JLabel("Abonos (Efectivo): $0.00");
+    private final JLabel lblApartadosAbonosTransferencia = new JLabel("Abonos (Transferencia): $0.00");
     private final JLabel lblApartadosTotal = new JLabel("Total apartados: $0.00");
 
     private final JLabel lblDebeHaberEnCaja = new JLabel("Debes tener en caja: $0.00");
@@ -66,7 +68,8 @@ public class CorteDeCaja extends JPanel {
         panelCuadrantes.add(construirCuadrante("Resumen de Transferencias",
                 lblVentasTransferencia, lblCantidadTransferencias));
         panelCuadrantes.add(construirCuadrante("Resumen de Apartados",
-                lblApartadosNuevos, lblApartadosAbonos, lblApartadosTotal));
+                lblApartadosNuevosEfectivo, lblApartadosNuevosTransferencia,
+                lblApartadosAbonosEfectivo, lblApartadosAbonosTransferencia, lblApartadosTotal));
         JPanel panelTotalDia = construirCuadrante("Total del Día",
                 lblDebeHaberEnCaja, lblEfectivoContado, lblMontoARetirar);
         lblDebeHaberEnCaja.setFont(new Font("SF Pro Rounded", Font.BOLD, 18));
@@ -120,7 +123,7 @@ public class CorteDeCaja extends JPanel {
     }
 
     public void setAbonosEfectivo(String texto) {
-        lblAbonosEfectivo.setText("Abonos en efectivo: " + texto);
+        lblAbonosEfectivo.setText("Abonos de apartados en efectivo: " + texto);
     }
 
     public void setFondoInicial(String texto) {
@@ -139,12 +142,20 @@ public class CorteDeCaja extends JPanel {
         lblCantidadTransferencias.setText("Cantidad de transacciones: " + cantidad);
     }
 
-    public void setApartadosNuevos(String texto) {
-        lblApartadosNuevos.setText("Nuevos: " + texto);
+    public void setApartadosNuevosEfectivo(String texto) {
+        lblApartadosNuevosEfectivo.setText("Nuevos (Efectivo): " + texto);
     }
 
-    public void setApartadosAbonos(String texto) {
-        lblApartadosAbonos.setText("Abonos: " + texto);
+    public void setApartadosNuevosTransferencia(String texto) {
+        lblApartadosNuevosTransferencia.setText("Nuevos (Transferencia): " + texto);
+    }
+
+    public void setApartadosAbonosEfectivo(String texto) {
+        lblApartadosAbonosEfectivo.setText("Abonos (Efectivo): " + texto);
+    }
+
+    public void setApartadosAbonosTransferencia(String texto) {
+        lblApartadosAbonosTransferencia.setText("Abonos (Transferencia): " + texto);
     }
 
     public void setApartadosTotal(String texto) {

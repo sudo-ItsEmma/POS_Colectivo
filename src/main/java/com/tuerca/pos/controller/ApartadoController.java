@@ -16,6 +16,8 @@ import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
 import java.awt.Component;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +73,8 @@ public class ApartadoController {
             return;
         }
 
-        double totalCarrito = calcularTotal();
-        double sugerido = totalCarrito * 0.10;
+        BigDecimal totalCarrito = calcularTotal();
+        BigDecimal sugerido = totalCarrito.multiply(new BigDecimal("0.10")).setScale(2, RoundingMode.HALF_UP);
 
         // 2. Recopilación unificada de datos del cliente
         JTextField txtNombre = new JTextField(20);
@@ -118,9 +120,9 @@ public class ApartadoController {
         if (montoStr == null) return;
         
         try {
-            double abonoInput = Double.parseDouble(montoStr);
+            BigDecimal abonoInput = new BigDecimal(montoStr);
 
-            if (abonoInput <= 0 || abonoInput > totalCarrito) {
+            if (abonoInput.compareTo(BigDecimal.ZERO) <= 0 || abonoInput.compareTo(totalCarrito) > 0) {
                 JOptionPane.showMessageDialog(vista, "Monto de abono inválido.");
                 return;
             }
@@ -132,21 +134,21 @@ public class ApartadoController {
             apt.setCustomerPhone(telefono);
             apt.setTotalAmount(totalCarrito);
             apt.setAdvanceAmount(abonoInput);
-            apt.setPendingBalance(totalCarrito - abonoInput);
+            apt.setPendingBalance(totalCarrito.subtract(abonoInput));
             apt.setBookingStatus("Activo");
 
             // 5. Creación del Detalle (List<ApartadoDetail>)
             List<ApartadoDetail> listaDetalles = new ArrayList<>();
-            
+
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 ApartadoDetail det = new ApartadoDetail();
                 String codigo = modelo.getValueAt(i, COL_CODIGO).toString();
-                
+
                 det.setIdProduct(productoDao.obtenerIdPorCodigo(codigo));
                 det.setQuantity(Integer.parseInt(modelo.getValueAt(i, COL_CANTIDAD).toString()));
-                det.setUnitPrice(Double.parseDouble(modelo.getValueAt(i, COL_PRECIO).toString()));
-                det.setSubtotalDetail(Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
-                
+                det.setUnitPrice(new BigDecimal(modelo.getValueAt(i, COL_PRECIO).toString()));
+                det.setSubtotalDetail(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
+
                 listaDetalles.add(det);
             }
 
@@ -172,11 +174,11 @@ public class ApartadoController {
         }
     }
 
-    private double calcularTotal() {
-        double total = 0;
+    private BigDecimal calcularTotal() {
+        BigDecimal total = BigDecimal.ZERO;
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            total += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+            total = total.add(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
         }
         return total;
     }
@@ -305,9 +307,9 @@ public class ApartadoController {
         sb.append("TOTAL APARTADO:  $").append(String.format("%.2f", apt.getTotalAmount())).append("\n");
         sb.append("ABONADO:         $").append(String.format("%.2f", apt.getAdvanceAmount())).append("\n");
         sb.append("SALDO RESTANTE:  $").append(String.format("%.2f", apt.getPendingBalance())).append("\n\n");
-        sb.append("¿Desea realizar un nuevo abono o liquidar la deuda?");
+        sb.append("¿Desea registrar un pago (abono o liquidación) sobre este apartado?");
 
-        String[] opciones = {"Registrar Abono", "Liquidar y Finalizar", "Cancelar Apartado", "Cerrar"};
+        String[] opciones = {"Registrar Pago", "Cancelar Apartado", "Cerrar"};
 
         int seleccion = JOptionPane.showOptionDialog(
             vistaGestion,
@@ -320,12 +322,9 @@ public class ApartadoController {
 
         // Lógica de respuesta
         if (seleccion == 0) {
-            // Método para abonos parciales
-            procesarNuevoAbono(apt);
+            // Un solo flujo: según el monto ingresado, se decide abono parcial o liquidación total
+            procesarPago(apt, detalles);
         } else if (seleccion == 1) {
-            // Método para liquidación final
-            procesarLiquidacionFinal(apt, detalles);
-        } else if (seleccion == 2) {
             // Cancelar el apartado y devolver el stock reservado
             procesarCancelacion(apt);
         }
@@ -355,67 +354,64 @@ public class ApartadoController {
         }
     }
     
-    private void procesarNuevoAbono(Apartado apt) {
-        // 1. Pedir el monto al cajero
-        String input = JOptionPane.showInputDialog(vistaGestion, 
-            "SALDO PENDIENTE: $" + String.format("%.2f", apt.getPendingBalance()) + 
-            "\n\nIngrese el monto del abono:", 
-            "Nuevo Abono - Folio " + apt.getIdBooking(), 
+    // Flujo único de pago: el monto ingresado decide si es abono parcial o liquidación
+    // total (si es igual o mayor al saldo pendiente) — ya no hay dos botones separados
+    // para "Registrar Abono" y "Liquidar y Finalizar". El método de pago siempre se
+    // pregunta, sea abono o liquidación (antes solo se preguntaba al liquidar).
+    private void procesarPago(Apartado apt, List<Object[]> detalles) {
+        BigDecimal saldoPendiente = apt.getPendingBalance();
+
+        String input = JOptionPane.showInputDialog(vistaGestion,
+            "SALDO PENDIENTE: $" + String.format("%.2f", saldoPendiente) +
+            "\n\nIngrese el monto a pagar (si cubre el saldo completo, el apartado se liquidará):",
+            "Registrar Pago - Folio " + apt.getIdBooking(),
             JOptionPane.QUESTION_MESSAGE);
 
         if (input == null || input.trim().isEmpty()) return;
 
         try {
-            double monto = Double.parseDouble(input);
+            BigDecimal monto = new BigDecimal(input);
 
-            // 2. Validaciones de negocio mejoradas
-            if (monto <= 0) {
+            if (monto.compareTo(BigDecimal.ZERO) <= 0) {
                 JOptionPane.showMessageDialog(vistaGestion, "El monto debe ser mayor a cero.");
                 return;
             }
 
-            double saldoPendiente = apt.getPendingBalance();
+            String[] metodos = {"Efectivo", "Transferencia"};
+            String metodoPago = (String) JOptionPane.showInputDialog(
+                vistaGestion,
+                "Seleccione el método de pago:",
+                "Método de Pago",
+                JOptionPane.QUESTION_MESSAGE,
+                null, metodos, metodos[0]
+            );
+            if (metodoPago == null) return;
 
-            if (monto >= saldoPendiente) {
-                if (monto > saldoPendiente) {
-                    // Calculamos el cambio para el cliente
-                    double cambio = monto - saldoPendiente;
+            if (monto.compareTo(saldoPendiente) >= 0) {
+                BigDecimal cambio = monto.subtract(saldoPendiente);
+                String mensajeConfirmacion = cambio.compareTo(BigDecimal.ZERO) > 0
+                    ? "El monto ingresado ($" + String.format("%.2f", monto) + ") supera el saldo pendiente ($" + String.format("%.2f", saldoPendiente) + ").\n\n" +
+                      "CAMBIO PARA EL CLIENTE: $" + String.format("%.2f", cambio) + "\n" +
+                      "¿Desea proceder con la LIQUIDACIÓN TOTAL del apartado?"
+                    : "¿Confirmas el cobro de $" + String.format("%.2f", saldoPendiente) + " para liquidar el apartado?";
 
-                    int confirmar = JOptionPane.showConfirmDialog(
-                        vistaGestion,
-                        "El monto ingresado ($" + String.format("%.2f", monto) + ") supera el saldo pendiente ($" + String.format("%.2f", saldoPendiente) + ").\n\n" +
-                        "CAMBIO PARA EL CLIENTE: $" + String.format("%.2f", cambio) + "\n" +
-                        "¿Desea proceder con la LIQUIDACIÓN TOTAL del apartado?",
-                        "Detectado Pago Mayor al Saldo",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
-                    );
+                int confirmar = JOptionPane.showConfirmDialog(
+                    vistaGestion,
+                    mensajeConfirmacion,
+                    "Confirmar Liquidación - Folio " + apt.getIdBooking(),
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+                if (confirmar != JOptionPane.YES_OPTION) return;
 
-                    if (confirmar != JOptionPane.YES_OPTION) return; // Canceló la operación
-                }
-
-                // El abono cubre el saldo completo: en vez de solo registrar el abono (lo que
-                // dejaba el Booking con saldo $0 pero bookingStatus='Activo' para siempre),
-                // se reutiliza el mismo flujo real de liquidación — genera la Sale, marca el
-                // Booking como 'Liquidado' y pregunta el método de pago del monto cobrado.
-                List<Object[]> detalles = apartadoDao.obtenerResumenDetallesPorFolio(apt.getIdBooking());
-                procesarLiquidacionFinal(apt, detalles);
+                ejecutarLiquidacion(apt, detalles, metodoPago);
                 return;
             }
 
             // Abono parcial normal (monto < saldoPendiente)
-            if (apartadoDao.registrarNuevoAbono(apt.getIdBooking(), monto)) {
+            if (apartadoDao.registrarNuevoAbono(apt.getIdBooking(), monto, metodoPago)) {
                 JOptionPane.showMessageDialog(vistaGestion, "¡Abono registrado con éxito!");
-
-                String textoFiltro = vistaGestion.getTxtBuscar().getText();
-                String estadoSeleccionado = vistaGestion.getCbEstado().getSelectedItem().toString();
-
-                if (estadoSeleccionado.equalsIgnoreCase("Pendientes")) estadoSeleccionado = "Activo";
-                else if (estadoSeleccionado.equalsIgnoreCase("Liquidados")) estadoSeleccionado = "Liquidado";
-                else if (estadoSeleccionado.equalsIgnoreCase("Cancelados")) estadoSeleccionado = "Cancelado";
-                else if (estadoSeleccionado.equalsIgnoreCase("Vencidos")) estadoSeleccionado = "Vencido";
-
-                llenarTablaGestion(textoFiltro, estadoSeleccionado);
+                refrescarTablaGestionSegunFiltro();
             } else {
                 JOptionPane.showMessageDialog(vistaGestion, "Error al procesar el pago en la base de datos.");
             }
@@ -424,58 +420,37 @@ public class ApartadoController {
             JOptionPane.showMessageDialog(vistaGestion, "Por favor, ingrese un monto numérico válido.");
         }
     }
-    
-    private void procesarLiquidacionFinal(Apartado apt, List<Object[]> detalles) {
-        double saldo = apt.getPendingBalance();
 
-        int confirmar = JOptionPane.showConfirmDialog(
-            vistaGestion,
-            "¿Confirmas el cobro de $" + String.format("%.2f", saldo) + " para liquidar el apartado?",
-            "Confirmar Liquidación - Folio " + apt.getIdBooking(),
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE
-        );
-
-        if (confirmar != JOptionPane.YES_OPTION) return;
-
-        String[] metodos = {"Efectivo", "Transferencia"};
-        String metodoSeleccionado = (String) JOptionPane.showInputDialog(
-            vistaGestion,
-            "Seleccione el método de pago para el saldo restante:",
-            "Método de Pago",
-            JOptionPane.QUESTION_MESSAGE,
-            null, metodos, metodos[0]
-        );
-
-        if (metodoSeleccionado == null) return; 
-
+    private void ejecutarLiquidacion(Apartado apt, List<Object[]> detalles, String metodoPago) {
         try {
             // Ejecución en el DAO (puede lanzar SQLException si falla el stock)
-            if (apartadoDao.liquidarApartadoCompleto(apt.getIdBooking(), Sesion.getInstancia().getIdUserAccount(), metodoSeleccionado, detalles)) {
+            if (apartadoDao.liquidarApartadoCompleto(apt.getIdBooking(), Sesion.getInstancia().getIdUserAccount(), metodoPago, detalles)) {
                 JOptionPane.showMessageDialog(vistaGestion,
                     "¡APARTADO LIQUIDADO Y VENTA GENERADA CON ÉXITO!\n\n" +
                     "Estado actualizado a: Liquidado.");
-
-                // Refrescar tabla de la interfaz
-                String textoFiltro = vistaGestion.getTxtBuscar().getText();
-                String estadoSeleccionado = vistaGestion.getCbEstado().getSelectedItem().toString();
-
-                if (estadoSeleccionado.equalsIgnoreCase("Pendientes")) estadoSeleccionado = "Activo";
-                else if (estadoSeleccionado.equalsIgnoreCase("Liquidados")) estadoSeleccionado = "Liquidado";
-                else if (estadoSeleccionado.equalsIgnoreCase("Cancelados")) estadoSeleccionado = "Cancelado";
-                else if (estadoSeleccionado.equalsIgnoreCase("Vencidos")) estadoSeleccionado = "Vencido";
-
-                llenarTablaGestion(textoFiltro, estadoSeleccionado);
+                refrescarTablaGestionSegunFiltro();
             } else {
                 JOptionPane.showMessageDialog(vistaGestion, "No se pudo completar la transacción por un error interno.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } catch (SQLException e) {
             // AQUÍ SE GESTIONA EL ERROR DEL DAO
             // Se muestra exactamente qué falló (por ejemplo, el mensaje de stock insuficiente)
-            JOptionPane.showMessageDialog(vistaGestion, 
-                "No se pudo liquidar el apartado:\n" + e.getMessage(), 
-                "Error de Inventario / Sistema", 
+            JOptionPane.showMessageDialog(vistaGestion,
+                "No se pudo liquidar el apartado:\n" + e.getMessage(),
+                "Error de Inventario / Sistema",
                 JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    private void refrescarTablaGestionSegunFiltro() {
+        String textoFiltro = vistaGestion.getTxtBuscar().getText();
+        String estadoSeleccionado = vistaGestion.getCbEstado().getSelectedItem().toString();
+
+        if (estadoSeleccionado.equalsIgnoreCase("Pendientes")) estadoSeleccionado = "Activo";
+        else if (estadoSeleccionado.equalsIgnoreCase("Liquidados")) estadoSeleccionado = "Liquidado";
+        else if (estadoSeleccionado.equalsIgnoreCase("Cancelados")) estadoSeleccionado = "Cancelado";
+        else if (estadoSeleccionado.equalsIgnoreCase("Vencidos")) estadoSeleccionado = "Vencido";
+
+        llenarTablaGestion(textoFiltro, estadoSeleccionado);
     }
 }

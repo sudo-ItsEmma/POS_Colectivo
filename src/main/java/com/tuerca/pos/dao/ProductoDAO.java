@@ -85,7 +85,7 @@ public class ProductoDAO {
         p.setFullProductCode(rs.getString("fullProductCode"));
         p.setProductDescription(rs.getString("productDescription"));
         p.setDepartment(rs.getString("department"));
-        p.setCurrentPrice(rs.getDouble("currentPrice"));
+        p.setCurrentPrice(rs.getBigDecimal("currentPrice"));
         p.setCurrentStock(rs.getInt("currentStock"));
         p.setMinStockAlert(rs.getInt("minStockAlert"));
         return p;
@@ -104,7 +104,7 @@ public class ProductoDAO {
             ps.setString(2, p.getFullProductCode());
             ps.setString(3, p.getProductDescription());
             ps.setString(4, p.getDepartment());
-            ps.setDouble(5, p.getCurrentPrice());
+            ps.setBigDecimal(5, p.getCurrentPrice());
             ps.setInt(6, p.getCurrentStock());
             ps.setInt(7, p.getMinStockAlert());
 
@@ -130,7 +130,7 @@ public class ProductoDAO {
             ps.setString(2, p.getFullProductCode());
             ps.setString(3, p.getProductDescription());
             ps.setString(4, p.getDepartment());
-            ps.setDouble(5, p.getCurrentPrice());
+            ps.setBigDecimal(5, p.getCurrentPrice());
             ps.setInt(6, p.getCurrentStock());
             ps.setInt(7, p.getMinStockAlert());
 
@@ -196,7 +196,7 @@ public class ProductoDAO {
                 pro.setFullProductCode(rs.getString("fullProductCode"));
                 pro.setProductDescription(rs.getString("productDescription"));
                 pro.setDepartment(rs.getString("department"));
-                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentPrice(rs.getBigDecimal("currentPrice"));
                 pro.setCurrentStock(rs.getInt("currentStock"));
                 return pro;
             }
@@ -215,7 +215,7 @@ public class ProductoDAO {
             ps.setString(2, p.getFullProductCode());
             ps.setString(3, p.getProductDescription());
             ps.setString(4, p.getDepartment());
-            ps.setDouble(5, p.getCurrentPrice());
+            ps.setBigDecimal(5, p.getCurrentPrice());
             ps.setInt(6, p.getCurrentStock());
             ps.setInt(7, p.getIdProduct());
             return ps.executeUpdate() > 0;
@@ -247,7 +247,7 @@ public class ProductoDAO {
                 pro.setFullProductCode(rs.getString("fullProductCode"));
                 pro.setProductDescription(rs.getString("productDescription"));
                 pro.setBrandName(rs.getString("brandName")); // Para mostrar en la tabla
-                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentPrice(rs.getBigDecimal("currentPrice"));
                 pro.setCurrentStock(rs.getInt("currentStock"));
                 lista.add(pro);
             }
@@ -294,7 +294,7 @@ public class ProductoDAO {
                 pro.setFullProductCode(rs.getString("fullProductCode"));
                 pro.setProductDescription(rs.getString("productDescription"));
                 pro.setBrandName(rs.getString("brandName"));
-                pro.setCurrentPrice(rs.getDouble("currentPrice"));
+                pro.setCurrentPrice(rs.getBigDecimal("currentPrice"));
                 pro.setCurrentStock(rs.getInt("currentStock"));
                 lista.add(pro);
             }
@@ -361,7 +361,7 @@ public class ProductoDAO {
                     p.setIdProduct(rs.getInt("idProduct"));
                     p.setFullProductCode(rs.getString("fullProductCode"));
                     p.setProductDescription(rs.getString("productDescription"));
-                    p.setCurrentPrice(rs.getDouble("currentPrice"));
+                    p.setCurrentPrice(rs.getBigDecimal("currentPrice"));
                     p.setCurrentStock(rs.getInt("currentStock")); 
 
                     // 2. Ahora sí, el rs contiene la columna brandName gracias al JOIN

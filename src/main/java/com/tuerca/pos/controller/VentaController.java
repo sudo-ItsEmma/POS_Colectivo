@@ -20,6 +20,8 @@ import com.tuerca.pos.view.components.BusquedaConDebounce;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -198,10 +200,10 @@ public class VentaController {
             }
 
             // Mantenemos los tipos de dato para cálculos precisos
-            @Override 
+            @Override
             public Class<?> getColumnClass(int c) {
                 if (c == COL_CANTIDAD) return Integer.class;
-                if (c == COL_PRECIO || c == COL_SUBTOTAL) return Double.class;
+                if (c == COL_PRECIO || c == COL_SUBTOTAL) return BigDecimal.class;
                 return Object.class;
             }
         };
@@ -312,13 +314,13 @@ public class VentaController {
     private void agregarProductoAlCarrito(Producto p) {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
 
-        double precioU = p.getCurrentPrice();
+        BigDecimal precioU = p.getCurrentPrice();
 
         // Por defecto, al agregar un producto nuevo, el descuento es 0
-        double porcentajeInicial = 0.0; 
+        double porcentajeInicial = 0.0;
 
         // El subtotal inicial será simplemente el precio unitario (cantidad 1 * precioU)
-        double subtotalInicial = precioU;
+        BigDecimal subtotalInicial = precioU;
         
         // Dentro de tu lógica de búsqueda/agregado
         if (p.getCurrentStock() <= 0) {
@@ -355,16 +357,17 @@ public class VentaController {
             // 2. Extraer valores de las celdas usando las constantes de columna
             // Nota: Convertimos a String y luego parseamos para ser más robustos con los tipos de Swing
             int cantidad = Integer.parseInt(modelo.getValueAt(fila, COL_CANTIDAD).toString());
-            double precioU = Double.parseDouble(modelo.getValueAt(fila, COL_PRECIO).toString());
+            BigDecimal precioU = new BigDecimal(modelo.getValueAt(fila, COL_PRECIO).toString());
 
             // Obtenemos el descuento específico de esta fila (Columna 4)
             Object valDscto = modelo.getValueAt(fila, COL_DSCTO_PER);
-            double porcentaje = (valDscto == null) ? 0.0 : Double.parseDouble(valDscto.toString());
+            BigDecimal porcentaje = (valDscto == null) ? BigDecimal.ZERO : new BigDecimal(valDscto.toString());
 
             // 3. Lógica matemática
-            double subtotalBase = cantidad * precioU;
-            double montoDescuento = subtotalBase * (porcentaje / 100);
-            double nuevoSubtotal = subtotalBase - montoDescuento;
+            BigDecimal subtotalBase = precioU.multiply(BigDecimal.valueOf(cantidad));
+            BigDecimal montoDescuento = subtotalBase.multiply(porcentaje)
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+            BigDecimal nuevoSubtotal = subtotalBase.subtract(montoDescuento).setScale(2, RoundingMode.HALF_UP);
 
             // 4. Actualización visual segura
             SwingUtilities.invokeLater(() -> {
@@ -386,9 +389,9 @@ public class VentaController {
 
     private void recalcularTodo() {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            total += (double) modelo.getValueAt(i, COL_SUBTOTAL);
+            total = total.add((BigDecimal) modelo.getValueAt(i, COL_SUBTOTAL));
         }
         vista.getLblTotal().setText(String.format("$%.2f", total));
     }
@@ -426,9 +429,9 @@ public class VentaController {
         }
 
         // 2. Obtener el Total (Directo de la tabla para mayor precisión)
-        double totalVenta = 0;
+        BigDecimal totalVenta = BigDecimal.ZERO;
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            totalVenta += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+            totalVenta = totalVenta.add(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
         }
 
         // 3. Selección de Método de Pago
@@ -439,8 +442,8 @@ public class VentaController {
             return;
         }
 
-        double cambio = 0;
-        double montoRecibido = totalVenta; // Para Transferencia, se asume el monto exacto
+        BigDecimal cambio = BigDecimal.ZERO;
+        BigDecimal montoRecibido = totalVenta; // Para Transferencia, se asume el monto exacto
 
         // 4. Lógica de Efectivo
         if (metodoPago.equalsIgnoreCase("Efectivo")) {
@@ -452,12 +455,12 @@ public class VentaController {
             if (input == null) return; // El usuario canceló el cobro
 
             try {
-                montoRecibido = Double.parseDouble(input);
-                if (montoRecibido < totalVenta) {
-                    JOptionPane.showMessageDialog(vista, "Monto insuficiente. Faltan: $" + (totalVenta - montoRecibido));
+                montoRecibido = new BigDecimal(input);
+                if (montoRecibido.compareTo(totalVenta) < 0) {
+                    JOptionPane.showMessageDialog(vista, "Monto insuficiente. Faltan: $" + totalVenta.subtract(montoRecibido));
                     return;
                 }
-                cambio = montoRecibido - totalVenta;
+                cambio = montoRecibido.subtract(totalVenta);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(vista, "Ingrese un monto numérico válido.");
                 return;
@@ -486,7 +489,7 @@ public class VentaController {
 
     // Arma el encabezado del ticket (productos + total); cada flujo de cobro le
     // agrega después sus propias líneas de método de pago/cambio.
-    private StringBuilder construirTicketBase(DefaultTableModel modelo, double total) {
+    private StringBuilder construirTicketBase(DefaultTableModel modelo, BigDecimal total) {
         StringBuilder sb = new StringBuilder();
         sb.append("========================================\n");
         sb.append("            TICKET DE VENTA\n");
@@ -499,7 +502,7 @@ public class VentaController {
             String codigo = modelo.getValueAt(i, COL_CODIGO).toString();
             String desc = modelo.getValueAt(i, 2).toString();
             if (desc.length() > 20) desc = desc.substring(0, 17) + "...";
-            double subtotal = Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+            BigDecimal subtotal = (BigDecimal) modelo.getValueAt(i, COL_SUBTOTAL);
             sb.append(String.format("%-4d %-8s %-20s %10s\n", cant, codigo, desc, String.format("$%.2f", subtotal)));
         }
 
@@ -522,43 +525,43 @@ public class VentaController {
         }
 
         // 3. Obtener el total acumulado
-        double totalVenta = 0;
+        BigDecimal totalVenta = BigDecimal.ZERO;
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            totalVenta += Double.parseDouble(modelo.getValueAt(i, COL_SUBTOTAL).toString());
+            totalVenta = totalVenta.add(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
         }
 
         try {
             // 2. Pedir monto en Transferencia
-            String tInput = JOptionPane.showInputDialog(vista, 
+            String tInput = JOptionPane.showInputDialog(vista,
                 "TOTAL VENTA: $" + String.format("%.2f", totalVenta) + "\n\nIngrese monto por TRANSFERENCIA:");
             if (tInput == null) return; // Usuario canceló
 
-            double montoTransferencia = Double.parseDouble(tInput);
+            BigDecimal montoTransferencia = new BigDecimal(tInput);
 
-            if (montoTransferencia > totalVenta) {
+            if (montoTransferencia.compareTo(totalVenta) > 0) {
                 JOptionPane.showMessageDialog(vista, "El monto de transferencia no puede exceder el total de la venta.");
                 return;
             }
 
             // 3. Calcular restante para Efectivo
-            double restanteEfectivo = totalVenta - montoTransferencia;
+            BigDecimal restanteEfectivo = totalVenta.subtract(montoTransferencia);
 
             // 4. Pedir efectivo y calcular cambio (Solo si queda saldo pendiente)
-            double efectivoRecibido = 0;
-            double cambio = 0;
+            BigDecimal efectivoRecibido = BigDecimal.ZERO;
+            BigDecimal cambio = BigDecimal.ZERO;
 
-            if (restanteEfectivo > 0) {
-                String eInput = JOptionPane.showInputDialog(vista, 
+            if (restanteEfectivo.compareTo(BigDecimal.ZERO) > 0) {
+                String eInput = JOptionPane.showInputDialog(vista,
                     "RESTANTE EN EFECTIVO: $" + String.format("%.2f", restanteEfectivo) + "\n\n¿Con cuánto paga el cliente?");
                 if (eInput == null) return;
 
-                efectivoRecibido = Double.parseDouble(eInput);
+                efectivoRecibido = new BigDecimal(eInput);
 
-                if (efectivoRecibido < restanteEfectivo) {
+                if (efectivoRecibido.compareTo(restanteEfectivo) < 0) {
                     JOptionPane.showMessageDialog(vista, "El monto en efectivo es insuficiente.");
                     return;
                 }
-                cambio = efectivoRecibido - restanteEfectivo;
+                cambio = efectivoRecibido.subtract(restanteEfectivo);
             }
 
             // 5. Preparar el objeto Venta con el detalle mixto
@@ -584,9 +587,9 @@ public class VentaController {
         }
     }
     
-    private boolean registrarVentaEnBD_Mixto(double total, String detalles) {
+    private boolean registrarVentaEnBD_Mixto(BigDecimal total, String detalles) {
         VentaDAO ventaDao = new VentaDAO();
-        
+
         Venta v = new Venta();
         v.setIdUsuario(Sesion.getInstancia().getIdUserAccount()); // El ID del cajero en turno
         v.setTotal(total);
@@ -601,10 +604,19 @@ public class VentaController {
             DetalleVenta dv = new DetalleVenta();
             String codigo = modelo.getValueAt(i, 1).toString();
             dv.setIdProducto(productoDao.obtenerIdPorCodigo(codigo));
-            dv.setCantidad(Integer.parseInt(modelo.getValueAt(i, 0).toString()));
-            dv.setPrecioUnitario(Double.parseDouble(modelo.getValueAt(i, 3).toString()));
-            dv.setDescuento(Double.parseDouble(modelo.getValueAt(i, 4).toString()));
-            dv.setSubtotal(Double.parseDouble(modelo.getValueAt(i, 5).toString()));
+            int cantidad = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+            dv.setCantidad(cantidad);
+
+            BigDecimal precioUnitario = new BigDecimal(modelo.getValueAt(i, 3).toString());
+            BigDecimal subtotal = new BigDecimal(modelo.getValueAt(i, 5).toString());
+            // El descuento se guarda como el monto en pesos realmente aplicado (subtotal antes
+            // de descuento - subtotal final), no el porcentaje que el cajero capturó en pantalla.
+            BigDecimal subtotalBase = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+            BigDecimal montoDescuento = subtotalBase.subtract(subtotal).setScale(2, RoundingMode.HALF_UP);
+
+            dv.setPrecioUnitario(precioUnitario);
+            dv.setDescuento(montoDescuento);
+            dv.setSubtotal(subtotal);
             listaDetalles.add(dv);
         }
 
@@ -645,7 +657,7 @@ public class VentaController {
         return true; // Todo en orden
     }
     
-    private boolean registrarVentaEnBD(String metodo, double total) {
+    private boolean registrarVentaEnBD(String metodo, BigDecimal total) {
         VentaDAO ventaDao = new VentaDAO();
 
         // Objeto cabecera
@@ -673,10 +685,19 @@ public class VentaController {
 
                 // 2. Llenado de datos con parseo seguro
                 dv.setIdProducto(idReal);
-                dv.setCantidad(Integer.parseInt(modelo.getValueAt(i, 0).toString()));
-                dv.setPrecioUnitario(Double.parseDouble(modelo.getValueAt(i, 3).toString()));
-                dv.setDescuento(Double.parseDouble(modelo.getValueAt(i, 4).toString()));
-                dv.setSubtotal(Double.parseDouble(modelo.getValueAt(i, 5).toString()));
+                int cantidad = Integer.parseInt(modelo.getValueAt(i, 0).toString());
+                dv.setCantidad(cantidad);
+
+                BigDecimal precioUnitario = new BigDecimal(modelo.getValueAt(i, 3).toString());
+                BigDecimal subtotal = new BigDecimal(modelo.getValueAt(i, 5).toString());
+                // El descuento se guarda como el monto en pesos realmente aplicado (subtotal antes
+                // de descuento - subtotal final), no el porcentaje que el cajero capturó en pantalla.
+                BigDecimal subtotalBase = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+                BigDecimal montoDescuento = subtotalBase.subtract(subtotal).setScale(2, RoundingMode.HALF_UP);
+
+                dv.setPrecioUnitario(precioUnitario);
+                dv.setDescuento(montoDescuento);
+                dv.setSubtotal(subtotal);
 
                 // 3. Agregar a la lista que enviaremos al DAO
                 detalles.add(dv);

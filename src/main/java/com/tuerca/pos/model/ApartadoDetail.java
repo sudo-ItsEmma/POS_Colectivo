@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author mannycalderon
@@ -13,8 +15,8 @@ public class ApartadoDetail {
     private int idBooking;
     private int idProduct;
     private int quantity;
-    private double unitPrice;
-    private double subtotalDetail;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotalDetail;
 
     public int getIdBookingDetail() {
         return idBookingDetail;
@@ -48,19 +50,19 @@ public class ApartadoDetail {
         this.quantity = quantity;
     }
 
-    public double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 
-    public double getSubtotalDetail() {
+    public BigDecimal getSubtotalDetail() {
         return subtotalDetail;
     }
 
-    public void setSubtotalDetail(double subtotalDetail) {
+    public void setSubtotalDetail(BigDecimal subtotalDetail) {
         this.subtotalDetail = subtotalDetail;
     }
 }

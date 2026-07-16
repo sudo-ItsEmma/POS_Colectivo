@@ -16,6 +16,7 @@ import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
 import com.tuerca.pos.view.components.BusquedaConDebounce;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -317,7 +318,7 @@ public class ProductoController {
             p.setFullProductCode(codigo);
             p.setProductDescription(desc);
             p.setDepartment(depto);
-            p.setCurrentPrice(Double.parseDouble(precioStr));
+            p.setCurrentPrice(new BigDecimal(precioStr));
             p.setCurrentStock(Integer.parseInt(stockStr));
             p.setMinStockAlert(1);
 
@@ -414,7 +415,7 @@ public class ProductoController {
             p.setFullProductCode(codigo);
             p.setProductDescription(vistaEdicion.getDescripcionField().toUpperCase());
             p.setDepartment(vistaEdicion.getDepartamentoField().toUpperCase());
-            p.setCurrentPrice(Double.parseDouble(vistaEdicion.getPrecioField()));
+            p.setCurrentPrice(new BigDecimal(vistaEdicion.getPrecioField()));
             p.setCurrentStock(Integer.parseInt(vistaEdicion.getStockField()));
 
             // 3. Guardar en DB
@@ -571,7 +572,7 @@ public class ProductoController {
                 p.setIdEntrepreneur(emp.getId());
                 p.setFullProductCode(codigo);
                 p.setProductDescription(modelo.getValueAt(i, 1).toString().toUpperCase().trim());
-                p.setCurrentPrice(Double.parseDouble(modelo.getValueAt(i, 2).toString()));
+                p.setCurrentPrice(new BigDecimal(modelo.getValueAt(i, 2).toString()));
                 p.setCurrentStock(Integer.parseInt(modelo.getValueAt(i, 3).toString()));
                 p.setDepartment(modelo.getValueAt(i, 4).toString().toUpperCase().trim());
                 p.setMinStockAlert(1);

@@ -44,7 +44,7 @@ public class VentaDAO {
             try (PreparedStatement psVenta = con.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
                 psVenta.setInt(1, venta.getIdUsuario());
                 psVenta.setInt(2, idMetodo);
-                psVenta.setDouble(3, venta.getTotal());
+                psVenta.setBigDecimal(3, venta.getTotal());
                 // Guardamos el detalle (E:100|T:150) o null si es pago simple
                 psVenta.setString(4, venta.getPaymentDetails()); 
                 psVenta.executeUpdate();
@@ -62,9 +62,9 @@ public class VentaDAO {
                                 psDetalle.setInt(1, idGenerado);
                                 psDetalle.setInt(2, item.getIdProducto());
                                 psDetalle.setInt(3, item.getCantidad());
-                                psDetalle.setDouble(4, item.getPrecioUnitario());
-                                psDetalle.setDouble(5, item.getDescuento());
-                                psDetalle.setDouble(6, item.getSubtotal());
+                                psDetalle.setBigDecimal(4, item.getPrecioUnitario());
+                                psDetalle.setBigDecimal(5, item.getDescuento());
+                                psDetalle.setBigDecimal(6, item.getSubtotal());
                                 psDetalle.executeUpdate();
 
                                 // Update Stock

@@ -4,6 +4,7 @@ import com.tuerca.pos.model.Apartado;
 import com.tuerca.pos.model.ApartadoDetail;
 import com.tuerca.pos.support.AbstractDaoIntegrationTest;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -99,16 +100,16 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
         apt.setIdUserAccount(1);
         apt.setCustomerName(nombreCliente);
         apt.setCustomerPhone("5555555555");
-        apt.setTotalAmount(20.00 * cantidad);
-        apt.setAdvanceAmount(10.00);
-        apt.setPendingBalance(20.00 * cantidad - 10.00);
+        apt.setTotalAmount(new BigDecimal("20.00").multiply(BigDecimal.valueOf(cantidad)));
+        apt.setAdvanceAmount(new BigDecimal("10.00"));
+        apt.setPendingBalance(new BigDecimal("20.00").multiply(BigDecimal.valueOf(cantidad)).subtract(new BigDecimal("10.00")));
         apt.setBookingStatus("Activo");
 
         ApartadoDetail det = new ApartadoDetail();
         det.setIdProduct(idProduct);
         det.setQuantity(cantidad);
-        det.setUnitPrice(20.00);
-        det.setSubtotalDetail(20.00 * cantidad);
+        det.setUnitPrice(new BigDecimal("20.00"));
+        det.setSubtotalDetail(new BigDecimal("20.00").multiply(BigDecimal.valueOf(cantidad)));
         List<ApartadoDetail> detalles = new ArrayList<>();
         detalles.add(det);
 
@@ -141,16 +142,16 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
         apt.setIdUserAccount(1);
         apt.setCustomerName("JUNIT TEST SIN STOCK");
         apt.setCustomerPhone("5555555555");
-        apt.setTotalAmount(2000.00);
-        apt.setAdvanceAmount(10.00);
-        apt.setPendingBalance(1990.00);
+        apt.setTotalAmount(new BigDecimal("2000.00"));
+        apt.setAdvanceAmount(new BigDecimal("10.00"));
+        apt.setPendingBalance(new BigDecimal("1990.00"));
         apt.setBookingStatus("Activo");
 
         ApartadoDetail det = new ApartadoDetail();
         det.setIdProduct(idProduct);
         det.setQuantity(999); // muy por encima del stock disponible
-        det.setUnitPrice(20.00);
-        det.setSubtotalDetail(2000.00);
+        det.setUnitPrice(new BigDecimal("20.00"));
+        det.setSubtotalDetail(new BigDecimal("2000.00"));
         List<ApartadoDetail> detalles = new ArrayList<>();
         detalles.add(det);
 

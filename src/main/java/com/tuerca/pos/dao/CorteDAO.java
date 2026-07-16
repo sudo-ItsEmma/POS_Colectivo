@@ -54,6 +54,62 @@ public class CorteDAO {
         return total;
     }
 
+    // Igual que calcularApartadosNuevos() pero filtrado por método de pago
+    // (Efectivo/Transferencia) — permite mostrar y persistir el desglose de los
+    // anticipos nuevos, para poder cuadrar cuentas y reportes sin tener que releer
+    // BookingPayment fila por fila.
+    public BigDecimal calcularApartadosNuevosPorMetodo(LocalDateTime desde, String metodoPago) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        String sql = "SELECT bp.paymentAmount FROM BookingPayment bp "
+                + "JOIN PaymentMethod pm ON bp.idPaymentMethod = pm.idPaymentMethod "
+                + "WHERE bp.paymentDate >= ? AND pm.methodName = ? "
+                + "AND bp.idBookingPayment = (SELECT MIN(bp2.idBookingPayment) FROM BookingPayment bp2 WHERE bp2.idBooking = bp.idBooking)";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(desde));
+            ps.setString(2, metodoPago);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    total = total.add(rs.getBigDecimal("paymentAmount"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al calcular apartados nuevos por método: " + e.getMessage());
+        }
+        return total;
+    }
+
+    // Igual que calcularAbonosApartados() pero filtrado por método de pago: suma
+    // todos los BookingPayment de ese método y le resta los anticipos nuevos de ese
+    // mismo método, dejando solo los abonos posteriores por Efectivo/Transferencia.
+    public BigDecimal calcularAbonosApartadosPorMetodo(LocalDateTime desde, String metodoPago, BigDecimal apartadosNuevosDelMetodo) {
+        BigDecimal totalPagos = BigDecimal.ZERO;
+
+        String sql = "SELECT bp.paymentAmount FROM BookingPayment bp "
+                + "JOIN PaymentMethod pm ON bp.idPaymentMethod = pm.idPaymentMethod "
+                + "WHERE bp.paymentDate >= ? AND pm.methodName = ?";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setTimestamp(1, Timestamp.valueOf(desde));
+            ps.setString(2, metodoPago);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    totalPagos = totalPagos.add(rs.getBigDecimal("paymentAmount"));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al calcular abonos de apartados por método: " + e.getMessage());
+        }
+        return totalPagos.subtract(apartadosNuevosDelMetodo);
+    }
+
     // función que suma los abonos del día que NO son el anticipo inicial de un
     // apartado nuevo (ese ya se cuenta en calcularApartadosNuevos). Como
     // registrarApartadoCompleto() inserta el anticipo inicial como el primer
@@ -90,7 +146,8 @@ public class CorteDAO {
         String sql = "UPDATE CashSession SET closingDateTime = NOW(), finalCashAmount = ?, "
                 + "theoricalAmount = ?, cashDifference = ?, cashSalesAmount = ?, "
                 + "cashBookingPaymentsAmount = ?, transferSalesAmount = ?, transferSalesCount = ?, "
-                + "bookingsNewAmount = ?, bookingsPaymentsAmount = ?, sessionStatus = 'Cerrada' "
+                + "bookingsNewAmount = ?, bookingsPaymentsAmount = ?, bookingsNewAmountTransfer = ?, "
+                + "bookingsPaymentsAmountTransfer = ?, sessionStatus = 'Cerrada' "
                 + "WHERE idCashSession = ?";
 
         try (Connection con = DatabaseConnection.getConnection();
@@ -105,7 +162,9 @@ public class CorteDAO {
             ps.setInt(7, cierre.getTransferSalesCount());
             ps.setBigDecimal(8, cierre.getBookingsNewAmount());
             ps.setBigDecimal(9, cierre.getBookingsPaymentsAmount());
-            ps.setInt(10, cierre.getIdCashSession());
+            ps.setBigDecimal(10, cierre.getBookingsNewAmountTransfer());
+            ps.setBigDecimal(11, cierre.getBookingsPaymentsAmountTransfer());
+            ps.setInt(12, cierre.getIdCashSession());
 
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {

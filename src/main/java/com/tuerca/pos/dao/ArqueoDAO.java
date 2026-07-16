@@ -30,12 +30,11 @@ public class ArqueoDAO {
     // (anticipo + abonos + pago final), así que sumarlas también aquí duplicaría
     // el anticipo que el cliente ya había dado antes de liquidar.
     //
-    // NOTA: los abonos parciales de apartados (no el pago final de la liquidación,
-    // que ya sí queda correcto) todavía se guardan siempre como "Efectivo" en
-    // BookingPayment, porque ApartadoController.procesarNuevoAbono() no le pregunta
-    // al cajero el método de pago (deuda documentada para el Paso 7). Mientras eso
-    // no se corrija, este cálculo puede salir optimista si hubo abonos parciales
-    // por transferencia.
+    // NOTA: desde el Paso 13, los abonos parciales de apartados también preguntan el
+    // método de pago real (ApartadoController.procesarPago() / ApartadoDAO.registrarNuevoAbono()),
+    // así que este filtro por 'Efectivo' ya excluye correctamente los abonos por
+    // transferencia — antes todos caían siempre en Efectivo por default, así que el
+    // filtro nunca se ponía a prueba.
     public BigDecimal calcularSaldoTeorico(CashSession sesion) {
         BigDecimal saldo = sesion.getInitialCashAmount();
         saldo = saldo.add(calcularVentasEfectivo(sesion.getOpeningDateTime()));
