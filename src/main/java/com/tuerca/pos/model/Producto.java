@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author mannycalderon
@@ -15,7 +17,7 @@ public class Producto {
     private String fullProductCode;
     private String productDescription;
     private String department;
-    private double currentPrice;
+    private BigDecimal currentPrice;
     private int currentStock;
     private int minStockAlert;
     private boolean active;
@@ -68,11 +70,11 @@ public class Producto {
         this.department = department;
     }
 
-    public double getCurrentPrice() {
+    public BigDecimal getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(double currentPrice) {
+    public void setCurrentPrice(BigDecimal currentPrice) {
         this.currentPrice = currentPrice;
     }
 

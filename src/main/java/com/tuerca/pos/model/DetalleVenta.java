@@ -4,6 +4,8 @@
  */
 package com.tuerca.pos.model;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author mannycalderon
@@ -13,9 +15,9 @@ public class DetalleVenta {
     private int idVenta;          // Relación con la cabecera
     private int idProducto;       // Qué producto es
     private int cantidad;
-    private double precioUnitario; // Precio al momento de la venta
-    private double descuento;      // Porcentaje aplicado (el que pusimos en la columna 4)
-    private double subtotal;       // (Cantidad * Precio) - Descuento
+    private BigDecimal precioUnitario; // Precio al momento de la venta
+    private BigDecimal descuento;      // Monto en dinero descontado (ya calculado a partir del % capturado en pantalla)
+    private BigDecimal subtotal;       // (Cantidad * Precio) - Descuento
 
     public DetalleVenta() {}
 
@@ -32,12 +34,12 @@ public class DetalleVenta {
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }
 
-    public double getPrecioUnitario() { return precioUnitario; }
-    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public double getDescuento() { return descuento; }
-    public void setDescuento(double descuento) { this.descuento = descuento; }
+    public BigDecimal getDescuento() { return descuento; }
+    public void setDescuento(BigDecimal descuento) { this.descuento = descuento; }
 
-    public double getSubtotal() { return subtotal; }
-    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 }

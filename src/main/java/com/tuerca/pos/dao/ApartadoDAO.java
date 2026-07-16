@@ -6,6 +6,7 @@ package com.tuerca.pos.dao;
 
 import com.tuerca.pos.model.Apartado;
 import com.tuerca.pos.model.ApartadoDetail;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +42,9 @@ public class ApartadoDAO {
                 psB.setInt(1, apt.getIdUserAccount());
                 psB.setString(2, apt.getCustomerName());
                 psB.setString(3, apt.getCustomerPhone());
-                psB.setDouble(4, apt.getTotalAmount());
-                psB.setDouble(5, apt.getAdvanceAmount());
-                psB.setDouble(6, apt.getPendingBalance());
+                psB.setBigDecimal(4, apt.getTotalAmount());
+                psB.setBigDecimal(5, apt.getAdvanceAmount());
+                psB.setBigDecimal(6, apt.getPendingBalance());
                 psB.executeUpdate();
 
                 try (ResultSet rs = psB.getGeneratedKeys()) {
@@ -58,8 +59,8 @@ public class ApartadoDAO {
                                 psD.setInt(1, idGenerado);
                                 psD.setInt(2, det.getIdProduct());
                                 psD.setInt(3, det.getQuantity());
-                                psD.setDouble(4, det.getUnitPrice());
-                                psD.setDouble(5, det.getSubtotalDetail());
+                                psD.setBigDecimal(4, det.getUnitPrice());
+                                psD.setBigDecimal(5, det.getSubtotalDetail());
                                 psD.executeUpdate();
 
                                 psStock.setInt(1, det.getQuantity());
@@ -74,7 +75,7 @@ public class ApartadoDAO {
                         // 3. Registrar Abono Inicial
                         try (PreparedStatement psP = con.prepareStatement(sqlPayment)) {
                             psP.setInt(1, idGenerado);
-                            psP.setDouble(2, apt.getAdvanceAmount());
+                            psP.setBigDecimal(2, apt.getAdvanceAmount());
                             psP.executeUpdate();
                         }
                     }
@@ -106,9 +107,9 @@ public class ApartadoDAO {
                     Apartado a = new Apartado();
                     a.setIdBooking(rs.getInt("idBooking"));
                     a.setCustomerName(rs.getString("customerName"));
-                    a.setTotalAmount(rs.getDouble("totalAmount"));
-                    a.setAdvanceAmount(rs.getDouble("advanceAmount"));
-                    a.setPendingBalance(rs.getDouble("pendingBalance"));
+                    a.setTotalAmount(rs.getBigDecimal("totalAmount"));
+                    a.setAdvanceAmount(rs.getBigDecimal("advanceAmount"));
+                    a.setPendingBalance(rs.getBigDecimal("pendingBalance"));
                     a.setExpirationDate(rs.getDate("expirationDate"));
                     a.setBookingStatus(rs.getString("bookingStatus"));
                     lista.add(a);
@@ -137,9 +138,9 @@ public class ApartadoDAO {
                     apt.setIdUserAccount(rs.getInt("idUserAccount"));
                     apt.setCustomerName(rs.getString("customerName"));
                     apt.setCustomerPhone(rs.getString("customerPhone"));
-                    apt.setTotalAmount(rs.getDouble("totalAmount"));
-                    apt.setAdvanceAmount(rs.getDouble("advanceAmount"));
-                    apt.setPendingBalance(rs.getDouble("pendingBalance"));
+                    apt.setTotalAmount(rs.getBigDecimal("totalAmount"));
+                    apt.setAdvanceAmount(rs.getBigDecimal("advanceAmount"));
+                    apt.setPendingBalance(rs.getBigDecimal("pendingBalance"));
                     apt.setBookingStatus(rs.getString("bookingStatus"));
                     apt.setExpirationDate(rs.getDate("expirationDate"));
                     return apt;
@@ -172,8 +173,8 @@ public class ApartadoDAO {
                     fila[0] = rs.getInt("quantity");
                     fila[1] = rs.getString("fullProductCode");
                     fila[2] = rs.getString("productDescription");
-                    fila[3] = rs.getDouble("unitPrice");
-                    fila[4] = rs.getDouble("subtotalDetail");
+                    fila[3] = rs.getBigDecimal("unitPrice");
+                    fila[4] = rs.getBigDecimal("subtotalDetail");
                     lista.add(fila);
                 }
             }
@@ -183,8 +184,22 @@ public class ApartadoDAO {
         return lista;
     }
     
-    public boolean registrarNuevoAbono(int idBooking, double montoAbono) {
-        String sqlInsertPago = "INSERT INTO BookingPayment (idBooking, paymentAmount) VALUES (?, ?)";
+    // Busca el idPaymentMethod real a partir del nombre elegido en pantalla (Efectivo/
+    // Transferencia). Si por algún motivo no se encuentra, cae en Efectivo (id 1) como
+    // valor seguro, en vez de fallar la transacción completa por esto.
+    private int obtenerIdMetodoPago(Connection con, String metodoPago) throws SQLException {
+        String sql = "SELECT idPaymentMethod FROM PaymentMethod WHERE methodName = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, metodoPago);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("idPaymentMethod");
+            }
+        }
+        return 1;
+    }
+
+    public boolean registrarNuevoAbono(int idBooking, BigDecimal montoAbono, String metodoPago) {
+        String sqlInsertPago = "INSERT INTO BookingPayment (idBooking, idPaymentMethod, paymentAmount) VALUES (?, ?, ?)";
         String sqlUpdateBooking = "UPDATE Booking SET advanceAmount = advanceAmount + ?, " +
                                    "pendingBalance = pendingBalance - ? WHERE idBooking = ?";
 
@@ -193,17 +208,20 @@ public class ApartadoDAO {
             con = DatabaseConnection.getConnection();
             con.setAutoCommit(false); // Iniciamos transacción
 
+            int idMetodoPago = obtenerIdMetodoPago(con, metodoPago);
+
             // 1. Registrar el pago en el historial
             try (PreparedStatement psPago = con.prepareStatement(sqlInsertPago)) {
                 psPago.setInt(1, idBooking);
-                psPago.setDouble(2, montoAbono);
+                psPago.setInt(2, idMetodoPago);
+                psPago.setBigDecimal(3, montoAbono);
                 psPago.executeUpdate();
             }
 
             // 2. Actualizar los saldos en la cabecera
             try (PreparedStatement psUpdate = con.prepareStatement(sqlUpdateBooking)) {
-                psUpdate.setDouble(1, montoAbono);
-                psUpdate.setDouble(2, montoAbono);
+                psUpdate.setBigDecimal(1, montoAbono);
+                psUpdate.setBigDecimal(2, montoAbono);
                 psUpdate.setInt(3, idBooking);
                 psUpdate.executeUpdate();
             }
@@ -230,7 +248,6 @@ public class ApartadoDAO {
         // hacía que el emprendedor nunca cobrara por productos vendidos vía apartado.
         String sqlInsertVentaDetalle = "INSERT INTO SaleDetail (idSale, idProduct, quantitySold, unitPriceAtSale, discountApplied, subtotalDetail) VALUES (?, ?, ?, ?, 0.00, ?)";
         String sqlUpdateBooking = "UPDATE Booking SET advanceAmount = totalAmount, pendingBalance = 0.00, bookingStatus = 'Liquidado' WHERE idBooking = ?";
-        String sqlIdPago = "SELECT idPaymentMethod FROM PaymentMethod WHERE methodName = ?";
         // El pago final (lo que realmente entra en efectivo/transferencia al liquidar, no el
         // total del apartado) se registra como un abono más, igual que el anticipo inicial y
         // los abonos posteriores — así BookingPayment queda con el historial completo.
@@ -242,24 +259,18 @@ public class ApartadoDAO {
             con.setAutoCommit(false); // Iniciamos Transacción
 
             // 1. Obtener ID del método de pago
-            int idMetodoPago = 1;
-            try (PreparedStatement psPago = con.prepareStatement(sqlIdPago)) {
-                psPago.setString(1, metodoPago);
-                try (ResultSet rs = psPago.executeQuery()) {
-                    if (rs.next()) idMetodoPago = rs.getInt("idPaymentMethod");
-                }
-            }
+            int idMetodoPago = obtenerIdMetodoPago(con, metodoPago);
 
             // 2. Obtener el monto total del apartado y el saldo pendiente (lo que se cobra ahora)
-            double totalVenta = 0;
-            double saldoPendiente = 0;
+            BigDecimal totalVenta = BigDecimal.ZERO;
+            BigDecimal saldoPendiente = BigDecimal.ZERO;
             String sqlTotalApt = "SELECT totalAmount, pendingBalance FROM Booking WHERE idBooking = ?";
             try (PreparedStatement psTot = con.prepareStatement(sqlTotalApt)) {
                 psTot.setInt(1, idBooking);
                 try (ResultSet rs = psTot.executeQuery()) {
                     if (rs.next()) {
-                        totalVenta = rs.getDouble("totalAmount");
-                        saldoPendiente = rs.getDouble("pendingBalance");
+                        totalVenta = rs.getBigDecimal("totalAmount");
+                        saldoPendiente = rs.getBigDecimal("pendingBalance");
                     }
                 }
             }
@@ -271,7 +282,7 @@ public class ApartadoDAO {
             try (PreparedStatement psVenta = con.prepareStatement(sqlInsertVenta, Statement.RETURN_GENERATED_KEYS)) {
                 psVenta.setInt(1, idUsuario);
                 psVenta.setInt(2, idMetodoPago);
-                psVenta.setDouble(3, totalVenta);
+                psVenta.setBigDecimal(3, totalVenta);
                 psVenta.setInt(4, idBooking);
                 psVenta.executeUpdate();
 
@@ -282,11 +293,11 @@ public class ApartadoDAO {
             }
 
             // 3.1 Registrar el pago final como abono, solo si en efecto quedaba saldo por cobrar
-            if (saldoPendiente > 0) {
+            if (saldoPendiente.compareTo(BigDecimal.ZERO) > 0) {
                 try (PreparedStatement psPagoFinal = con.prepareStatement(sqlInsertPagoFinal)) {
                     psPagoFinal.setInt(1, idBooking);
                     psPagoFinal.setInt(2, idMetodoPago);
-                    psPagoFinal.setDouble(3, saldoPendiente);
+                    psPagoFinal.setBigDecimal(3, saldoPendiente);
                     psPagoFinal.executeUpdate();
                 }
             }
@@ -299,8 +310,8 @@ public class ApartadoDAO {
                 for (Object[] prod : detallesProductos) {
                     int cantidad = (int) prod[0];
                     String codigo = (String) prod[1];
-                    double precio = (double) prod[3];
-                    double subtotal = (double) prod[4];
+                    BigDecimal precio = (BigDecimal) prod[3];
+                    BigDecimal subtotal = (BigDecimal) prod[4];
 
                     // Consultar ID del producto por su código
                     int idProduct = 0;
@@ -316,8 +327,8 @@ public class ApartadoDAO {
                     psVentaDet.setInt(1, idVentaGenerada);
                     psVentaDet.setInt(2, idProduct);
                     psVentaDet.setInt(3, cantidad);
-                    psVentaDet.setDouble(4, precio);
-                    psVentaDet.setDouble(5, subtotal);
+                    psVentaDet.setBigDecimal(4, precio);
+                    psVentaDet.setBigDecimal(5, subtotal);
                     psVentaDet.addBatch();
                 }
                 psVentaDet.executeBatch();

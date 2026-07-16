@@ -4,6 +4,7 @@
  */
 package com.tuerca.pos.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 /**
@@ -13,15 +14,15 @@ import java.sql.Date;
 public class Venta {
     private int id;
     private int idUsuario;     // Quién vendió
-    private double total;      // Monto total final
+    private BigDecimal total;  // Monto total final
     private String metodoPago; // Efectivo o Transferencia
     private Date fecha;        // Momento de la venta
-    private String paymentDetails; 
+    private String paymentDetails;
 
     public Venta() {}
 
     // Constructor útil para el registro
-    public Venta(int idUsuario, double total, String metodoPago) {
+    public Venta(int idUsuario, BigDecimal total, String metodoPago) {
         this.idUsuario = idUsuario;
         this.total = total;
         this.metodoPago = metodoPago;
@@ -34,8 +35,8 @@ public class Venta {
     public int getIdUsuario() { return idUsuario; }
     public void setIdUsuario(int idUsuario) { this.idUsuario = idUsuario; }
 
-    public double getTotal() { return total; }
-    public void setTotal(double total) { this.total = total; }
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
 
     public String getMetodoPago() { return metodoPago; }
     public void setMetodoPago(String metodoPago) { this.metodoPago = metodoPago; }

@@ -71,13 +71,20 @@ public class CorteCajaController {
         vista.setVentasTransferencia(formatoMoneda(ventasTransferencia));
         vista.setCantidadTransferencias(cantidadTransferencias);
 
-        // Resumen de apartados
+        // Resumen de apartados, desglosado por método de pago para poder cuadrar cuentas
         BigDecimal apartadosNuevos = corteDao.calcularApartadosNuevos(desde);
         BigDecimal apartadosAbonos = corteDao.calcularAbonosApartados(desde, apartadosNuevos);
         BigDecimal apartadosTotal = apartadosNuevos.add(apartadosAbonos);
 
-        vista.setApartadosNuevos(formatoMoneda(apartadosNuevos));
-        vista.setApartadosAbonos(formatoMoneda(apartadosAbonos));
+        BigDecimal apartadosNuevosEfectivo = corteDao.calcularApartadosNuevosPorMetodo(desde, "Efectivo");
+        BigDecimal apartadosNuevosTransferencia = corteDao.calcularApartadosNuevosPorMetodo(desde, "Transferencia");
+        BigDecimal apartadosAbonosEfectivo = corteDao.calcularAbonosApartadosPorMetodo(desde, "Efectivo", apartadosNuevosEfectivo);
+        BigDecimal apartadosAbonosTransferencia = corteDao.calcularAbonosApartadosPorMetodo(desde, "Transferencia", apartadosNuevosTransferencia);
+
+        vista.setApartadosNuevosEfectivo(formatoMoneda(apartadosNuevosEfectivo));
+        vista.setApartadosNuevosTransferencia(formatoMoneda(apartadosNuevosTransferencia));
+        vista.setApartadosAbonosEfectivo(formatoMoneda(apartadosAbonosEfectivo));
+        vista.setApartadosAbonosTransferencia(formatoMoneda(apartadosAbonosTransferencia));
         vista.setApartadosTotal(formatoMoneda(apartadosTotal));
 
         // Total del día: cuánto dinero debe haber físicamente en la caja ahora mismo
@@ -132,6 +139,9 @@ public class CorteCajaController {
         int cantidadTransferencias = arqueoDao.contarVentasConTransferencia(desde);
         BigDecimal apartadosNuevos = corteDao.calcularApartadosNuevos(desde);
         BigDecimal apartadosAbonos = corteDao.calcularAbonosApartados(desde, apartadosNuevos);
+        BigDecimal apartadosNuevosTransferencia = corteDao.calcularApartadosNuevosPorMetodo(desde, "Transferencia");
+        BigDecimal apartadosAbonosTransferencia = corteDao.calcularAbonosApartadosPorMetodo(
+                desde, "Transferencia", apartadosNuevosTransferencia);
 
         String comentario = null;
         if (diferencia.compareTo(BigDecimal.ZERO) != 0) {
@@ -173,6 +183,8 @@ public class CorteCajaController {
         cierre.setTransferSalesCount(cantidadTransferencias);
         cierre.setBookingsNewAmount(apartadosNuevos);
         cierre.setBookingsPaymentsAmount(apartadosAbonos);
+        cierre.setBookingsNewAmountTransfer(apartadosNuevosTransferencia);
+        cierre.setBookingsPaymentsAmountTransfer(apartadosAbonosTransferencia);
 
         boolean cerrada = corteDao.cerrarCaja(cierre);
 

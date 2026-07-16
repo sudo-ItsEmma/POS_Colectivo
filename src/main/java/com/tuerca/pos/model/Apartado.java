@@ -4,6 +4,7 @@
  */
 package com.tuerca.pos.model;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 /**
@@ -15,9 +16,9 @@ public class Apartado {
     private int idUserAccount;
     private String customerName;
     private String customerPhone;
-    private double totalAmount;
-    private double advanceAmount;
-    private double pendingBalance;
+    private BigDecimal totalAmount;
+    private BigDecimal advanceAmount;
+    private BigDecimal pendingBalance;
     private String bookingStatus;
     private Date expirationDate;
     
@@ -54,27 +55,27 @@ public class Apartado {
         this.customerPhone = customerPhone;
     }
 
-    public double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public double getAdvanceAmount() {
+    public BigDecimal getAdvanceAmount() {
         return advanceAmount;
     }
 
-    public void setAdvanceAmount(double advanceAmount) {
+    public void setAdvanceAmount(BigDecimal advanceAmount) {
         this.advanceAmount = advanceAmount;
     }
 
-    public double getPendingBalance() {
+    public BigDecimal getPendingBalance() {
         return pendingBalance;
     }
 
-    public void setPendingBalance(double pendingBalance) {
+    public void setPendingBalance(BigDecimal pendingBalance) {
         this.pendingBalance = pendingBalance;
     }
 
