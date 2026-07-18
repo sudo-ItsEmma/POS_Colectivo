@@ -1,6 +1,7 @@
 package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -28,6 +29,7 @@ public class Ventas extends JPanel {
     private final JLabel lblTitulo = new JLabel("POS de Venta");
     private final JButton btnBack = new JButton("Volver");
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
     private final JButton btnApartarProductos = new JButton("Apartar Productos");
 
     private final JTextField txtBusqueda = new JTextField();
@@ -80,7 +82,12 @@ public class Ventas extends JPanel {
 
         JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][]"));
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
-        panelPie.add(lblUsuario, "growx");
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        JPanel panelUsuarioInfo = new JPanel(new MigLayout("insets 0, wrap 1", "[grow]"));
+        panelUsuarioInfo.add(lblUsuario, "growx");
+        panelUsuarioInfo.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
+        panelPie.add(panelUsuarioInfo, "growx");
 
         btnApartarProductos.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnApartarProductos.setBackground(UIManager.getDefaults().getColor("Actions.Blue"));

@@ -1,6 +1,7 @@
 package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -35,6 +36,7 @@ public class EmployeePanel extends JPanel {
 
     private final JPanel panelEstado = new JPanel();
     private final JLabel lblUsuarioActivo = new JLabel(" ");
+    private final JLabel lblFechaHora = new JLabel(" ");
     private final JButton btnCerrarSesion = new JButton("Cerrar sesión");
 
     public EmployeePanel() {
@@ -83,8 +85,14 @@ public class EmployeePanel extends JPanel {
         btnCerrarSesion.setForeground(Color.WHITE);
         btnCerrarSesion.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
 
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        JPanel panelUsuarioInfo = new JPanel(new MigLayout("insets 0, wrap 1", "[grow]"));
+        panelUsuarioInfo.add(lblUsuarioActivo, "growx");
+        panelUsuarioInfo.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
+
         panelEstado.setLayout(new MigLayout("insets 0, fillx", "[grow][]"));
-        panelEstado.add(lblUsuarioActivo, "growx");
+        panelEstado.add(panelUsuarioInfo, "growx");
         panelEstado.add(btnCerrarSesion);
 
         add(panelEstado, "growx");

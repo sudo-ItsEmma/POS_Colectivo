@@ -36,7 +36,11 @@ public class ArqueoCajaController {
         vista.getBtnBack().addActionListener(e ->
                 mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee"));
         vista.getBtnIntroducirCantidad().addActionListener(e -> procesarArqueo());
-        vista.getBtnCancelar().addActionListener(e -> limpiarComparacion());
+        vista.getBtnCancelar().addActionListener(e -> {
+            limpiarComparacion();
+            JOptionPane.showMessageDialog(vista, "Comparación de arqueo cancelada.");
+            mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
+        });
     }
 
     // Se llama desde MainView.showView() cada vez que se entra a esta pantalla,

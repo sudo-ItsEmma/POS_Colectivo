@@ -193,7 +193,7 @@ public class MainView extends JFrame {
 
     private String textoUsuarioActivo() {
         Sesion sesion = Sesion.getInstancia();
-        return "Usuario activo: " + sesion.getNombreCompleto() + " (" + sesion.getRoleName() + ")";
+        return "Usuario: " + sesion.getNombreCompleto() + " (" + sesion.getRoleName() + ")";
     }
 
     /** Cierra la sesión activa y regresa al login. La caja (CashSession) sigue abierta. */

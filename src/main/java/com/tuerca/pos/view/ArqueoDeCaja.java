@@ -1,6 +1,7 @@
 package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ public class ArqueoDeCaja extends JPanel {
     private final JLabel lblTitulo = new JLabel("Arqueo de Caja");
     private final JButton btnBack = new JButton("Volver");
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
 
     private final JLabel lblTituloVentas = new JLabel("Ventas realizadas");
     private final JTable tablaVentas = new JTable();
@@ -104,6 +106,10 @@ public class ArqueoDeCaja extends JPanel {
 
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
         panel.add(lblUsuario, "growx");
+
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        panel.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
 
         return panel;
     }

@@ -1,6 +1,7 @@
 package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -25,6 +26,7 @@ public class EditarProducto extends JPanel {
     private final JLabel lblTitulo = new JLabel("Editar producto");
     private final JButton btnBack = new JButton("Volver");
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
 
     private final JComboBox<Object> cbEmprendedor = new JComboBox<>();
     private final JTextField codigoField = new JTextField();
@@ -139,6 +141,10 @@ public class EditarProducto extends JPanel {
 
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
         add(lblUsuario, "growx");
+
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
     }
 
     private void volver() {

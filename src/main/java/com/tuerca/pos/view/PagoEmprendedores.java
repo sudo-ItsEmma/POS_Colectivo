@@ -3,6 +3,7 @@ package com.tuerca.pos.view;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.toedter.calendar.JDateChooser;
 import com.tuerca.pos.model.Sesion;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.BorderFactory;
@@ -29,6 +30,7 @@ public class PagoEmprendedores extends JPanel {
     private final JLabel lblTitulo = new JLabel("Pago a Emprendedores");
     private final JButton btnBack = new JButton("Volver");
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
 
     private final JComboBox<Object> cbEmprendedor = new JComboBox<>();
     private final JDateChooser fechaInicio = new JDateChooser();
@@ -149,7 +151,12 @@ public class PagoEmprendedores extends JPanel {
 
         JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][240!]"));
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
-        panelPie.add(lblUsuario, "growx");
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        JPanel panelUsuarioInfo = new JPanel(new MigLayout("insets 0, wrap 1", "[grow]"));
+        panelUsuarioInfo.add(lblUsuario, "growx");
+        panelUsuarioInfo.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
+        panelPie.add(panelUsuarioInfo, "growx");
 
         btnRegistrarPago.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnRegistrarPago.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
