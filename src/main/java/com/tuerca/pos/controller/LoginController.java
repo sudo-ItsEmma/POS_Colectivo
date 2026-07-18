@@ -65,6 +65,25 @@ public class LoginController {
         vista.limpiarFormulario();
         vista.getBtnIniciarSesion().setEnabled(true);
 
+        if (usuario.isMustChangePassword()) {
+            // La sesión ya quedó iniciada (se necesita el idUserAccount activo para poder
+            // guardar la nueva contraseña), pero no avanza a caja/dashboard hasta que la
+            // cambie — CambiarContrasenaController llama a continuarFlujoPostLogin() al
+            // terminar.
+            mainView.showView("cambiarContrasena");
+            return;
+        }
+
+        continuarFlujoPostLogin();
+    }
+
+    /**
+     * Decide a dónde navegar después de un login válido (o de completar el cambio de
+     * contraseña obligatorio): a la caja del día si ya está abierta, o a pedir su apertura.
+     * Se extrajo de {@link #iniciarSesion()} para que {@code CambiarContrasenaController}
+     * pueda reutilizar exactamente la misma lógica al terminar.
+     */
+    public void continuarFlujoPostLogin() {
         if (cashSessionDAO.obtenerSesionAbierta() != null) {
             mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");
         } else {

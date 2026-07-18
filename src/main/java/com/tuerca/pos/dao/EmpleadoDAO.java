@@ -106,7 +106,7 @@ public class EmpleadoDAO {
     // y no revela si falló el usuario o la contraseña (mismo resultado: null)
     public Empleado autenticar(String username, String password) {
         String sql = "SELECT e.idEmployee, e.firstNameEmployee, e.lastNameEmployee, e.secondLastNameEmployee, "
-                + "u.idUserAccount, u.passwordAccount, u.idRole, u.isAccountActive, r.roleName "
+                + "u.idUserAccount, u.passwordAccount, u.idRole, u.isAccountActive, u.mustChangePassword, r.roleName "
                 + "FROM UserAccount u "
                 + "JOIN Employee e ON u.idEmployee = e.idEmployee "
                 + "JOIN Role r ON u.idRole = r.idRole "
@@ -139,6 +139,7 @@ public class EmpleadoDAO {
                 emp.setUsername(username);
                 emp.setIdRole(rs.getInt("idRole"));
                 emp.setRoleName(rs.getString("roleName"));
+                emp.setMustChangePassword(rs.getBoolean("mustChangePassword"));
 
                 actualizarUltimoLogin(rs.getInt("idUserAccount"));
 
@@ -242,7 +243,7 @@ public class EmpleadoDAO {
     
     // función para obtener el empleado que vamos a editar
     public Empleado buscarPorId(int id) {
-        String sql = "SELECT e.*, u.idRole, u.usernameAccount, r.roleName FROM Employee e " +
+        String sql = "SELECT e.*, u.idUserAccount, u.idRole, u.usernameAccount, r.roleName FROM Employee e " +
                      "JOIN UserAccount u ON e.idEmployee = u.idEmployee " +
                      "JOIN Role r ON u.idRole = r.idRole " +
                      "WHERE e.idEmployee = ?";
@@ -255,6 +256,7 @@ public class EmpleadoDAO {
             if (rs.next()) {
                 Empleado emp = new Empleado();
                 emp.setId(rs.getInt("idEmployee"));
+                emp.setIdUserAccount(rs.getInt("idUserAccount"));
                 emp.setNombre(rs.getString("firstNameEmployee"));
                 emp.setPaterno(rs.getString("lastNameEmployee"));
                 emp.setMaterno(rs.getString("secondLastNameEmployee"));
@@ -418,4 +420,54 @@ public class EmpleadoDAO {
             }
         }
 }
+
+    // Alfabeto sin caracteres ambiguos (0/O, 1/l/I) para que la contraseña temporal
+    // se pueda dictar de palabra o leer en pantalla sin confusiones.
+    private static final String ALFABETO_CONTRASENA_TEMPORAL = "ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789";
+    private static final java.security.SecureRandom RANDOM = new java.security.SecureRandom();
+
+    private String generarContrasenaTemporal() {
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            sb.append(ALFABETO_CONTRASENA_TEMPORAL.charAt(RANDOM.nextInt(ALFABETO_CONTRASENA_TEMPORAL.length())));
+        }
+        return sb.toString();
+    }
+
+    // función para que un Administrador restablezca la contraseña de un empleado (Paso 18):
+    // genera una temporal aleatoria, la guarda hasheada y marca mustChangePassword para que
+    // el sistema fuerce el cambio en el próximo login. Devuelve la temporal en texto plano
+    // (única vez que se puede ver) para que el Admin se la comunique al empleado; null si falla.
+    public String restablecerContrasena(int idUserAccount) {
+        String contrasenaTemporal = generarContrasenaTemporal();
+        String hash = BCrypt.hashpw(contrasenaTemporal, BCrypt.gensalt());
+
+        String sql = "UPDATE UserAccount SET passwordAccount = ?, mustChangePassword = 1 WHERE idUserAccount = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, hash);
+            ps.setInt(2, idUserAccount);
+            return ps.executeUpdate() > 0 ? contrasenaTemporal : null;
+        } catch (SQLException e) {
+            System.err.println("Error al restablecer contraseña: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // función para que el propio usuario establezca su nueva contraseña (pantalla forzada
+    // de CambiarContrasenaPanel) y quede libre de mustChangePassword.
+    public boolean cambiarContrasena(int idUserAccount, String nuevaContrasena) {
+        String hash = BCrypt.hashpw(nuevaContrasena, BCrypt.gensalt());
+
+        String sql = "UPDATE UserAccount SET passwordAccount = ?, mustChangePassword = 0 WHERE idUserAccount = ?";
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, hash);
+            ps.setInt(2, idUserAccount);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error al cambiar contraseña: " + e.getMessage());
+            return false;
+        }
+    }
 }

@@ -34,6 +34,9 @@ public class LoginPanel extends JPanel {
     private final JLabel lblContrasena = new JLabel("Contraseña");
     private final JPasswordField contraField = new JPasswordField();
     private final JButton btnIniciarSesion = new JButton("Iniciar sesión");
+    private final JLabel lblOlvideContrasena = new JLabel(
+            "<html><div style='width: 140px; text-align: center;'>¿Olvidaste tu contraseña? "
+            + "Pídele a un Administrador que te la restablezca desde Gestión de Empleados.</div></html>");
 
     private final JLabel lblMarca = new JLabel("Aura");
     private final JLabel lblSubtituloMarca = new JLabel("Tienda Colectiva");
@@ -43,7 +46,7 @@ public class LoginPanel extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new MigLayout("insets 0, fill, gap 0", "[grow 30, fill][grow 70, fill]", "[fill]"));
+        setLayout(new MigLayout("insets 0, fill, gap 0", "[grow 20, fill][grow 80, fill]", "[fill]"));
 
         construirFormulario();
         construirPanelDecorativo();
@@ -81,6 +84,10 @@ public class LoginPanel extends JPanel {
         panelFormulario.add(lblContrasena, "growx");
         panelFormulario.add(contraField, "growx, h 42!, gapbottom 30");
         panelFormulario.add(btnIniciarSesion, "growx, h 42!");
+
+        lblOlvideContrasena.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        lblOlvideContrasena.setForeground(UIManager.getColor("Label.disabledForeground"));
+        panelFormulario.add(lblOlvideContrasena, "growx, gaptop 15");
     }
 
     private void construirPanelDecorativo() {

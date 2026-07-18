@@ -38,6 +38,7 @@ public class EditarEmpleado extends JPanel {
     private final JTextField numeroField = new JTextField();
     private final JComboBox<String> rolComboBox = new JComboBox<>(new String[]{"Administrador", "Vendedor"});
     private final JLabel lblUsuarioAsignado = new JLabel("Usuario asignado: —");
+    private final JButton btnRestablecerContrasena = new JButton("Restablecer Contraseña");
 
     private final JButton btnActualizar = new JButton("Actualizar");
     private final JButton btnCancelar = new JButton("Cancelar");
@@ -119,6 +120,12 @@ public class EditarEmpleado extends JPanel {
         // confirmada del Paso 14, evita romper sesiones activas con ese username).
         formulario.add(lblUsuarioAsignado, "span 2, gaptop 10");
 
+        btnRestablecerContrasena.putClientProperty("FlatLaf.style", "arc: 20; focusWidth: 0");
+        btnRestablecerContrasena.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Yellow"));
+        btnRestablecerContrasena.setForeground(Color.WHITE);
+        btnRestablecerContrasena.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
+        formulario.add(btnRestablecerContrasena, "span 2, growx, gaptop 10, h 36!");
+
         btnActualizar.putClientProperty("FlatLaf.style", "arc: 20; iconTextGap: 10; focusWidth: 0");
         btnActualizar.setBackground(javax.swing.UIManager.getDefaults().getColor("Actions.Blue"));
         btnActualizar.setForeground(Color.WHITE);
@@ -168,6 +175,7 @@ public class EditarEmpleado extends JPanel {
     public JButton getBtnActualizar() { return btnActualizar; }
     public JButton getBtnCancelar() { return btnCancelar; }
     public JButton getBtnBack() { return btnBack; }
+    public JButton getBtnRestablecerContrasena() { return btnRestablecerContrasena; }
 
     public void limpiarFormulario() {
         nombreField.setText("");
