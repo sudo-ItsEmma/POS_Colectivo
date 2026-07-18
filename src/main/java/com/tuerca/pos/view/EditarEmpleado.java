@@ -1,6 +1,7 @@
 package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import com.tuerca.pos.view.components.FiltroCampoTexto;
 import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
@@ -57,6 +58,11 @@ public class EditarEmpleado extends JPanel {
 
         numeroField.putClientProperty("JTextField.placeholderText", "Introduce el número de contacto a 10 dígitos");
         numeroField.putClientProperty("JTextField.showClearButton", true);
+
+        FiltroCampoTexto.soloLetras(nombreField);
+        FiltroCampoTexto.soloLetras(paternoField);
+        FiltroCampoTexto.soloLetras(maternoField);
+        FiltroCampoTexto.soloNumeros(numeroField, 10);
     }
 
     private void initComponents() {

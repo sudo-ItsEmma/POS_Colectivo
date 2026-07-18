@@ -2,6 +2,7 @@ package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.toedter.calendar.JDateChooser;
+import com.tuerca.pos.view.components.FiltroCampoTexto;
 import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Color;
 import java.awt.Font;
@@ -53,6 +54,9 @@ public class NuevoEmprendedor extends JPanel {
 
         rentField.putClientProperty("JTextField.placeholderText", "Introduce la renta mensual (Ej: 400)");
         rentField.putClientProperty("JTextField.showClearButton", true);
+
+        FiltroCampoTexto.soloLetras(contactNameField);
+        FiltroCampoTexto.soloNumeros(contactPhoneField, 10);
 
         JTextField dateEditor = (JTextField) datePicker.getDateEditor().getUiComponent();
         dateEditor.putClientProperty("JTextField.placeholderText", "Selecciona la fecha de contrato");
