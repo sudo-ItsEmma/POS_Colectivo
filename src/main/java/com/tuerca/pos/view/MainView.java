@@ -14,10 +14,14 @@ import com.tuerca.pos.controller.LoginController;
 import com.tuerca.pos.controller.PagoEmprendedoresController;
 import com.tuerca.pos.controller.ProductoController;
 import com.tuerca.pos.controller.VentaController;
+import com.tuerca.pos.dao.CashSessionDAO;
+import com.tuerca.pos.model.CashSession;
 import com.tuerca.pos.model.Sesion;
 
 import java.awt.CardLayout;
+import java.time.format.DateTimeFormatter;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 
 /**
@@ -196,8 +200,37 @@ public class MainView extends JFrame {
         return "Usuario: " + sesion.getNombreCompleto() + " (" + sesion.getRoleName() + ")";
     }
 
-    /** Cierra la sesión activa y regresa al login. La caja (CashSession) sigue abierta. */
+    /**
+     * Cierra la sesión activa y regresa al login. Es informativo, no bloquea
+     * la salida: "cerrar sesión" y "cerrar caja" son conceptos separados a
+     * propósito (la caja es del negocio, no del usuario que tiene la sesión) —
+     * aplica igual para Empleado o Admin, cualquiera puede ser quien deba
+     * dejar la caja lista antes de irse (relevo a medio día). Si la
+     * {@code CashSession} sigue abierta, se ofrece un camino directo a
+     * Arqueo (para dejar constancia de cuánto se deja) sin forzar nada.
+     */
     public void cerrarSesion() {
+        CashSession sesionCaja = new CashSessionDAO().obtenerSesionAbierta();
+        if (sesionCaja != null) {
+            String horaApertura = sesionCaja.getOpeningDateTime()
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+            String[] opciones = {"Hacer Arqueo", "Cerrar sesión de todos modos", "Cancelar"};
+            int seleccion = JOptionPane.showOptionDialog(this,
+                    "La caja sigue abierta (abierta el " + horaApertura + ").\n\n"
+                    + "¿Quieres dejar constancia de un Arqueo antes de salir?",
+                    "Caja abierta",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, opciones, opciones[0]);
+
+            if (seleccion == 0) {
+                showView("arqueo");
+                return;
+            } else if (seleccion != 1) {
+                return; // Cancelar o cerró el diálogo: se queda en la sesión
+            }
+        }
+
         Sesion.getInstancia().cerrarSesion();
         loginPanel1.limpiarFormulario();
         showView("login");
