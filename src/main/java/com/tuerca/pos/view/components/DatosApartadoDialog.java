@@ -66,6 +66,9 @@ public class DatosApartadoDialog extends JDialog {
         txtTelefono.putClientProperty("JTextField.placeholderText", "Ej. 7771234567");
         txtMonto.setText(sugerido.toPlainString());
 
+        FiltroCampoTexto.soloLetras(txtNombre);
+        FiltroCampoTexto.soloNumeros(txtTelefono, 10);
+
         JPanel panelCampos = new JPanel(new GridLayout(0, 1, 5, 5));
         panelCampos.add(new JLabel("TOTAL A APARTAR: $" + String.format("%.2f", totalCarrito)));
         panelCampos.add(new JLabel("Nombre del Cliente:"));
