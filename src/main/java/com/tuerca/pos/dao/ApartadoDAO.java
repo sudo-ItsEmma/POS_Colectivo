@@ -18,7 +18,7 @@ import java.util.Calendar;
  */
 public class ApartadoDAO {
     
-    public boolean registrarApartadoCompleto(Apartado apt, List<ApartadoDetail> detalles) throws SQLException {
+    public boolean registrarApartadoCompleto(Apartado apt, List<ApartadoDetail> detalles, String metodoPago) throws SQLException {
         String sqlBooking = "INSERT INTO Booking (idUserAccount, customerName, customerPhone, " +
                             "expirationDate, totalAmount, advanceAmount, pendingBalance) " +
                             "VALUES (?, ?, ?, DATE_ADD(CURDATE(), INTERVAL 14 DAY), ?, ?, ?)";
@@ -26,7 +26,7 @@ public class ApartadoDAO {
         String sqlDetail = "INSERT INTO BookingDetail (idBooking, idProduct, quantity, unitPrice, subtotalDetail) " +
                            "VALUES (?, ?, ?, ?, ?)";
 
-        String sqlPayment = "INSERT INTO BookingPayment (idBooking, paymentAmount) VALUES (?, ?)";
+        String sqlPayment = "INSERT INTO BookingPayment (idBooking, idPaymentMethod, paymentAmount) VALUES (?, ?, ?)";
 
         // Mismo patrón atómico que ya usa liquidarApartadoCompleto(): si no alcanza el stock,
         // 0 filas afectadas y se lanza la excepción para que se revierta toda la transacción.
@@ -72,10 +72,12 @@ public class ApartadoDAO {
                             }
                         }
 
-                        // 3. Registrar Abono Inicial
+                        // 3. Registrar Abono Inicial con el método de pago real elegido en pantalla
+                        int idMetodoPago = obtenerIdMetodoPago(con, metodoPago);
                         try (PreparedStatement psP = con.prepareStatement(sqlPayment)) {
                             psP.setInt(1, idGenerado);
-                            psP.setBigDecimal(2, apt.getAdvanceAmount());
+                            psP.setInt(2, idMetodoPago);
+                            psP.setBigDecimal(3, apt.getAdvanceAmount());
                             psP.executeUpdate();
                         }
                     }

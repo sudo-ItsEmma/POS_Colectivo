@@ -96,6 +96,10 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
     }
 
     private int crearApartado(String nombreCliente, int cantidad) throws SQLException {
+        return crearApartado(nombreCliente, cantidad, "Efectivo");
+    }
+
+    private int crearApartado(String nombreCliente, int cantidad, String metodoPago) throws SQLException {
         Apartado apt = new Apartado();
         apt.setIdUserAccount(1);
         apt.setCustomerName(nombreCliente);
@@ -113,7 +117,7 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
         List<ApartadoDetail> detalles = new ArrayList<>();
         detalles.add(det);
 
-        dao.registrarApartadoCompleto(apt, detalles);
+        dao.registrarApartadoCompleto(apt, detalles, metodoPago);
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(
                 "SELECT idBooking FROM Booking WHERE customerName = ? ORDER BY idBooking DESC LIMIT 1")) {
@@ -123,6 +127,27 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
                 return rs.getInt(1);
             }
         }
+    }
+
+    private String metodoPagoDelAnticipo(int idBooking) throws SQLException {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(
+                "SELECT pm.methodName FROM BookingPayment bp " +
+                "JOIN PaymentMethod pm ON bp.idPaymentMethod = pm.idPaymentMethod " +
+                "WHERE bp.idBooking = ?")) {
+            ps.setInt(1, idBooking);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                return rs.getString(1);
+            }
+        }
+    }
+
+    @Test
+    void registrarApartadoCompleto_guardaElMetodoDePagoRealDelAnticipo() throws SQLException {
+        int idBooking = crearApartado("JUNIT TEST METODO PAGO", 1, "Transferencia");
+
+        assertEquals("Transferencia", metodoPagoDelAnticipo(idBooking),
+                "el anticipo debe quedar guardado con el método de pago elegido, no con el DEFAULT (Efectivo)");
     }
 
     @Test
@@ -155,7 +180,7 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
         List<ApartadoDetail> detalles = new ArrayList<>();
         detalles.add(det);
 
-        assertThrows(SQLException.class, () -> dao.registrarApartadoCompleto(apt, detalles));
+        assertThrows(SQLException.class, () -> dao.registrarApartadoCompleto(apt, detalles, "Efectivo"));
         assertEquals(stockInicial, stockActual(), "el stock no debe cambiar si la transacción se revierte");
 
         try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(

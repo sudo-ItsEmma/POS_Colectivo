@@ -15,16 +15,14 @@ import com.tuerca.pos.view.Ventas;
 import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
+import com.tuerca.pos.view.components.DatosApartadoDialog;
 import java.awt.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -66,7 +64,7 @@ public class ApartadoController {
 
     private void procesarApartado() {
         DefaultTableModel modelo = (DefaultTableModel) vista.getTablaVenta().getModel();
-        
+
         // 1. Validación de carrito vacío
         if (modelo.getRowCount() == 0) {
             JOptionPane.showMessageDialog(vista, "No hay productos para apartar.");
@@ -76,87 +74,41 @@ public class ApartadoController {
         BigDecimal totalCarrito = calcularTotal();
         BigDecimal sugerido = totalCarrito.multiply(new BigDecimal("0.10")).setScale(2, RoundingMode.HALF_UP);
 
-        // 2. Recopilación unificada de datos del cliente
-        JTextField txtNombre = new JTextField(20);
-        JTextField txtTelefono = new JTextField(15);
+        // 2. Un solo diálogo con los datos del cliente y el abono inicial
+        DatosApartadoDialog.Resultado datos = DatosApartadoDialog.solicitar(vista, totalCarrito, sugerido);
+        if (datos == null) return; // El usuario canceló el diálogo
 
-        // Agregamos una propiedad de FlatLaf si quieres que muestre un texto de ayuda de fondo (Placeholder)
-        txtNombre.putClientProperty("JTextField.placeholderText", "Nombre y Apellido");
-        txtTelefono.putClientProperty("JTextField.placeholderText", "Ej. 7771234567");
+        // 3. Creación de la Cabecera (Apartado)
+        Apartado apt = new Apartado();
+        apt.setIdUserAccount(Sesion.getInstancia().getIdUserAccount());
+        apt.setCustomerName(datos.nombreCliente.toUpperCase());
+        apt.setCustomerPhone(datos.telefonoCliente);
+        apt.setTotalAmount(totalCarrito);
+        apt.setAdvanceAmount(datos.montoAbono);
+        apt.setPendingBalance(totalCarrito.subtract(datos.montoAbono));
+        apt.setBookingStatus("Activo");
 
-        // Creamos un panel con un diseño básico (puedes usar GridLayout o GridBagLayout si quieres más orden)
-        JPanel panelCliente = new JPanel(new java.awt.GridLayout(4, 1, 5, 5));
-        panelCliente.add(new JLabel("Nombre del Cliente:"));
-        panelCliente.add(txtNombre);
-        panelCliente.add(new JLabel("Teléfono de contacto:"));
-        panelCliente.add(txtTelefono);
+        // 4. Creación del Detalle (List<ApartadoDetail>)
+        List<ApartadoDetail> listaDetalles = new ArrayList<>();
 
-        int resultado = JOptionPane.showConfirmDialog(
-            vista, 
-            panelCliente, 
-            "Datos del Cliente - Aura POS", 
-            JOptionPane.OK_CANCEL_OPTION, 
-            JOptionPane.PLAIN_MESSAGE
-        );
+        for (int i = 0; i < modelo.getRowCount(); i++) {
+            ApartadoDetail det = new ApartadoDetail();
+            String codigo = modelo.getValueAt(i, COL_CODIGO).toString();
 
-        // Si el usuario da clic en Cancelar o cierra la ventana, detenemos el proceso
-        if (resultado != JOptionPane.OK_OPTION) return;
+            det.setIdProduct(productoDao.obtenerIdPorCodigo(codigo));
+            det.setQuantity(Integer.parseInt(modelo.getValueAt(i, COL_CANTIDAD).toString()));
+            det.setUnitPrice(new BigDecimal(modelo.getValueAt(i, COL_PRECIO).toString()));
+            det.setSubtotalDetail(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
 
-        String nombre = txtNombre.getText();
-        String telefono = txtTelefono.getText();
-
-        // Validación del campo obligatorio
-        if (nombre == null || nombre.trim().isEmpty()) {
-            JOptionPane.showMessageDialog(vista, "El nombre del cliente es obligatorio para registrar el apartado.", "Datos Incompletos", JOptionPane.WARNING_MESSAGE);
-            return;
+            listaDetalles.add(det);
         }
 
-        // 3. Gestión del abono inicial
-        String montoStr = JOptionPane.showInputDialog(vista, 
-            "TOTAL A APARTAR: $" + String.format("%.2f", totalCarrito) + 
-            "\nMONTO SUGERIDO (10%): $" + String.format("%.2f", sugerido) + 
-            "\n\n¿Cuánto dejará de abono inicial?");
-        
-        if (montoStr == null) return;
-        
         try {
-            BigDecimal abonoInput = new BigDecimal(montoStr);
-
-            if (abonoInput.compareTo(BigDecimal.ZERO) <= 0 || abonoInput.compareTo(totalCarrito) > 0) {
-                JOptionPane.showMessageDialog(vista, "Monto de abono inválido.");
-                return;
-            }
-
-            // 4. Creación de la Cabecera (Apartado)
-            Apartado apt = new Apartado();
-            apt.setIdUserAccount(Sesion.getInstancia().getIdUserAccount());
-            apt.setCustomerName(nombre.toUpperCase());
-            apt.setCustomerPhone(telefono);
-            apt.setTotalAmount(totalCarrito);
-            apt.setAdvanceAmount(abonoInput);
-            apt.setPendingBalance(totalCarrito.subtract(abonoInput));
-            apt.setBookingStatus("Activo");
-
-            // 5. Creación del Detalle (List<ApartadoDetail>)
-            List<ApartadoDetail> listaDetalles = new ArrayList<>();
-
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                ApartadoDetail det = new ApartadoDetail();
-                String codigo = modelo.getValueAt(i, COL_CODIGO).toString();
-
-                det.setIdProduct(productoDao.obtenerIdPorCodigo(codigo));
-                det.setQuantity(Integer.parseInt(modelo.getValueAt(i, COL_CANTIDAD).toString()));
-                det.setUnitPrice(new BigDecimal(modelo.getValueAt(i, COL_PRECIO).toString()));
-                det.setSubtotalDetail(new BigDecimal(modelo.getValueAt(i, COL_SUBTOTAL).toString()));
-
-                listaDetalles.add(det);
-            }
-
-            // 6. Ejecución en el DAO (puede lanzar SQLException si algún producto no tiene stock)
-            if (apartadoDao.registrarApartadoCompleto(apt, listaDetalles)) {
+            // 5. Ejecución en el DAO (puede lanzar SQLException si algún producto no tiene stock)
+            if (apartadoDao.registrarApartadoCompleto(apt, listaDetalles, datos.metodoPago)) {
                 JOptionPane.showMessageDialog(vista,
                     "APARTADO REGISTRADO CON ÉXITO\n" +
-                    "Cliente: " + nombre.toUpperCase() + "\n" +
+                    "Cliente: " + apt.getCustomerName() + "\n" +
                     "Saldo Pendiente: $" + String.format("%.2f", apt.getPendingBalance()) + "\n" +
                     "Fecha Límite: 14 días naturales.");
                 limpiarCarrito();
@@ -164,9 +116,6 @@ public class ApartadoController {
             } else {
                 JOptionPane.showMessageDialog(vista, "Error al registrar el apartado en la base de datos.");
             }
-
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(vista, "Por favor, ingrese un monto numérico válido.");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(vista,
                 "No se pudo registrar el apartado:\n" + e.getMessage(),

@@ -2,6 +2,7 @@ package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.tuerca.pos.model.Sesion;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -28,6 +29,7 @@ public class GestionEmpleados extends JPanel {
     private final JButton btnNuevoEmpleado = new JButton("Nuevo Empleado");
     private final JTable tablaEmpleados = new JTable();
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
     private final JRadioButton rbVerInactivos = new JRadioButton("Ver empleados desactivados");
 
     public GestionEmpleados() {
@@ -86,7 +88,12 @@ public class GestionEmpleados extends JPanel {
 
         JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow][]"));
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
-        panelPie.add(lblUsuario, "growx");
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        JPanel panelUsuarioInfo = new JPanel(new MigLayout("insets 0, wrap 1", "[grow]"));
+        panelUsuarioInfo.add(lblUsuario, "growx");
+        panelUsuarioInfo.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
+        panelPie.add(panelUsuarioInfo, "growx");
         panelPie.add(rbVerInactivos);
         add(panelPie, "growx");
     }

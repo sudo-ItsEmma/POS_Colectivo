@@ -2,6 +2,7 @@ package com.tuerca.pos.view;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.tuerca.pos.model.Sesion;
+import com.tuerca.pos.view.components.RelojEnVivo;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -26,6 +27,7 @@ public class GestionDevoluciones extends JPanel {
     private final JTextField txtBuscar = new JTextField();
     private final JTable tablaVentas = new JTable();
     private final JLabel lblUsuario = new JLabel("Usuario: ");
+    private final JLabel lblFechaHora = new JLabel(" ");
 
     public GestionDevoluciones() {
         initComponents();
@@ -69,9 +71,12 @@ public class GestionDevoluciones extends JPanel {
         jScrollPane1.putClientProperty("FlatLaf.style", "arc: 20");
         add(jScrollPane1, "grow");
 
-        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx", "[grow]"));
+        JPanel panelPie = new JPanel(new MigLayout("insets 0, fillx, wrap 1", "[grow]"));
         lblUsuario.setFont(new Font("SF Pro Rounded", Font.BOLD, 14));
         panelPie.add(lblUsuario, "growx");
+        lblFechaHora.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        panelPie.add(lblFechaHora, "growx");
+        RelojEnVivo.iniciar(lblFechaHora);
         add(panelPie, "growx");
     }
 
