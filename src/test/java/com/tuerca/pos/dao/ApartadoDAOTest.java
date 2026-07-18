@@ -229,4 +229,45 @@ class ApartadoDAOTest extends AbstractDaoIntegrationTest {
         assertFalse(ok, "no se debe poder cancelar un apartado que ya está Liquidado");
         assertEquals(stockTrasLiquidar, stockActual(), "el stock no debe cambiar si la cancelación no procede");
     }
+
+    private void forzarExpirationDatePasado(int idBooking) throws SQLException {
+        try (PreparedStatement ps = DatabaseConnection.getConnection().prepareStatement(
+                "UPDATE Booking SET expirationDate = DATE_SUB(CURDATE(), INTERVAL 1 DAY) WHERE idBooking = ?")) {
+            ps.setInt(1, idBooking);
+            ps.executeUpdate();
+        }
+    }
+
+    @Test
+    void marcarVencidosAutomaticamente_soloCambiaEstadoYNoTocaElStock() throws SQLException {
+        int idVencido = crearApartado("JUNIT TEST VENCIDO", 1);
+        int idVigente = crearApartado("JUNIT TEST VIGENTE", 1);
+        forzarExpirationDatePasado(idVencido);
+        int stockAntes = stockActual();
+
+        // No se afirma un conteo exacto: el método es global (barre todos los folios de la
+        // BD real, no solo los de esta prueba) — podría haber otros apartados ya vencidos
+        // de sesiones anteriores. Lo que sí debe cumplirse siempre es el comportamiento
+        // sobre estos dos folios de prueba puntuales.
+        int cantidad = dao.marcarVencidosAutomaticamente();
+
+        assertTrue(cantidad >= 1, "debe marcar al menos el apartado de prueba cuya fecha límite ya pasó");
+        assertEquals("Vencido", estadoBooking(idVencido));
+        assertEquals("Activo", estadoBooking(idVigente), "el apartado que aún no vence debe seguir Activo");
+        assertEquals(stockAntes, stockActual(), "el auto-marcado no debe devolver el stock, solo cambia el estado");
+    }
+
+    @Test
+    void cancelarApartado_funcionaSobreUnApartadoVencido() throws SQLException {
+        int idBooking = crearApartado("JUNIT TEST CANCELAR VENCIDO", 1);
+        forzarExpirationDatePasado(idBooking);
+        dao.marcarVencidosAutomaticamente();
+        int stockTrasVencer = stockActual();
+
+        boolean ok = dao.cancelarApartado(idBooking);
+
+        assertTrue(ok, "un apartado Vencido sí se debe poder cancelar");
+        assertEquals(stockTrasVencer + 1, stockActual(), "cancelar debe devolver el stock reservado");
+        assertEquals("Cancelado", estadoBooking(idBooking));
+    }
 }

@@ -30,6 +30,7 @@ public class GestionApartados extends JPanel {
     private final JTextField txtBuscar = new JTextField();
     private final JComboBox<String> cbEstado = new JComboBox<>(new String[]{"Pendientes", "Liquidados", "Cancelados", "Vencidos"});
     private final JButton btnNuevoApartado = new JButton("Nuevo Apartado");
+    private final JLabel lblLeyendaVencidos = new JLabel("🟧 Por vencer (≤ 3 días)     🟥 Vencido");
     private final JTable tablaApartados = new JTable();
     private final JLabel lblUsuario = new JLabel("Usuario: ");
     private final JLabel lblFechaHora = new JLabel(" ");
@@ -41,7 +42,7 @@ public class GestionApartados extends JPanel {
     }
 
     private void initComponents() {
-        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][][grow][]"));
+        setLayout(new MigLayout("insets 20, fill, wrap 1", "[grow]", "[][][][grow][]"));
 
         lblTitulo.setFont(new Font("SF Pro Rounded", Font.BOLD, 28));
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -73,6 +74,9 @@ public class GestionApartados extends JPanel {
         panelFiltros.add(cbEstado, "h 40!");
         panelFiltros.add(btnNuevoApartado, "h 40!");
         add(panelFiltros, "growx");
+
+        lblLeyendaVencidos.setFont(new Font("SF Pro Rounded", Font.PLAIN, 12));
+        add(lblLeyendaVencidos, "growx");
 
         tablaApartados.setFont(new Font("SF Compact Rounded", Font.PLAIN, 13));
         tablaApartados.setRowHeight(40);

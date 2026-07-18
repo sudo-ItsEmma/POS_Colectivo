@@ -16,13 +16,17 @@ import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.AccionesRender;
 import com.tuerca.pos.view.components.DatosApartadoDialog;
+import java.awt.Color;
 import java.awt.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,6 +39,15 @@ public class ApartadoController {
     private ProductoDAO productoDao;
     private Ventas vista;
      private GestionApartados vistaGestion;
+
+    // Días antes del vencimiento en que un apartado 'Activo' se resalta como "por vencer"
+    // en la tabla de gestión (FN.6: recordarle al cajero avisar al cliente antes de que se venza).
+    private static final int DIAS_UMBRAL_POR_VENCER = 3;
+
+    // Copia en memoria de la última consulta a listarApartados(), en el mismo orden que las
+    // filas de la tabla — la usa el renderer de resaltado para saber el estado/vencimiento
+    // real de cada fila sin agregar columnas ocultas nuevas.
+    private List<Apartado> apartadosActuales = new ArrayList<>();
 
     private final int COL_CANTIDAD = 0;
     private final int COL_CODIGO = 1;
@@ -188,6 +201,41 @@ public class ApartadoController {
 
         vistaGestion.getTablaApartados().getColumnModel().getColumn(6).setCellEditor(editorApt);
         vistaGestion.getTablaApartados().setRowHeight(40);
+
+        // 3. Resaltado visual de apartados Vencidos / por vencer (Paso 17)
+        DefaultTableCellRenderer resaltadoVencidos = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (isSelected || row >= apartadosActuales.size()) {
+                    c.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+                    return c;
+                }
+                Apartado a = apartadosActuales.get(row);
+                if ("Vencido".equals(a.getBookingStatus())) {
+                    c.setBackground(new Color(255, 205, 210)); // rojo suave
+                } else if ("Activo".equals(a.getBookingStatus()) && estaPorVencer(a)) {
+                    c.setBackground(new Color(255, 236, 179)); // ámbar suave
+                } else {
+                    c.setBackground(table.getBackground());
+                }
+                return c;
+            }
+        };
+        for (int col = 0; col <= 5; col++) {
+            vistaGestion.getTablaApartados().getColumnModel().getColumn(col).setCellRenderer(resaltadoVencidos);
+        }
+    }
+
+    // Un apartado 'Activo' se considera "por vencer" dentro de los DIAS_UMBRAL_POR_VENCER
+    // previos a su expirationDate, aunque el auto-marcado (que solo corre al abrir caja)
+    // todavía no lo haya pasado a 'Vencido'.
+    private boolean estaPorVencer(Apartado a) {
+        if (a.getExpirationDate() == null) return false;
+        LocalDate hoy = LocalDate.now();
+        LocalDate vencimiento = a.getExpirationDate().toLocalDate();
+        return !hoy.isBefore(vencimiento.minusDays(DIAS_UMBRAL_POR_VENCER));
     }
 
     private void filtrarGestion() {
@@ -213,6 +261,7 @@ public class ApartadoController {
         modelo.setRowCount(0);
         
         List<Apartado> lista = apartadoDao.listarApartados(filtro, estado);
+        apartadosActuales = lista;
         for (Apartado a : lista) {
             modelo.addRow(new Object[]{
                 a.getIdBooking(),

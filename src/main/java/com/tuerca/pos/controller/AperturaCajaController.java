@@ -1,5 +1,6 @@
 package com.tuerca.pos.controller;
 
+import com.tuerca.pos.dao.ApartadoDAO;
 import com.tuerca.pos.dao.CashSessionDAO;
 import com.tuerca.pos.model.Sesion;
 import com.tuerca.pos.view.AperturaCajaPanel;
@@ -19,11 +20,13 @@ public class AperturaCajaController {
     private final AperturaCajaPanel vista;
     private final MainView mainView;
     private final CashSessionDAO dao;
+    private final ApartadoDAO apartadoDao;
 
     public AperturaCajaController(AperturaCajaPanel vista, MainView mainView) {
         this.vista = vista;
         this.mainView = mainView;
         this.dao = new CashSessionDAO();
+        this.apartadoDao = new ApartadoDAO();
 
         vista.getBtnConfirmarApertura().addActionListener(e -> confirmarApertura());
     }
@@ -60,6 +63,17 @@ public class AperturaCajaController {
                     "Error al abrir caja", JOptionPane.ERROR_MESSAGE);
             vista.getBtnConfirmarApertura().setEnabled(true);
             return;
+        }
+
+        // Auto-marcado de apartados vencidos (FN.6: "alerta visual al iniciar la jornada").
+        // Solo cambia el estado — el stock se queda reservado hasta que alguien cancele el
+        // apartado explícitamente desde Gestión de Apartados.
+        int vencidos = apartadoDao.marcarVencidosAutomaticamente();
+        if (vencidos > 0) {
+            JOptionPane.showMessageDialog(mainView,
+                    "Hay " + vencidos + " apartado(s) vencido(s).\n\n"
+                    + "Revísalos en Gestión de Apartados.",
+                    "Apartados vencidos", JOptionPane.WARNING_MESSAGE);
         }
 
         mainView.showView(Sesion.getInstancia().isAdmin() ? "admin" : "employee");

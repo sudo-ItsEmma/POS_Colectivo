@@ -358,13 +358,15 @@ public class ApartadoDAO {
         }
     }
 
-    // Cancela un apartado Activo y devuelve al inventario el stock que se había reservado
-    // al crearlo (registrarApartadoCompleto()). Solo aplica sobre apartados 'Activo' — un
-    // apartado ya Liquidado o Cancelado no puede cancelarse otra vez.
+    // Cancela un apartado Activo o Vencido y devuelve al inventario el stock que se había
+    // reservado al crearlo (registrarApartadoCompleto()). Un apartado Vencido sigue con el
+    // stock reservado (el auto-marcado de vencidos no lo libera solo) hasta que alguien lo
+    // cancela explícitamente aquí — un apartado ya Liquidado o Cancelado no puede cancelarse
+    // otra vez.
     public boolean cancelarApartado(int idBooking) {
         String sqlDetalles = "SELECT idProduct, quantity FROM BookingDetail WHERE idBooking = ?";
         String sqlDevolverStock = "UPDATE Product SET currentStock = currentStock + ? WHERE idProduct = ?";
-        String sqlCancelarBooking = "UPDATE Booking SET bookingStatus = 'Cancelado' WHERE idBooking = ? AND bookingStatus = 'Activo'";
+        String sqlCancelarBooking = "UPDATE Booking SET bookingStatus = 'Cancelado' WHERE idBooking = ? AND bookingStatus IN ('Activo', 'Vencido')";
 
         Connection con = null;
         try {
@@ -401,6 +403,24 @@ public class ApartadoDAO {
             return false;
         } finally {
             if (con != null) try { con.setAutoCommit(true); con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
+
+    // Se llama al abrir la caja del día (AperturaCajaController), no en cada login — es el
+    // momento que pide FN.6 ("alerta visual al iniciar la jornada"). Solo cambia el estado a
+    // 'Vencido'; el stock se queda reservado hasta que alguien cancele el apartado
+    // explícitamente (cancelarApartado() ya acepta 'Vencido'). Devuelve cuántos folios se
+    // marcaron, para poder avisarle al usuario cuántos hay que revisar.
+    public int marcarVencidosAutomaticamente() {
+        String sql = "UPDATE Booking SET bookingStatus = 'Vencido' " +
+                     "WHERE bookingStatus = 'Activo' AND expirationDate < CURDATE()";
+
+        try (Connection con = DatabaseConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al marcar apartados vencidos: " + e.getMessage());
+            return 0;
         }
     }
 }
