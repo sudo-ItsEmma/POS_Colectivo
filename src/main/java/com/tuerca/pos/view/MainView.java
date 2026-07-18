@@ -4,6 +4,7 @@ import com.tuerca.pos.controller.AdminDashboardController;
 import com.tuerca.pos.controller.ApartadoController;
 import com.tuerca.pos.controller.AperturaCajaController;
 import com.tuerca.pos.controller.ArqueoCajaController;
+import com.tuerca.pos.controller.CambiarContrasenaController;
 import com.tuerca.pos.controller.CorteCajaController;
 import com.tuerca.pos.controller.DevolucionController;
 import com.tuerca.pos.controller.EmpleadoController;
@@ -33,6 +34,7 @@ public class MainView extends JFrame {
 
     private final LoginPanel loginPanel1 = new LoginPanel();
     private final AperturaCajaPanel aperturaCajaPanel1 = new AperturaCajaPanel();
+    private final CambiarContrasenaPanel cambiarContrasenaPanel1 = new CambiarContrasenaPanel();
     private final EmployeePanel employeePanel2 = new EmployeePanel();
     private final AdminPanel adminPanel2 = new AdminPanel();
     private final GestionEmprendedores gestionEmprendedores1 = new GestionEmprendedores();
@@ -55,6 +57,7 @@ public class MainView extends JFrame {
 
     private LoginController loginController;
     private AperturaCajaController aperturaCajaController;
+    private CambiarContrasenaController cambiarContrasenaController;
     private EmployeeDashboardController employeeDashboardController;
     private AdminDashboardController adminDashboardController;
     private ArqueoCajaController arqueoCajaController;
@@ -74,6 +77,7 @@ public class MainView extends JFrame {
 
         getContentPane().add(loginPanel1, "login");
         getContentPane().add(aperturaCajaPanel1, "aperturaCaja");
+        getContentPane().add(cambiarContrasenaPanel1, "cambiarContrasena");
         getContentPane().add(employeePanel2, "employee");
         getContentPane().add(adminPanel2, "admin");
         getContentPane().add(gestionEmprendedores1, "entrepreneur");
@@ -99,6 +103,7 @@ public class MainView extends JFrame {
         this.setLocationRelativeTo(null);
 
         loginController = new LoginController(loginPanel1, aperturaCajaPanel1, this);
+        cambiarContrasenaController = new CambiarContrasenaController(cambiarContrasenaPanel1, loginController);
         aperturaCajaController = new AperturaCajaController(aperturaCajaPanel1, this);
         employeeDashboardController = new EmployeeDashboardController(employeePanel2, this);
         adminDashboardController = new AdminDashboardController(adminPanel2, this);
@@ -163,7 +168,10 @@ public class MainView extends JFrame {
     }
 
     public void showView(String viewName) {
-        if ("employee".equals(viewName)) {
+        if ("cambiarContrasena".equals(viewName)) {
+            cambiarContrasenaPanel1.resetear();
+            cambiarContrasenaPanel1.setNombreUsuario(Sesion.getInstancia().getNombreCompleto());
+        } else if ("employee".equals(viewName)) {
             employeePanel2.setNombreUsuarioActivo(textoUsuarioActivo());
         } else if ("admin".equals(viewName)) {
             adminPanel2.setNombreUsuarioActivo(textoUsuarioActivo());

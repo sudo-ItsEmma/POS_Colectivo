@@ -14,6 +14,7 @@ import com.tuerca.pos.view.components.AccionTableEvent;
 import com.tuerca.pos.view.components.AccionesRender;
 import com.tuerca.pos.view.components.AccionesEditar;
 import com.tuerca.pos.view.components.BusquedaConDebounce;
+import com.tuerca.pos.view.components.TextoCopiable;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -24,6 +25,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class EmpleadoController {
     private int idEdicion = -1; // Variable para saber qué ID estamos editando
+    private int idUserAccountEdicion = -1; // idUserAccount del empleado en edición (Paso 18: restablecer contraseña)
+    private String usernameEdicion; // username del empleado en edición, para el mensaje de confirmación
     private EditarEmpleado vistaEdicion;
     private NuevoEmpleado vista;
     private EmpleadoDAO dao;
@@ -107,6 +110,8 @@ public class EmpleadoController {
             actualizarEmpleado();
         });
 
+        this.vistaEdicion.getBtnRestablecerContrasena().addActionListener(e -> restablecerContrasena());
+
         this.vista.getBtnBack().addActionListener(e -> {
             vistaGestion.limpiarFiltro();
             vista.limpiarFormulario();
@@ -179,8 +184,8 @@ public class EmpleadoController {
         emp.setPassword(contra); // La contraseña ya validada
         emp.setIdRole(rolSeleccionado.equals("Administrador") ? 1 : 2);
         if (dao.registrar(emp)) {
-            JOptionPane.showMessageDialog(vista,
-                    "¡Empleado registrado con éxito!\n\nUsuario generado: " + userName);
+            TextoCopiable.mostrar(vista, "Empleado registrado",
+                    "¡Empleado registrado con éxito!", "Usuario generado:", userName);
             vistaGestion.limpiarFiltro();
             vista.limpiarFormulario();
             cargarTabla();
@@ -260,10 +265,37 @@ public class EmpleadoController {
             vistaEdicion.getRolComboBox().setSelectedItem(emp.getRoleName().equals("Admin") ? "Administrador" : "Vendedor");
 
             this.idEdicion = id;
+            this.idUserAccountEdicion = emp.getIdUserAccount();
+            this.usernameEdicion = emp.getUsername();
             mainView.showView("editarEmpleado");
         }
     }
-    
+
+    // función del controlador para que un Administrador restablezca la contraseña de un
+    // empleado (Paso 18): genera una temporal y fuerza el cambio en el próximo login.
+    private void restablecerContrasena() {
+        int confirmar = JOptionPane.showConfirmDialog(vistaEdicion,
+                "¿Restablecer la contraseña de \"" + usernameEdicion + "\"?\n\n"
+                + "Se generará una contraseña temporal y el sistema le pedirá cambiarla "
+                + "en su próximo inicio de sesión.",
+                "Confirmar restablecimiento", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirmar != JOptionPane.YES_OPTION) return;
+
+        String temporal = dao.restablecerContrasena(idUserAccountEdicion);
+        if (temporal == null) {
+            JOptionPane.showMessageDialog(vistaEdicion, "No se pudo restablecer la contraseña.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        TextoCopiable.mostrar(vistaEdicion, "Contraseña restablecida",
+                "Comunícasela al empleado — no se podrá volver a consultar. "
+                + "Deberá cambiarla en su próximo inicio de sesión.",
+                new String[]{"Usuario:", "Contraseña temporal:"},
+                new String[]{usernameEdicion, temporal});
+    }
+
     private void actualizarEmpleado() {
         // 1. Capturamos los datos de la vista de edición (getters ya devuelven String)
         String nombre = vistaEdicion.getNombreField();

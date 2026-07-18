@@ -22,6 +22,7 @@ public class Empleado {
     private String username;
     private String password;
     private String roleName;
+    private boolean mustChangePassword;
 
     // constructor
     public Empleado(){}
@@ -105,5 +106,13 @@ public class Empleado {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-    
+
+    public boolean isMustChangePassword() {
+        return mustChangePassword;
+    }
+
+    public void setMustChangePassword(boolean mustChangePassword) {
+        this.mustChangePassword = mustChangePassword;
+    }
+
 }
