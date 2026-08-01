@@ -7,12 +7,13 @@ package com.tuerca.pos.controller;
 import com.tuerca.pos.dao.DatabaseConnection;
 import com.tuerca.pos.view.SplashView;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 
 /**
  *
@@ -49,7 +50,7 @@ public class SplashController {
                 ResultSet rs = stmt.executeQuery("SHOW TABLES LIKE 'UserAccount'");
                 if (!rs.next()) {
                     view.progressBar.setString("Configurando tablas por primera vez...");
-                    ejecutarScriptSQL(conn, "src/main/resources/db_setup.sql");
+                    ejecutarScriptSQL(conn, "/db_setup.sql");
                 }
                 actualizarProgreso(100);
 
@@ -74,8 +75,13 @@ public class SplashController {
         view.progressBar.setValue(v);
     }
     
-    private void ejecutarScriptSQL(Connection conn, String rutaScript) {
-        try (BufferedReader br = new BufferedReader(new FileReader(rutaScript))) {
+    // recursoClasspath se lee desde dentro del .jar (no una ruta de archivo real) — así
+    // funciona igual corriendo desde el código fuente que empaquetado con jpackage,
+    // donde "src/main/resources/..." ya no existe como carpeta real en el disco del
+    // usuario final.
+    private void ejecutarScriptSQL(Connection conn, String recursoClasspath) {
+        try (InputStream in = getClass().getResourceAsStream(recursoClasspath);
+             BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
             StringBuilder sql = new StringBuilder();
             String line;
             Statement stmt = conn.createStatement();

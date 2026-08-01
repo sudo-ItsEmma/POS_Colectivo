@@ -5,10 +5,13 @@ build/
 dist/
 nbdist/
 .nb-gradle/
+dependency-reduced-pom.xml
 
 # Database files (We keep the engine but NOT the data)
 db_engine/data/*
 !db_engine/data/.gitkeep
+db_engine-windows/data/*
+!db_engine-windows/data/.gitkeep
 
 # macOS system files
 .DS_Store
